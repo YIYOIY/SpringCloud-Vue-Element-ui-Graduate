@@ -1,0 +1,14 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.BookMapper">
+
+    <insert id="addBook">
+      insert into book(bookNo,bookName,bookAuthor,bookPicture,bookFactory,bookPrice,bookSeries,bookAddDate)
+      values(#{book.bookNo},#{book.bookName},#{book.bookAuthor},#{book.bookPicture},#{book.bookFactory},#{book.bookPrice},#{seriesId},#{book.bookAddDate})
+    </insert>
+    <update id="updateBook">
+        update book set bookNo=#{book.bookNo},bookName=#{book.bookName},bookAuthor=#{book.bookAuthor},bookPicture=#{book.bookPicture},bookFactory=#{book.bookFactory},bookPrice=#{book.bookPrice},bookSeries=#{seriesId},bookAddDate=#{book.bookAddDate} where bookId=#{book.bookId}
+
+    </update>
+</mapper>

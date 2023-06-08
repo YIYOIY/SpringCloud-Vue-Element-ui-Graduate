@@ -30,6 +30,10 @@ public interface BookMapper extends BaseMapper<Book>{
         @Select("select bookId,bookNo, bookName, bookAuthor, bookPicture, bookFactory, bookPrice, bookAddDate, seriesName from book b,bookseries s where b.bookseries=s.seriesId and b.bookName like '%${keyword}%'")
         List<Book> getAll(@Param("keyword") String keyword, @Param("page") Integer page);
 
+        //        给导入导出的
+        @Select("select bookId,bookNo, bookName, bookAuthor, bookPicture, bookFactory, bookPrice, bookAddDate, seriesName from book b,bookseries s where b.bookseries=s.seriesId ")
+        List<Book> getAllByExcel();
+
         boolean addBook(@Param("book") Book book,Integer seriesId);
 
         @Delete("delete from book where bookId=#{bookId}")
@@ -39,4 +43,8 @@ public interface BookMapper extends BaseMapper<Book>{
 
         @Select("select count(*) from book where  bookName like '%${keyword}%'")
         Long getCount(String keyword);
+
+//        给导入导出的
+        @Insert("insert into book(bookName) values (#{bookName})")
+        long insertAll(String bookName);
 }

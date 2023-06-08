@@ -50,6 +50,15 @@
       <img :src='PICTURE' style="width:100%;height:50%" v-show="havePicture" alt="上传的图片" />
       <el-button @click="havePicture = !havePicture" type="primary" v-show="havePicture">重新上传图片</el-button>
       <el-button type="warning" v-show="havePicture"><a href="api/test/download">测试下载</a></el-button>
+      <el-button type="warning"><a href="api/exportExcel">测试excel</a></el-button>
+
+      <el-upload class=" upload-demo" drag action="api/importExcel" multiple limit="100" encytype="multipart/form-data"
+        name="photo" v-show="!havePicture">
+        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+        <div class="el-upload__text">
+          测试导入
+        </div>
+      </el-upload>
 
       <el-upload class=" upload-demo" drag action="api/test/up" multiple limit="100" encytype="multipart/form-data"
         ref="pict" name="photo" v-show="!havePicture" @keydown.y="handleBookPicture()">
@@ -112,6 +121,7 @@ let handleBookPicture = (() => {
     })
   }, 500);
 })
+
 
 
 let add = (() => {

@@ -1,8 +1,10 @@
 package com.entity;
 
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.sql.Date;
+
 @ToString
 public class Book {
     private Integer bookId;
@@ -51,7 +53,7 @@ public class Book {
         this.bookFactory = bookFactory;
     }
 
-    public Book( String seriesName, String bookName, String bookAuthor, String bookPicture, String bookFactory) {
+    public Book(String seriesName, String bookName, String bookAuthor, String bookPicture, String bookFactory) {
         this.seriesName = seriesName;
         this.bookName = bookName;
         this.bookAuthor = bookAuthor;

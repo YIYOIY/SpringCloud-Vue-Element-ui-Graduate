@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface BookService extends IService<Book> {
         Book getById(Integer id);
-
         List<Book> getByType(String bookType);
         Long checkBagData(Integer UserId);
         List<Book> getAll(String keyword, Integer page);

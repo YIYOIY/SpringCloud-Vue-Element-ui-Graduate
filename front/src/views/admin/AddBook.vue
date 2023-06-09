@@ -45,7 +45,6 @@
     </div>
 
 
-
     <div style="width: 40%;float: right;margin-right: 7%">
       <img :src='PICTURE' style="width:100%;height:50%" v-show="havePicture" alt="上传的图片" />
       <el-button @click="havePicture = !havePicture" type="primary" v-show="havePicture">重新上传图片</el-button>

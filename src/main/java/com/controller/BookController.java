@@ -44,10 +44,13 @@ public class BookController {
                 }
                 session.setAttribute("BookpageNo", BookpageNo);
             }
+//            页数所计算的页面显示条数，limit bookNumber，5
             int bookNumber=(BookpageNo-1)*5;
+
             List<Book> all = bookService.getAll(searchName, bookNumber);
             session.setAttribute("list", all);
 
+//            数据库数据总数量
             long count = bookService.getCount(searchName);
             long pagecount = (count + 4) / 5;
             System.out.println(pagecount);
@@ -56,7 +59,7 @@ public class BookController {
             return all;
 
         } catch (Exception e) {
-            throw new SelfExcept("bookController的index出现的问题");
+            throw new SelfExcept("bookController的index出现的问题"+e);
         }
     }
 

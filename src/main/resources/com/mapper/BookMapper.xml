@@ -9,6 +9,5 @@
     </insert>
     <update id="updateBook">
         update book set bookNo=#{book.bookNo},bookName=#{book.bookName},bookAuthor=#{book.bookAuthor},bookPicture=#{book.bookPicture},bookFactory=#{book.bookFactory},bookPrice=#{book.bookPrice},bookSeries=#{seriesId},bookAddDate=#{book.bookAddDate} where bookId=#{book.bookId}
-
     </update>
 </mapper>

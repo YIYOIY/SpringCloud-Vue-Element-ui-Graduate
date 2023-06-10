@@ -5,7 +5,7 @@
     </el-form-item>
 
     <el-form-item label="密码" prop="password" label-width="20%">
-      <el-input type="password" v-model="people.password" style="width: 50%"></el-input>
+      <el-input type="password" show-password v-model="people.password" style="width: 50%"></el-input>
     </el-form-item>
 
     <el-form-item label="身份" prop="userType" label-width="20%">
@@ -65,7 +65,6 @@ const rule = reactive({
 
 
 const submitForm = () => {
-  // 之前用这种不规范的方式传递数据,没有指明请求数据类型
   // let name = people.userName
   // let password = people.password
   // axios.post(`/api/${type}`, {adminPetName: `${name}`, adminPassword: `${password}`}).then(Response => {
@@ -79,13 +78,13 @@ const submitForm = () => {
   let resp;
 
   let userdata = {
-    userPetName: people.userName,
+    userName: people.userName,
     userPassword: people.password
   }
   let user = JSON.stringify(userdata)
 
   let admindata = {
-    adminPetName: people.userName,
+    adminName: people.userName,
     adminPassword: people.password
   }
   let admin = JSON.stringify(admindata)
@@ -117,7 +116,7 @@ const submitForm = () => {
     } else {
       if (type === 'admin') {
         alert('当前给vuex赋值管理员')
-        store.state.adminPetName = resp.adminPetName
+        store.state.adminName = resp.adminName
         store.state.adminPassword = resp.adminPassword
         store.state.isAdmin = true
         router.push({
@@ -125,7 +124,7 @@ const submitForm = () => {
         })
       } else {
         alert('当前给vuex赋值用户')
-        store.state.userPetName = resp.userPetName
+        store.state.userName = resp.userName
         store.state.userPassword = resp.userPassword
         store.state.userId = resp.userId
         store.state.isUser = true
@@ -135,13 +134,15 @@ const submitForm = () => {
       }
     }
   }
+}
 
-
-
-
-
-
-
+function enroll() {
+  router.push({
+    path: '/adduser',
+    query: {
+      enroll: true
+    }
+  })
 }
 </script>
 

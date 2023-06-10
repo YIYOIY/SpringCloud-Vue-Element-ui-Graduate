@@ -14,53 +14,66 @@
         <el-radio label="top">top</el-radio>
       </el-radio-group>
     </div>
-    <br/>
-    <el-form
-        :size="size"
-        :label-position="labelPosition"
-        ref="form"
-        label-width="auto"
-        :model="user"
-    >
+    <br />
+    <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="user">
       <el-form-item label="姓名">
         <el-input v-model="user.user.userName" :model-value="user.user.userName"></el-input>
       </el-form-item>
-      <el-form-item label="昵称">
-        <el-input v-model="user.user.userPetName" :model-value="user.user.userPetName"></el-input>
+      <el-form-item label="性别">
+        <el-select v-model="user.user.userSex" filterable clearable placeholder="选择性别">
+          <el-option label="男" value="男" />
+          <el-option label="女" value="女" />
+          <el-option label="保密" value="保密" />
+        </el-select>
+        <!-- <el-input v-model="user.user.userSex" :model-value="user.user.userSex"></el-input> -->
+      </el-form-item>
+      <el-form-item label="生日" clearable>
+        <el-date-picker clearable v-model="user.user.userBirth" :model-value="user.user.userBirth" align="right"
+          type="date" format="YYYY 年 MM 月 DD 日">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model="user.user.userPassword" :model-value="user.user.userPassword"></el-input>
+        <el-input type="password" show-password v-model="user.user.userPassword"
+          :model-value="user.user.userPassword"></el-input>
       </el-form-item>
       <el-form-item label="电话">
-        <el-input v-model="user.user.userTel" :model-value="user.user.userTel"></el-input>
+        <el-input v-model="user.user.userPhone" :model-value="user.user.userPhone"></el-input>
       </el-form-item>
       <el-form-item label="地址">
         <el-input v-model="user.user.userAddress" :model-value="user.user.userAddress"></el-input>
       </el-form-item>
-      <el-form-item>
-        <el-button type="success" @click="alter()">修改</el-button>
-        <el-button type="danger" @click="back()">注销</el-button>
+
+      <el-form-item label-width="80">
+        <el-row justify="space-around" gutter="20">
+          <el-col :span="12">
+            <el-button type="success" dark @click="alter()">修改</el-button>
+          </el-col>
+          <el-col :span="12">
+            <el-button type="danger" dark @click="back()">注销</el-button>
+          </el-col>
+        </el-row>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script setup>
-import {useRouter} from "vue-router";
-import {ref, reactive, onMounted} from "vue";
+import { useRouter } from "vue-router";
+import { ref, reactive, onMounted } from "vue";
 import axios from "axios";
-import {useStore} from "vuex";
-let router=useRouter()
-let store=useStore();
+import { useStore } from "vuex";
+let router = useRouter()
+let store = useStore();
 const size = ref("default")
 const labelPosition = ref("left")
 
 const user = reactive({
   user: {
     userName: '',
-    userPetName: '',
+    userSex: '',
     userPassword: '',
-    userTel: '',
+    userBirth: '',
+    userPhone: '',
     userAddress: '',
   }
 })
@@ -76,13 +89,14 @@ onMounted(async () => {
 
 let alter = (() => {
   let alterUser = JSON.stringify(user.user)
-  axios.put('api/user', alterUser, {headers: {'Content-Type': 'application/json'}}).then(Response => {
+  axios.put('api/user', alterUser, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
     let message = Response.data
-    if (confirm(message)){
+    if (confirm(message)) {
       router.push({
         name: 'user',
-      })}
-  }).catch(Error=>{
+      })
+    }
+  }).catch(Error => {
     alert(Error.message)
   })
 })
@@ -95,16 +109,16 @@ let back = (() => {
     ).then(Response => {
       let message = Response.data
       alert(message)
-      store.state.isUser=false
-      store.state.userPassword=''
-      store.state.userPetName=''
+      store.state.isUser = false
+      store.state.userPassword = ''
+      store.state.userPetName = ''
       store.state.userId = ''
       sessionStorage.removeItem('user')
       router.push({
         name: 'book'
       })
-    }).catch(Error=>{
-      alert(Error.message+"请稍后重试!")
+    }).catch(Error => {
+      alert(Error.message + "请稍后重试!")
     })
   }
 })
@@ -114,19 +128,19 @@ let back = (() => {
 .el-radio-group {
   margin-right: 12px;
 }
-.el-input{
+
+.el-input {
   width: 30%;
 }
-.control{
+
+.control {
   float: left;
   width: 30%;
 }
-.el-form{
+
+.el-form {
   margin-left: 10%;
   float: right;
   width: 60%;
-}
-.el-button{
-  margin-left: 7%;
 }
 </style>

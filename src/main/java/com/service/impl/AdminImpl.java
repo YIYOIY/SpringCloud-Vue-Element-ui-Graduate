@@ -2,11 +2,8 @@ package com.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.Admin;
-import com.entity.Bag;
 import com.mapper.AdminMapper;
-import com.mapper.BagMapper;
 import com.service.AdminService;
-import com.service.BagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +23,7 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
     }
 
     @Override
-    public Admin getByAdminId(int adminId) {
+    public Admin getByAdminId(Integer adminId) {
         return adminMapper.getById(adminId);
     }
 

@@ -1,19 +1,20 @@
 package com.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.entity.Bag;
+import com.entity.Order;
+
 import java.util.List;
 
 /**
  * @author 游弋
  * @create 2023-04-02 7:14 PM
  */
-public interface BagService extends IService<Bag> {
-    List<Bag> userGetAll(Integer userId, Integer page);
+public interface OrderService extends IService<Order> {
+    List<Order> userGetAll(Integer userId, Integer page);
     //    long getTotal(Connection connection, Integer userId);
-    List<Bag> adminGetAll(Integer page);
+    List<Order> adminGetAll(Integer page);
 
-    boolean addBag(Bag bag);
+    boolean addBag(Order order);
     boolean deleteBag(Integer bagId);
     //    boolean updateBag(Connection connection,entity.Bag bag);
     Long adminGetCount();

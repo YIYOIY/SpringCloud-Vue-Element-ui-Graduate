@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface AdminService extends IService<Admin> {
     List<Admin> getAll(String keyword);
-    Admin getByAdminId(int adminId);
+    Admin getByAdminId(Integer adminId);
     Admin getByLogin(Admin admin);
     boolean addAdmin(Admin admin);
     boolean deleteAdmin(Integer adminId);

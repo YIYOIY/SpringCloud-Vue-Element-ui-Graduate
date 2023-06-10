@@ -8,12 +8,10 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class Admin {
-    @TableId("admin_id")
-    private Integer adminId;
-    private String adminName;
-    private String adminPassword;
-    public  Admin(){
-
+public class Category {
+    @TableId("series_id")
+    private Integer seriesId;
+    private String seriesName;
+    public Category() {
     }
 }

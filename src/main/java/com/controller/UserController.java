@@ -78,17 +78,17 @@ public class UserController {
     public ResponseEntity<String> deleteUser(Integer userId) {
         try {
 //            删除前检查购物车
-            Long aLong = userService.checkBagData(userId);
-            if (aLong > 0) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败,用户有未购买的书籍,请先清空购物车!");
-            } else {
+//            Long aLong = userService.checkBagData(userId);
+//            if (aLong > 0) {
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败,用户有未购买的书籍,请先清空购物车!");
+//            } else {
                 boolean deleteUser = userService.deleteUser(userId);
                 if (deleteUser) {
                     return ResponseEntity.ok("删除成功");
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败");
                 }
-            }
+//            }
 
         } catch (Exception e) {
             throw new SelfExcept("userController的deleteUser出现的问题");
@@ -99,6 +99,7 @@ public class UserController {
     @PutMapping("/user")
     public ResponseEntity<String> updateUser(@RequestBody User user) {
         try {
+            System.out.println(user);
             boolean alterUser = userService.updateUser(user);
             if (alterUser) {
                 return ResponseEntity.ok("更新成功");
@@ -106,7 +107,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("更新失败");
             }
         } catch (Exception e) {
-            throw new SelfExcept("userController的updateUser出现的问题");
+            throw new SelfExcept("userController的updateUser出现的问题"+e);
         }
     }
 

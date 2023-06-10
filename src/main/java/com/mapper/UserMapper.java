@@ -16,24 +16,22 @@ import java.util.List;
  */
 @Repository
 public interface UserMapper extends BaseMapper<User> {
-    @Select("select * from user where userId=#{userId}")
-    public User getById(Integer UserId);
 
-    @Select("select * from user where userPetName=#{userPetName} and userPassword=#{userPassword}")
-    public User getByLogin(User user);
+//    @Select("select * from user where userPetName=#{userPetName} and userPassword=#{userPassword}")
+//    public User getByLogin(User user);
 
-    @Select("select count(*) from user u,bag b where b.userId=u.userId and u.userId=#{userId}")
-    public Long checkBagData(Integer UserId);
+//    @Select("select count(*) from user u,bag b where b.userId=u.userId and u.userId=#{userId}")
+//    public Long checkBagData(Integer UserId);
 
-    @Select("select * from user where userName like '%${keyword}%'")
-    public List<User> getAll(String keyword);
+//    @Select("select * from user where userName like '%${keyword}%'")
+//    public List<User> getAll(String keyword);
 
-    @Insert("insert into user(userName,userPetName,userPassword,userTel,userAddress) values(#{userName},#{userPetName},#{userPassword},#{userTel},#{userAddress})")
-    public boolean addUser(User user);
+//    @Insert("insert into user(userName,userPetName,userPassword,userTel,userAddress) values(#{userName},#{userPetName},#{userPassword},#{userTel},#{userAddress})")
+//    public boolean addUser(User user);
 
-    @Delete("delete from user where userId=#{userId}")
-    public boolean deleteUser(Integer userId);
+//    @Delete("delete from user where userId=#{userId}")
+//    public boolean deleteUser(Integer userId);
 
-    @Update("update user set userName=#{userName},userPetName=#{userPetName},userPassword=#{userPassword},userTel=#{userTel},userAddress=#{userAddress} where userId=#{userId}")
-    public boolean updateUser(User user);
+//    @Update("update user set userName=#{userName},userPetName=#{userPetName},userPassword=#{userPassword},userTel=#{userTel},userAddress=#{userAddress} where userId=#{userId}")
+//    public boolean updateUser(User user);
 }

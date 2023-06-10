@@ -2,12 +2,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mapper.BookMapper">
-
+<!--    book_name,book_author, book_picture, book_factory, book_price,book_info,book_detail, book_addDate,series_name,book_num-->
     <insert id="addBook">
-      insert into book(bookNo,bookName,bookAuthor,bookPicture,bookFactory,bookPrice,bookSeries,bookAddDate)
-      values(#{book.bookNo},#{book.bookName},#{book.bookAuthor},#{book.bookPicture},#{book.bookFactory},#{book.bookPrice},#{seriesId},#{book.bookAddDate})
+      insert into t_book(book_name,book_author, book_picture, book_factory, book_price,book_info,book_detail, book_addDate,series_id,book_num)
+      values(#{book.bookName},#{book.bookAuthor},#{book.bookPicture},#{book.bookFactory},#{book.bookPrice},#{book_info},#{book_detail},#{book.bookAddDate},#{seriesId},#{book_num})
     </insert>
+
     <update id="updateBook">
-        update book set bookNo=#{book.bookNo},bookName=#{book.bookName},bookAuthor=#{book.bookAuthor},bookPicture=#{book.bookPicture},bookFactory=#{book.bookFactory},bookPrice=#{book.bookPrice},bookSeries=#{seriesId},bookAddDate=#{book.bookAddDate} where bookId=#{book.bookId}
+        update t_book set book_name=#{book.bookName},book_author=#{book.bookAuthor},book_picture=#{book.bookPicture},book_factory=#{book.bookFactory},book_Price=#{book.bookPrice},book_info=#{book.bookInfo},book_detail=#{book.bookDetail},series_id=#{seriesId},book_addDate=#{book.bookAddDate},book_num=#{book.bookNum} where book_id=#{book.bookId}
     </update>
 </mapper>

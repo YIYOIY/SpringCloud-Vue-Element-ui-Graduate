@@ -1,31 +1,30 @@
 <template>
-	<el-table stripe :data="books" highlight-current-row="true" height="600" style="width: 100%;margin-top: 3%">
+	<el-table stripe :data="books" highlight-current-row="true" height="100%" style="width: 100%;margin-top: 1%"
+		label-width="20%">
 		<!--    <el-table-column prop="bookId" label="书籍编号" width="120px"></el-table-column>-->
-		<el-table-column fixed prop="bookPicture" label="封面" width="200px">
+		<el-table-column fixed prop="bookPicture" label="封面">
 			<template v-slot="scope">
 				<el-image :src="scope.row.bookPicture" style="width: 100%;height: 100%;">
 				</el-image>
 			</template>
 		</el-table-column>
-
-		<el-table-column prop="bookInfo" label="简介" width="120px" style="font-size:small"
-			show-overflow-tooltip="true"></el-table-column>
-		<el-table-column prop="bookName" class-name="bookName" label="书名" width="200px"></el-table-column>
-		<el-table-column prop="bookAuthor" label="作者" width="150px"></el-table-column>
-		<el-table-column prop="seriesName" label="系列" width="150px"></el-table-column>
-		<el-table-column prop="bookPrice" label="价格" width="120px"></el-table-column>
-		<el-table-column prop="bookAddDate" label="发布日期" width="150px"></el-table-column>
-		<el-table-column prop="bookFactory" label="出版社" width="120px"></el-table-column>
-		<el-table-column prop="booknum" label="库存" width="120px">
+		<el-table-column prop="bookInfo" label="简介"></el-table-column>
+		<el-table-column prop="bookName" class-name="bookName" label="书名"></el-table-column>
+		<el-table-column prop="bookAuthor" label="作者"></el-table-column>
+		<el-table-column prop="seriesName" label="系列"></el-table-column>
+		<el-table-column prop="bookPrice" label="价格"></el-table-column>
+		<el-table-column prop="bookAddDate" label="发布日期"></el-table-column>
+		<el-table-column prop="bookFactory" label="出版社"></el-table-column>
+		<el-table-column prop="booknum" label="库存">
 			<template v-slot="scope">
 				<el-tag type="success">{{ scope.row.bookNum }}</el-tag>
 			</template>
 		</el-table-column>
-
-		<el-table-column prop="bookId" label="操作" width="100px">
+		<el-table-column prop="bookId" label="操作">
 			<template v-slot="scope">
 				<el-button class="el-button" round type="success" @click="inf(scope.row.bookId)">详情</el-button>
-				<el-button class="el-button" round @click="buy(scope.row.bookId)">购买</el-button>
+				<el-button class="el-button" round @click="buy(scope.row.bookId)"
+					v-show="scope.row.bookNum > 0">购买</el-button>
 			</template>
 		</el-table-column>
 	</el-table>
@@ -50,12 +49,8 @@ let books = ref([])
 let router = useRouter()
 let store = useStore()
 
-let bookPict = ref("")
-
 axios.get('api/book').then(Response => {
 	books.value = Response.data
-	console.log(books.value)
-	bookPict.value = books.value[0].bookPicture
 })
 
 let bag = reactive({

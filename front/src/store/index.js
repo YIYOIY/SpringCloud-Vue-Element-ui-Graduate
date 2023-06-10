@@ -2,10 +2,10 @@ import{createStore} from "vuex";
 export default createStore({
     state:{
         userId:'',
-        userPetName:'',
+        userName:'',
         userPassword:'',
 
-        adminPetName:'',
+        adminName:'',
         adminPassword:'',
 
         isAdmin:false,

@@ -16,24 +16,24 @@ import java.util.List;
  */
 @Repository
 public interface AdminMapper extends BaseMapper<Admin>{
-        @Select("select * from admin where AdminName like '%${keyword}%'")
+        @Select("select * from t_admin where admin_name like '%${keyword}%'")
         public List<Admin> getAll(String keyword) ;
 
-        @Select("select * from admin where AdminId=#{adminId}")
+        @Select("select * from t_admin where admin_id=#{adminId}")
         public Admin getById(int adminId);
 
-        @Select("select * from admin where adminPetName=#{adminPetName} and adminPassword=#{adminPassword}")
+        @Select("select * from t_admin where admin_name=#{adminName} and admin_Password=#{adminPassword}")
         public Admin getByLogin(Admin admin);
 
 
-        @Insert("insert into admin(adminName,adminPetName,adminPassword) values(#{adminName},#{adminPetName},#{adminPassword})")
+        @Insert("insert into t_admin(admin_name,admin_password) values(#{adminName},#{adminPassword})")
         public boolean addAdmin(Admin admin) ;
 
 
-        @Delete("delete from admin where adminId=#{adminId}")
+        @Delete("delete from t_admin where admin_id=#{adminId}")
         public boolean deleteAdmin(Integer adminId);
 
 
-        @Update("update admin set adminName=#{adminName},adminPetName=#{adminPetName},adminPassword=#{adminPassword} where adminId=#{adminId}")
+        @Update("update t_admin set admin_name=#{adminName},admin_password=#{adminPassword} where admin_id=#{adminId}")
         public boolean updateAdmin(Admin admin) ;
 }

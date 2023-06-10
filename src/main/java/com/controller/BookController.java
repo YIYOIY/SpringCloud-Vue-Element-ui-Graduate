@@ -3,9 +3,14 @@ package com.controller;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.entity.Book;
 import com.exception.SelfExcept;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiOutput;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -21,10 +27,27 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+
+    private final  static ObjectMapper om = new ObjectMapper();
+
 //    @ResponseBody
+
+    /**
+     * 从redis中读取mysqlbook表的缓存，后续判断更新及删除操作时redis库的数据操作
+     * @param req
+     * @param searchName
+     * @param oper
+     * @param BookpageNo
+     * @return
+     */
     @CrossOrigin
     @GetMapping("/book")
     private List<Book> index(HttpServletRequest req, String searchName, String oper, Integer BookpageNo) {
+        ListOperations<String, String> redisList = stringRedisTemplate.opsForList();
+        List<Book> all=null;
+
         HttpSession session = req.getSession();
         if (BookpageNo == null) {
             BookpageNo = 1;
@@ -47,9 +70,38 @@ public class BookController {
 //            页数所计算的页面显示条数，limit bookNumber，5
             int bookNumber=(BookpageNo-1)*5;
 
-            List<Book> all = bookService.getAll(searchName, bookNumber);
-            session.setAttribute("list", all);
 
+            List<String> list = redisList.range("books", 0, -1);
+            System.out.println(list.toString());
+            ArrayList<Book> books = new ArrayList<>();
+            if (list.stream().count()!=0){
+                list.stream().forEach(li->{
+                    Book book = null;
+                    try {
+                        book = om.readValue(li, Book.class);
+                        books.add(book);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                all=books;
+                System.out.println(all.toString()+"\n\n从redis中读取\n\n");
+//                redisList.leftPop("books",20);
+            }else {
+            all = bookService.getAll(searchName, bookNumber);
+            session.setAttribute("list", all);
+            ArrayList<String> redisBooks = new ArrayList<>();
+
+            all.stream().forEach(a->{
+                try {
+                    String s = om.writeValueAsString(a);
+                    redisBooks.add(s);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            redisList.leftPushAll("books",redisBooks);
+            }
 //            数据库数据总数量
             long count = bookService.getCount(searchName);
             long pagecount = (count + 4) / 5;
@@ -71,17 +123,17 @@ public class BookController {
             return book;
     }
 
-    @CrossOrigin
-    @ResponseBody
-    @GetMapping("/lookup/byType")
-    private List<Book> typeLookUp(String bookType) {
-        try {
-            List<Book> byType = bookService.getByType(bookType);
-            return byType;
-        } catch (Exception e) {
-            throw new SelfExcept("bookController的typelookup出现的问题");
-        }
-    }
+//    @CrossOrigin
+//    @ResponseBody
+//    @GetMapping("/lookup/byType")
+//    private List<Book> typeLookUp(String bookType) {
+//        try {
+////            List<Book> byType = bookService.getByType(bookType);
+////            return byType;
+//        } catch (Exception e) {
+//            throw new SelfExcept("bookController的typelookup出现的问题");
+//        }
+//    }
 
 
 
@@ -97,9 +149,7 @@ public class BookController {
             }
         } catch (Exception e) {
             System.out.println(e);
-            throw new SelfExcept("bookController的add出现的问题");
-        } finally {
-//            GetDriver.closeresource(getconnection, null);
+            throw new SelfExcept("bookController的add出现的问题"+e);
         }
     }
 
@@ -107,17 +157,17 @@ public class BookController {
     public ResponseEntity<String> deleteBook(Integer bookId) {
         try {
             //            删除前检查购物车
-            Long aLong = bookService.checkBagData(bookId);
-            if (aLong > 0) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败,改图书被某些用户加入购物车!");
-            } else {
+//            Long aLong = bookService.checkBagData(bookId);
+//            if (aLong > 0) {
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败,改图书被某些用户加入购物车!");
+//            } else {
                 boolean deleteBook = bookService.deleteBook(bookId);
                 if (deleteBook) {
                     return ResponseEntity.ok("删除成功");
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败");
                 }
-            }
+//            }
         } catch (Exception e) {
             throw new SelfExcept("bookController的delete出现的问题");
         } finally {

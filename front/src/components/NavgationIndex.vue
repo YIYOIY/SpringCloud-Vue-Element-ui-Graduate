@@ -41,13 +41,13 @@
       <el-menu-item-group title="书籍管理">
         <el-menu-item index="2-3"><router-link to="/adminBooks" active-class="active-class"
             exact-active-class="exact-active">书籍信息管理</router-link></el-menu-item>
-        <el-menu-item index="2-3"><router-link to="/adminBookSeries" active-class="active-class"
+        <el-menu-item index="2-3"><router-link to="/category" active-class="active-class"
             exact-active-class="exact-active">书籍类型管理</router-link></el-menu-item>
       </el-menu-item-group>
 
       <el-sub-menu index="2-4">
         <template #title>用户隐私</template>
-        <el-menu-item index="2-4-1"><router-link to="/adminBag" active-class="active-class"
+        <el-menu-item index="2-4-1"><router-link to="/adminOrder" active-class="active-class"
             exact-active-class="exact-active">购物车管理</router-link></el-menu-item>
       </el-sub-menu>
     </el-sub-menu>
@@ -63,7 +63,7 @@
         <template #title>个人中心</template>
         <el-menu-item index="3-1"><router-link to="/user" active-class="active-class"
             exact-active-class="exact-active">用户信息</router-link></el-menu-item>
-        <el-menu-item index="3-2"><router-link to="/userBag" active-class="active-class"
+        <el-menu-item index="3-2"><router-link to="/userOrder" active-class="active-class"
             exact-active-class="exact-active">购物车</router-link></el-menu-item>
       </el-menu-item-group>
     </el-sub-menu>
@@ -138,4 +138,5 @@ const leave = (() => {
 
 .el-sub-menu .el-menu-item {
   margin-left: 10%;
-}</style>
+}
+</style>

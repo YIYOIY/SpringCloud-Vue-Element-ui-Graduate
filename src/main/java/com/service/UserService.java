@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface UserService extends IService<User> {
     User getByLogin(User user);
-    Long checkBagData(Integer UserId);
+//    Long checkBagData(Integer UserId);
 
 
     User getById(Integer UserId);

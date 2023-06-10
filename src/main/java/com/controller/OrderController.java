@@ -1,8 +1,8 @@
 package com.controller;
 
-import com.entity.Bag;
+import com.entity.Order;
 import com.exception.SelfExcept;
-import com.service.BagService;
+import com.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-public class BagController {
+public class OrderController {
     @Autowired
-    BagService bagService;
+    OrderService orderService;
 
     @GetMapping("/userBag")
     @ResponseBody
     @CrossOrigin
-    private List<Bag> index(Integer pageNo, Integer userId) {
+    private List<Order> index(Integer pageNo, Integer userId) {
         if (pageNo == null) {
             pageNo = 1;
         }
         try {
-            List<Bag> bag = bagService.userGetAll(userId, pageNo);
-            return bag;
+            List<Order> order = orderService.userGetAll(userId, pageNo);
+            return order;
         } catch (Exception e) {
             throw new SelfExcept(e + "bagController的index出现的问题");
         }
@@ -34,25 +34,25 @@ public class BagController {
     @GetMapping("/userPageCount")
     @ResponseBody
     private long userPageCount(Integer userId) {
-        Long aLong = bagService.userGetCount(userId);
+        Long aLong = orderService.userGetCount(userId);
         return (aLong + 4) / 5;
     }
 
     @GetMapping("/adminPageCount")
     @ResponseBody
     private long adminPageCount() {
-        Long aLong = bagService.adminGetCount();
+        Long aLong = orderService.adminGetCount();
         return (aLong + 4) / 5;
     }
 
     @ResponseBody
     @GetMapping("/adminBag")
-    private List<Bag> indexAdmin(Integer pageNo) {
+    private List<Order> indexAdmin(Integer pageNo) {
         if (pageNo == null) {
             pageNo = 1;
         }
         try {
-            return bagService.adminGetAll(pageNo);
+            return orderService.adminGetAll(pageNo);
         } catch (Exception e) {
             throw new SelfExcept(e + "bagController的adminIndex出现的问题");
         }
@@ -60,9 +60,9 @@ public class BagController {
 
 
     @PostMapping("/bag")
-    public ResponseEntity<String> addBag(@RequestBody Bag bag) {
+    public ResponseEntity<String> addBag(@RequestBody Order order) {
         try {
-            boolean addBag = bagService.addBag(bag);
+            boolean addBag = orderService.addBag(order);
             if (addBag) {
                 return ResponseEntity.ok("添加成功");
             } else {
@@ -76,7 +76,7 @@ public class BagController {
     @DeleteMapping("/bag")
     public ResponseEntity<String> deleteBag(Integer bagId) {
         try {
-            boolean addBag = bagService.deleteBag(bagId);
+            boolean addBag = orderService.deleteBag(bagId);
             if (addBag) {
                 return ResponseEntity.ok("删除成功");
             } else {
@@ -89,7 +89,7 @@ public class BagController {
     @DeleteMapping("/buybag")
     public ResponseEntity<String> buybag(Integer bagId) {
         try {
-            boolean addBag = bagService.deleteBag(bagId);
+            boolean addBag = orderService.deleteBag(bagId);
             if (addBag) {
                 return ResponseEntity.ok("购买成功");
             } else {

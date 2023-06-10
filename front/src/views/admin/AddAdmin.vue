@@ -14,24 +14,15 @@
         <el-radio label="top">top</el-radio>
       </el-radio-group>
     </div>
-    <el-form
-        :size="size"
-        :label-position="labelPosition"
-        ref="form"
-        label-width="auto"
-        :model="admin"
-    >
+    <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="admin">
       <el-form-item label="姓名">
         <el-input v-model="admin.admin.adminName" :model-value="admin.admin.adminName"></el-input>
       </el-form-item>
-      <el-form-item label="昵称">
-        <el-input v-model="admin.admin.adminPetName" :model-value="admin.admin.adminPetName"></el-input>
-      </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model="admin.admin.adminPassword" :model-value="admin.admin.adminPassword"></el-input>
+        <el-input v-model="admin.admin.adminPassword" show-password :model-value="admin.admin.adminPassword"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="sucess" @click="add()">新增</el-button>
+        <el-button type="success" @click="add()">新增</el-button>
         <el-button type="primary" @click="cancelAdd()">取消</el-button>
       </el-form-item>
     </el-form>
@@ -39,9 +30,9 @@
 </template>
 
 <script setup>
-import {ref, reactive} from "vue";
+import { ref, reactive } from "vue";
 import axios from "axios";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 const size = ref("default")
 const labelPosition = ref("left")
@@ -49,25 +40,24 @@ let router = useRouter()
 const admin = reactive({
   admin: {
     adminName: '',
-    adminPetName: '',
     adminPassword: ''
   }
 })
 
-const add=(()=>{
-  let addAdmin =JSON.stringify(admin.admin)
+const add = (() => {
+  let addAdmin = JSON.stringify(admin.admin)
   console.log(addAdmin)
-  axios.post('api/addAdmin', addAdmin, {headers: {'Content-Type': 'application/json'}}).then(Response => {
+  axios.post('api/addAdmin', addAdmin, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
     let message = Response.data
-    if (confirm(message+" 是否跳转到管理员首页?")) {
+    if (confirm(message + " 是否跳转到管理员首页?")) {
       router.push('/admin')
     }
-  }).catch(Error=>{
-    alert(Error.message+"添加失败,请稍后重试!")
+  }).catch(Error => {
+    alert(Error.message + "添加失败,请稍后重试!")
   })
 })
 
-const cancelAdd=(()=>{
+const cancelAdd = (() => {
   router.push('/admin')
 })
 
@@ -77,14 +67,17 @@ const cancelAdd=(()=>{
 .el-radio-group {
   margin-right: 12px;
 }
-.el-input{
+
+.el-input {
   width: 30%;
 }
-.control{
+
+.control {
   float: left;
   width: 30%;
 }
-.el-form{
+
+.el-form {
   margin-left: 10%;
   float: right;
   width: 60%;

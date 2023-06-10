@@ -2,7 +2,7 @@ package com.entity;
 
 import java.sql.Date;
 
-public class Bag {
+public class Order {
     private Integer bagId;
     private Integer bookNumber;
     private Integer userId;
@@ -48,7 +48,7 @@ public class Bag {
     }
 
 
-    public Bag(Integer bagId, Integer bookNumber, Integer userId, Integer bookId, String bookName, Double bookPrice, String bookPicture, Date addTime) {
+    public Order(Integer bagId, Integer bookNumber, Integer userId, Integer bookId, String bookName, Double bookPrice, String bookPicture, Date addTime) {
         this.bagId = bagId;
         this.bookNumber = bookNumber;
         this.userId = userId;
@@ -74,7 +74,7 @@ public class Bag {
                 '}';
     }
 
-    public Bag(Integer bagId, Integer bookNumber, Integer userId, Integer bookId, String bookName, Double bookPrice, String bookPicture, Double totalPrice, Date addTime) {
+    public Order(Integer bagId, Integer bookNumber, Integer userId, Integer bookId, String bookName, Double bookPrice, String bookPicture, Double totalPrice, Date addTime) {
         this.bagId = bagId;
         this.bookNumber = bookNumber;
         this.userId = userId;
@@ -86,11 +86,11 @@ public class Bag {
         this.addTime = addTime;
     }
 
-    public Bag() {
+    public Order() {
 
     }
 
-    public Bag(Integer bagId, Integer bookNumber, Integer userId, Integer bookId, Date addTime) {
+    public Order(Integer bagId, Integer bookNumber, Integer userId, Integer bookId, Date addTime) {
         this.bagId = bagId;
         this.bookNumber = bookNumber;
         this.userId = userId;
@@ -98,7 +98,7 @@ public class Bag {
         this.addTime = addTime;
     }
 
-    public Bag(Integer bookNumber, Integer userId, Integer bookId) {
+    public Order(Integer bookNumber, Integer userId, Integer bookId) {
         this.bookNumber = bookNumber;
         this.userId = userId;
         this.bookId = bookId;

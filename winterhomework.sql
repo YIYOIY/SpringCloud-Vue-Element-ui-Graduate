@@ -43,13 +43,13 @@ INSERT INTO `admin` VALUES (21,'primary','11','admin'),(22,'priMain8','1','admin
 UNLOCK TABLES;
 
 --
--- Table structure for table `bag`
+-- Table structure for table `order`
 --
 
-DROP TABLE IF EXISTS `bag`;
+DROP TABLE IF EXISTS `order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `bag` (
+CREATE TABLE `order` (
   `bagId` int NOT NULL AUTO_INCREMENT,
   `bookId` int DEFAULT NULL,
   `userId` int DEFAULT NULL,
@@ -64,12 +64,12 @@ CREATE TABLE `bag` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `bag`
+-- Dumping data for table `order`
 --
 
-LOCK TABLES `bag` WRITE;
-/*!40000 ALTER TABLE `bag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `bag` ENABLE KEYS */;
+LOCK TABLES `order` WRITE;
+/*!40000 ALTER TABLE `order` DISABLE KEYS */;
+/*!40000 ALTER TABLE `order` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -88,10 +88,10 @@ CREATE TABLE `book` (
   `bookFactory` varchar(30) DEFAULT NULL,
   `bookPrice` double NOT NULL DEFAULT (0),
   `bookAddDate` date DEFAULT (curdate()),
-  `bookSeries` int DEFAULT NULL,
+  `category` int DEFAULT NULL,
   PRIMARY KEY (`bookId`),
-  KEY `bookSeries` (`bookSeries`),
-  CONSTRAINT `book_ibfk_1` FOREIGN KEY (`bookSeries`) REFERENCES `bookseries` (`seriesId`)
+  KEY `category` (`category`),
+  CONSTRAINT `book_ibfk_1` FOREIGN KEY (`category`) REFERENCES `bookseries` (`seriesId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -70,11 +70,8 @@ export default createRouter({
             adminName: name,
             adminPassword: password,
           };
-          // 为了方便代码编写先将判断关闭
-          // if (password && name) {
-          if (1) {
+          if (password && name) {
             sessionStorage.setItem("admin", admin);
-
             // 一个时间只能登录一个身份时开启下面的语句
             // sessionStorage.removeItem('user')
             next();

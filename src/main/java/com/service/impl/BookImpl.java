@@ -49,6 +49,11 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
     }
 
     @Override
+    public List<Book> getAllForExcel() {
+        return bookMapper.getAllForExcel();
+    }
+
+    @Override
     public boolean addBook(Book book) {
         QueryWrapper<Category> QueryWrapper = new QueryWrapper<>();
         QueryWrapper.select("series_id").and(i -> i.eq("series_name", book.getSeriesName()));
@@ -67,6 +72,7 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
         QueryWrapper<Category> QueryWrapper = new QueryWrapper<>();
         QueryWrapper.select("series_id").and(i -> i.eq("series_name", book.getSeriesName()));
         Category category = categoryMapper.selectOne(QueryWrapper);
+
         return bookMapper.updateBook(book,category.getSeriesId());
     }
 

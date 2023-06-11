@@ -14,9 +14,10 @@ public interface OrderService extends IService<Order> {
     //    long getTotal(Connection connection, Integer userId);
     List<Order> adminGetAll(Integer page);
 
-    boolean addBag(Order order);
-    boolean deleteBag(Integer bagId);
-    //    boolean updateBag(Connection connection,entity.Bag bag);
+    boolean addOrder(Order order);
+    boolean deleteOrder(Integer bagId);
+
+    boolean updateOrder(Integer bagId,Integer num,Integer bookId);
     Long adminGetCount();
     Long userGetCount(Integer userId);
 }

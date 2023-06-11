@@ -39,6 +39,14 @@ public class CategoryController {
         }
     }
 
+
+    @ResponseBody
+    @GetMapping("/series")
+    public List<Category> getSeries(){
+        List<Category> seriesName = seriesService.getSeriesName();
+        return seriesName;
+    }
+
     @PostMapping("/bookSeries")
     public ResponseEntity<String> addBookSeries(@RequestBody Category Series) {
         try {

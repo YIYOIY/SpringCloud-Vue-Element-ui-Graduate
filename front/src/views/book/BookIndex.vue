@@ -1,5 +1,5 @@
 <template>
-	<el-table stripe :data="books" highlight-current-row="true" height="100%" style="width: 100%;margin-top: 1%"
+	<el-table stripe :data="books" highlight-current-row="true" height="600" style="width: 100%;margin-top: 1%"
 		label-width="20%">
 		<!--    <el-table-column prop="bookId" label="书籍编号" width="120px"></el-table-column>-->
 		<el-table-column fixed prop="bookPicture" label="封面">
@@ -53,12 +53,6 @@ axios.get('api/book').then(Response => {
 	books.value = Response.data
 })
 
-let bag = reactive({
-	bookId: '',
-	userId: '',
-	bookNumber: 1
-})
-
 let inf = ((v) => {
 	console.log(v)
 	let id = v
@@ -70,26 +64,34 @@ let inf = ((v) => {
 	})
 })
 
+let bag = reactive({
+	bookId: '',
+	userId: '',
+	bookNum: 1
+})
+
 let buy = ((v) => {
 	bag.bookId = v;
-	console.log(v + "----" + bag.bookId)
+	console.log(v + "----左右两边都是bookId,左边是传过来的,右边是要发送后端的" + bag.bookId);
 	bag.userId = store.state.userId;
-	console.log(bag.userId)
+	console.log(bag.userId);
+	// 判断用户登陆了没，没登陆返回登录页面
 	if (store.state.userId == "" || store.state.userId == undefined || store.state.userId == null) {
 		router.push({
 			name: 'login'
 		})
 	} else {
 		let addBag = JSON.stringify(bag)
-		axios.post(`api/bag`, addBag, {
+		axios.post(`api/order`, addBag, {
 			headers: {
 				'Content-Type': 'application/json'
 			}
 		}).then(Response => {
 			let message = Response.data;
-			if (confirm("是否前往购物车?")) {
+			console.log(message);
+			if (confirm(message + "是否前往购物车?")) {
 				router.push({
-					name: 'userBag'
+					name: 'userOrder'
 				})
 			}
 		}).catch(Error => {

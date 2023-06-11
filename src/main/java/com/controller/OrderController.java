@@ -2,8 +2,10 @@ package com.controller;
 
 import com.entity.Order;
 import com.exception.SelfExcept;
+import com.mapper.BookMapper;
 import com.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +18,9 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @GetMapping("/userBag")
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+    @GetMapping("/userOrder")
     @ResponseBody
     @CrossOrigin
     private List<Order> index(Integer pageNo, Integer userId) {
@@ -46,7 +50,7 @@ public class OrderController {
     }
 
     @ResponseBody
-    @GetMapping("/adminBag")
+    @GetMapping("/adminOrder")
     private List<Order> indexAdmin(Integer pageNo) {
         if (pageNo == null) {
             pageNo = 1;
@@ -59,10 +63,10 @@ public class OrderController {
     }
 
 
-    @PostMapping("/bag")
-    public ResponseEntity<String> addBag(@RequestBody Order order) {
+    @PostMapping("/order")
+    public ResponseEntity<String> addOrder(@RequestBody Order order) {
         try {
-            boolean addBag = orderService.addBag(order);
+            boolean addBag = orderService.addOrder(order);
             if (addBag) {
                 return ResponseEntity.ok("添加成功");
             } else {
@@ -73,10 +77,10 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping("/bag")
-    public ResponseEntity<String> deleteBag(Integer bagId) {
+    @DeleteMapping("/order")
+    public ResponseEntity<String> deleteOrder(Integer orderId) {
         try {
-            boolean addBag = orderService.deleteBag(bagId);
+            boolean addBag = orderService.deleteOrder(orderId);
             if (addBag) {
                 return ResponseEntity.ok("删除成功");
             } else {
@@ -86,10 +90,11 @@ public class OrderController {
             throw new SelfExcept(e + "bagController的delete出现的问题");
         }
     }
-    @DeleteMapping("/buybag")
-    public ResponseEntity<String> buybag(Integer bagId) {
+    @PutMapping("/buyOrder")
+    public ResponseEntity<String> buybag(Integer orderId,Integer num,Integer bookId) {
         try {
-            boolean addBag = orderService.deleteBag(bagId);
+            stringRedisTemplate.delete("books");
+            boolean addBag = orderService.updateOrder(orderId,num,bookId);
             if (addBag) {
                 return ResponseEntity.ok("购买成功");
             } else {

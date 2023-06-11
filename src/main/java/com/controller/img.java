@@ -57,27 +57,24 @@ public class img {
         photo.transferTo(new File(finalPath));
 
 //        上传成功后返回成功信息
-//        picturePath="api/img/"+filename;
         picturePath="api/"+filename;
         return ResponseEntity.ok(picturePath);
     }
-
-
     @RequestMapping("/getPicture")
     private ResponseEntity<String> getPicture(){
         String picture=picturePath;
-        System.out.println(picture);
+        System.out.println(picture+"获取图片名称以作为显示的请求");
         return ResponseEntity.ok(picture);
     }
-
     @RequestMapping("/test/download")
     public ResponseEntity<byte[]> testResponseEntity(HttpSession session) throws IOException {
         Path path2 = Paths.get("C:\\Users\\yo\\Desktop\\vuespringbootTotalProject\\WebDevelopment\\back\\demo\\src\\main\\resources\\static\\img");
+//        因为返回去的 api/，正好4个可以截断api/
         String name=picturePath.substring(4);
-        System.out.println(name);
-        System.out.println(path2);
+        System.out.println(name+"图片下载的图片名称");
+        System.out.println(path2+"将要在这个地址进行下载");
         String finalPath = path2 + File.separator + name;
-        System.out.println(finalPath);
+        System.out.println(finalPath+"最终下载路径以及图片名");
 
 //创建输入流
         InputStream is = new FileInputStream(finalPath);
@@ -92,7 +89,6 @@ public class img {
         headers.add("Content-Disposition", "attachment;filename="+name);
 //设置响应状态码
         HttpStatus statusCode = HttpStatus.OK;
-
 //创建ResponseEntity对象
         ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(bytes, headers,
                 statusCode);

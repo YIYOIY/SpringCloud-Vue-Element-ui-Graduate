@@ -73,9 +73,8 @@ public class CheckLogin {
             try {
                 Order order1 = new Order();
                 order1.setBookId(id);
-                order1.setBookNumber(bookNumber);
                 order1.setUserId(loginUser.getUserId());
-                boolean addBag = orderService.addBag(order1);
+                boolean addBag = orderService.addOrder(order1);
                 if (addBag) {
                     return "redirect:bag.do";
                 } else {

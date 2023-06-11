@@ -17,4 +17,5 @@ public interface CategoryService extends IService<Category> {
     boolean deleteBookSeries(Integer bookSeries);
     boolean updateBookSeries(Category category);
 
+    List<Category> getSeriesName();
 }

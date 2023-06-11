@@ -37,11 +37,17 @@ spring:
     cluster:
       nodes: 192.168.1.100:6379,192.168.1.101:6380,192.168.1.102:6381,192.168.1.103:6382,192.168.1.104:6383,192.168.1.105:6384
 
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+
 # 配置MyBatis日志
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+    #开启驼峰命名匹配映射
   global-config:
     db-config:
       # 配置MyBatis-Plus操作表的默认前缀

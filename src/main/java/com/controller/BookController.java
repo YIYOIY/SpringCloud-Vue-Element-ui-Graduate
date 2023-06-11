@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.sql.SqlInjectionUtils;
 import com.entity.Book;
 import com.exception.SelfExcept;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -89,7 +90,7 @@ public class BookController {
 //                redisList.leftPop("books",20);
             }else {
             all = bookService.getAll(searchName, bookNumber);
-            session.setAttribute("list", all);
+//            session.setAttribute("list", all);
             ArrayList<String> redisBooks = new ArrayList<>();
 
             all.stream().forEach(a->{
@@ -140,7 +141,7 @@ public class BookController {
     @PostMapping("/book")
     public ResponseEntity<String> addBook(@RequestBody Book book) {
         try {
-            System.out.println(book);
+            stringRedisTemplate.delete("books");
             boolean addBook = bookService.addBook(book);
             if (addBook) {
                 return ResponseEntity.ok("添加成功");
@@ -156,6 +157,7 @@ public class BookController {
     @DeleteMapping("/book")
     public ResponseEntity<String> deleteBook(Integer bookId) {
         try {
+            stringRedisTemplate.delete("books");
             //            删除前检查购物车
 //            Long aLong = bookService.checkBagData(bookId);
 //            if (aLong > 0) {
@@ -179,7 +181,7 @@ public class BookController {
     @PutMapping("/book")
     public ResponseEntity<String> updateBook(@RequestBody Book book) {
         try {
-            System.out.println(book.toString());
+            stringRedisTemplate.delete("books");
             boolean alterBook = bookService.updateBook(book);
             if (alterBook) {
 //                添加书籍封面时是否可以返回一个url通过路由进行编程式跳转或者刷新

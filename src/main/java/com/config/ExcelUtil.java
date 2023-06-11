@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.*;
  * @create 2023-06-08 1:28 PM
  */
 public class ExcelUtil {
+
     public static XSSFWorkbook getXSSFWorkBook(String name,String[] titles,String[][] data){
 //        创建一个excel文件对应的对象
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
@@ -20,11 +21,11 @@ public class ExcelUtil {
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
 
 // 设置默认列宽，width为字符个数
-        sheet.setDefaultColumnWidth(10);
+        sheet.setDefaultColumnWidth(20);
 // 设置第columnIndex+1列的列宽，单位为字符宽度的1/256
-//        sheet.setColumnWidth(2,20*256);
-//        sheet.setColumnWidth(5,20*256);
-//        sheet.setColumnWidth(7,20*256);
+        sheet.setColumnWidth(3,50*256);
+        sheet.setColumnWidth(4,50*256);
+        sheet.setColumnWidth(10,40*256);
 // 设置第5列的列宽为20个字符宽度
 // sheet.setColumnWidth(4, 20*256)
 
@@ -52,7 +53,7 @@ public class ExcelUtil {
 
 //          设置内容
         for (int i = 0; i <data.length; i++) {
-//            因为第0行作为标题了，所以从第一行开始
+//            因为第0行作为标题,第一行作为表头了，所以从第二行开始
             row = sheet.createRow(i + 2);
             for (int j = 0; j <data[i].length ; j++) {
                 XSSFCell cell = row.createCell(j);

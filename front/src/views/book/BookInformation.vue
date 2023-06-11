@@ -31,6 +31,7 @@
 						<el-button @click="number++" type="info" round v-show="book.book.bookNum > number">加一</el-button>
 						<el-button @click="number--" type="info" round v-if="number > 1">减一</el-button>
 						<el-button style="float: left; width: 50%" type="warning" @click="buy()">购买</el-button>
+						<el-button type="primary" @click="cancelBuy()">返回</el-button>
 					</div>
 				</el-card>
 			</el-col>
@@ -50,6 +51,12 @@
 		</el-row>
 
 		<el-row>
+			<el-col :span="24">
+				<h2>书籍简介</h2>
+				<el-card :body-style="{ padding: '50px 50px' }" shadow="hover" style="width: 100%; align-content: center">
+					<p>{{ book.book.bookInfo }}</p>
+				</el-card>
+			</el-col>
 			<el-col :span="24">
 				<h2>书籍详情</h2>
 				<el-card :body-style="{ padding: '50px 50px' }" shadow="hover" style="width: 100%; align-content: center">
@@ -71,6 +78,11 @@ let number = ref(1);
 const props = defineProps(["id"]);
 
 // let book = ref(null)
+let cancelBuy = (() => {
+	router.push({
+		name: "book",
+	});
+})
 
 const book = reactive({
 	book: {
@@ -84,6 +96,7 @@ const book = reactive({
 		bookPrice: "",
 		seriesName: "",
 		bookDetail: "",
+		bookInfo: "",
 	},
 });
 
@@ -97,48 +110,50 @@ console.log(book);
 let bag = reactive({
 	bookId: "",
 	userId: "",
-	bookNumber: "",
+	bookNum: "",
 });
 
 
 // 购买操作
-// let buy = () => {
-// 	bag.bookId = book.book.bookId;
-// 	console.log("----" + bag.bookId);
-// 	bag.userId = store.state.userId;
-// 	console.log(bag.userId);
-// 	if (
-// 		store.state.userId == "" ||
-// 		store.state.userId == undefined ||
-// 		store.state.userId == null
-// 	) {
-// 		router.push({
-// 			name: "login",
-// 		});
-// 	} else {
-// 		bag.bookNumber = number.value;
-// 		console.log(bag.bookNumber);
-// 		let addBag = JSON.stringify(bag);
-
-// 		axios
-// 			.post(`api/bag`, addBag, {
-// 				headers: {
-// 					"Content-Type": "application/json",
-// 				},
-// 			})
-// 			.then((Response) => {
-// 				let message = Response.data;
-// 				if (confirm("是否前往购物车?")) {
-// 					router.push({
-// 						name: "userBag",
-// 					});
-// 				}
-// 			})
-// 			.catch((Error) => {
-// 				console.log(Error);
-// 			});
-// 	}
-// };
+let buy = () => {
+	bag.bookId = book.book.bookId;
+	bag.userId = store.state.userId;
+	console.log(bag + "购买操作");
+	if (
+		store.state.userId == "" ||
+		store.state.userId == undefined ||
+		store.state.userId == null
+	) {
+		router.push({
+			name: "login",
+		});
+	} else {
+		bag.bookNum = number.value;
+		console.log(bag.bookNum + "购买数量");
+		let addBag = JSON.stringify(bag);
+		axios
+			.post(`api/order`, addBag, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})
+			.then((Response) => {
+				let message = Response.data;
+				if (confirm(message + "是否前往购物车?")) {
+					router.push({
+						name: "userOrder",
+					});
+				} else {
+					router.push({
+						name: "book",
+					});
+				}
+			})
+			.catch((Error) => {
+				console.log(Error);
+			});
+	}
+};
 </script>
 
 <style scoped>

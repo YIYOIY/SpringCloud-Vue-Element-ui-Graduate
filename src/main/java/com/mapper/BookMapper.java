@@ -26,16 +26,12 @@ public interface BookMapper extends BaseMapper<Book> {
     @Select("select book_id,book_name,book_author, book_picture, book_factory, book_price,book_info,book_detail, book_addDate,series_name,book_num from t_book b,t_category c where b.series_id=c.series_id and b.book_name like  concat('%',#{keyword},'%')")
     List<Book> getAll(@Param("keyword") String keyword, @Param("page") Integer page);
 
-    //        给导入导出的
-    @Select("book_id,book_name,book_author, book_picture, book_factory, book_price,book_info,book_detail, book_addDate,series_name,book_num from t_book b,t_category c where b.series_id=c.series_id ")
-    List<Book> getAllByExcel();
-
     boolean addBook(@Param("book") Book book, Integer seriesId);
 
     @Delete("delete from t_book where book_id=#{bookId}")
     boolean deleteBook(Integer bookId);
 
-    boolean updateBook(@Param("book") Book book, Integer seriesId);
+    boolean updateBook(@Param("book") Book book,Integer seriesId);
 
 //        @Select("select count(*) from book where  bookName like '%${keyword}%'")
 //        Long getCount(String keyword);
@@ -45,4 +41,6 @@ public interface BookMapper extends BaseMapper<Book> {
     //        给导入导出的测试
     @Insert("insert into t_book(book_name) values (#{bookName})")
     long insertAll(String bookName);
+
+    List<Book> getAllForExcel();
 }

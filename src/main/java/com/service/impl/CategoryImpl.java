@@ -1,5 +1,6 @@
 package com.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.entity.Category;
 import com.mapper.CategoryMapper;
@@ -7,6 +8,7 @@ import com.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,5 +47,11 @@ public class CategoryImpl extends ServiceImpl<CategoryMapper, Category> implemen
     @Override
     public boolean updateBookSeries(Category category) {
         return categoryMapper.updateById(category)>0;
+    }
+
+    @Override
+    public List<Category> getSeriesName() {
+        List<Category> categories = categoryMapper.selectList(null);
+        return categories;
     }
 }

@@ -2,9 +2,8 @@
   <!-- <p v-show="false">{{ book.book.bookName }}</p> -->
   <div style="margin: 5% 2%">
 
-    <div style="width: 70%;float: left">
-
-      <el-form size="default" label-position="left" ref="form" width="100%" :model="book">
+    <el-form size="default" label-position="left" ref="form" width="100%" :model="book">
+      <div style="width: 55%;float: left">
         <el-row gutter="2" justify="space-evenly">
           <el-col span="10">
             <el-form-item label="编号">
@@ -22,17 +21,18 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="系列">
-              <el-select v-model="book.book.seriesId" :model-value="book.book.seriesId" placeholder="请选择">
+              <el-select v-model="book.book.seriesName" :model-value="book.book.seriesName" placeholder="请选择">
                 <el-option v-for="item in series" :key="item.seriesId" :label="item.seriesName"
-                  :value="item.seriesId"></el-option>
-                <!-- <el-input v-model="book.book.seriesName" :model-value="book.book.seriesName"></el-input> -->
+                  :value="item.seriesName"></el-option>
               </el-select>
+              <!-- <el-input v-model="book.book.seriesName" :model-value="book.book.seriesName"></el-input> -->
             </el-form-item>
             <el-form-item label="出版社">
               <el-input v-model="book.book.bookFactory" :model-value="book.book.bookFactory"></el-input>
             </el-form-item>
             <el-form-item label="发售日期">
-              <el-input v-model="book.book.bookAddDate" :model-value="book.book.bookAddDate"></el-input>
+              <el-date-picker v-model="book.book.bookAddDate" type="date" placeholder="选择日期 " format="YYYY/MM/DD"
+                value-format="YYYY-MM-DD" />
             </el-form-item>
             <el-form-item label="数量">
               <el-input v-model="book.book.bookNum" :model-value="book.book.bookNum"></el-input>
@@ -67,11 +67,6 @@
 
         </el-collapse>
 
-
-
-
-
-
         <el-row justify="space-evenly">
           <el-col span="24">
             <el-button type="primary" @click="alter()">修改</el-button>
@@ -80,30 +75,35 @@
             <el-button type="success" @click="back()">返回</el-button>
           </el-col>
         </el-row>
-      </el-form>
-    </div>
 
-    <div style="width: 30%;float: right">
-      <el-image :src="book.book.bookPicture" style="width: 100%; height: 100%"></el-image>
-      <el-upload class="upload-demo" drag action="" multiple limit="1">
-        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-        <div class="el-upload__text">
-          Drop file here or <em>click to upload</em>
-        </div>
-        <template #tip>
-          <div class="el-upload__tip">
-            jpg/png files with a size less than 500kb
+      </div>
+
+      <div style="width: 40%;float: right;margin-right: 1%">
+        <el-image :src='book.book.bookPicture' style="width: 100%; height: 50%" v-show="havePicture"></el-image>
+        <el-button type="warning" v-show="havePicture"><a href="api/test/download">下载图片</a></el-button>
+        <el-button @click="havePicture = !havePicture" type="primary" v-show="havePicture">清空图片</el-button>
+        <el-upload class=" upload-demo" drag action="api/test/up" multiple limit="100" encytype="multipart/form-data"
+          ref="pict" name="photo" v-show="!havePicture" @keydown.y="handleBookPicture()">
+          <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+          <div class="el-upload__text">
+            <em>图片拖入</em> 或<em>点击上传</em>
+            <p> 确定后点击 Y 键可查看上传的图片</p>
+            重新上传图片请先清空列表
           </div>
-        </template>
-      </el-upload>
-    </div>
-
+          <template #tip>
+            <div class="el-upload__tip">
+              只能上传图片
+            </div>
+          </template>
+        </el-upload>
+      </div>
+    </el-form>
   </div>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router";
-import { reactive, onBeforeMount, toRef } from "vue";
+import { reactive, onBeforeMount, toRef, ref } from "vue";
 import axios from "axios";
 import { UploadFilled } from '@element-plus/icons-vue'
 let router = useRouter()
@@ -112,6 +112,22 @@ const prop = defineProps(['bookId'])
 
 let bookId = toRef(prop, 'bookId')
 console.log(bookId.value + "!!!!!!!!!!!!!!!!!!!!!!")
+
+
+let havePicture = ref(true);
+let handleBookPicture = (() => {
+  setTimeout(() => {
+    axios.get('api/getPicture').then(Response => {
+      book.book.bookPicture = Response.data
+      if (book.book.bookPicture != null && book.book.bookPicture != "")
+        console.log(book.book.bookPicture + "图片")
+      havePicture.value = true
+    }).catch(Error => {
+      alert(Error.message)
+    })
+  }, 500);
+})
+
 
 const book = reactive({
   book: {
@@ -129,13 +145,23 @@ const book = reactive({
   }
 })
 
-
+let series = ref('')
 onBeforeMount(async () => {
   await axios.get(`api/lookup?bookId=${bookId.value}`).then(Response => {
     book.book = Response.data
     console.log(book.book.bookName + "@@@@@@@@@@@@@@@@@@@@@@@@@@@")
   })
+  await axios.get('api/series').then(Response => {
+    series.value = Response.data
+    console.log(series.value)
+  }).catch(Error => {
+    alert(Error.message)
+  })
 })
+
+
+
+
 
 
 let alter = (() => {

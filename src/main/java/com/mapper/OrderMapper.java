@@ -15,21 +15,17 @@ import java.util.List;
  */
 @Repository
 public interface OrderMapper extends BaseMapper<Order>{
-        @Select("select v.userId,b.bookId,a.bagId,b.bookName,b.bookPicture,b.bookPrice,a.bookNumber,a.addTime from book as b,bag as a,user as v where a.bookId=b.bookId and a.userId=v.userId and v.userId=#{userId} order by bagId asc limit #{pageStart},5")
+//        @Select("select v.userId,b.bookId,a.bagId,b.bookName,b.bookPicture,b.bookPrice,a.bookNumber,a.addTime from book as b,bag as a,user as v where a.bookId=b.bookId and a.userId=v.userId and v.userId=#{userId} order by bagId asc limit #{pageStart},5")
         List<Order> userGetAll(Integer userId, Integer pageStart);
 
-        @Select("select bagId,bookNumber,addTime,bookName,bookPicture,bookPrice,userName from book,bag,user where bag.bookId=book.bookId and bag.userId=user.userId limit #{pageStart},5 ")
+//        @Select("select bagId,bookNumber,addTime,bookName,bookPicture,bookPrice,userName from book,bag,user where bag.bookId=book.bookId and bag.userId=user.userId limit #{pageStart},5 ")
         List<Order> adminGetAll(Integer pageStart);
 
-        @Insert("insert into bag(bookId, userId, bookNumber) values(#{bookId},#{userId},#{bookNumber})")
-        public boolean addBag(Order order) ;
+//        public boolean addBag(Order order) ;
 
-        @Delete("delete from bag where bagId=#{bagId}")
-        public boolean deleteBag(Integer bagId) ;
+//        public boolean deleteBag(Integer bagId) ;
 
-        @Select("select count(*) from bag")
-        public Long adminGetCount();
+//        public Long adminGetCount();
 
-        @Select("select count(*) from bag where bag.userId=#{userId}")
-        public Long userGetCount(Integer userId) ;
+//        public Long userGetCount(Integer userId) ;
 }

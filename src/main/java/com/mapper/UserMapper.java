@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Repository
 public interface UserMapper extends BaseMapper<User> {
+      public User getById(Integer userId);
 
 //    @Select("select * from user where userPetName=#{userPetName} and userPassword=#{userPassword}")
 //    public User getByLogin(User user);

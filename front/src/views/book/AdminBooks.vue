@@ -1,5 +1,6 @@
 <template>
   <el-button @click="add()" type="info" style="margin-top: 1%">添加新书籍</el-button>
+  <el-button type="warning"><a href="api/exportExcel">excel表格导出所有书籍</a></el-button>
   <el-table stripe :data="books" :highlight-current-row=true height="100%" style="width: 96%; margin-left:2%"
     label-width="30%">
     <!--    <el-table-column prop="bookId" label="书籍编号" width="120px"></el-table-column>-->

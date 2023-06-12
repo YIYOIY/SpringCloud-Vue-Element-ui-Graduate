@@ -16,4 +16,6 @@ public interface BookService extends IService<Book> {
         boolean deleteBook(Integer bookId);
         boolean updateBook(Book Book);
         Long getCount(String keyword);
+
+        List<Book> selectBySeries(String seriesName);
 }

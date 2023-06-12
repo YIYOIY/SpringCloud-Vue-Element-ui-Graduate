@@ -56,6 +56,9 @@ let alter = ((v) => {
   })
 })
 
+import { useStore } from "vuex";
+const store = useStore()
+
 let del = ((v) => {
   // axios.post(`api/user`,
   //     {_method:'delete',userId:`${v}`}
@@ -64,7 +67,15 @@ let del = ((v) => {
     axios.delete(`api/user?userId=${v}`,
     ).then(Response => {
       let message = Response.data
+      if (store.state.userId == v) {
+        sessionStorage.removeItem('user')
+        store.state.userId = '';
+        store.state.userName = '';
+        store.state.userPassword = '';
+        store.state.isUser = false;
+      }
       alert(message)
+
       axios.get('api/users').then(Response => {
         users.value = Response.data
       })

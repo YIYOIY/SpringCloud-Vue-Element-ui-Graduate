@@ -1,5 +1,29 @@
 <template>
-	<el-table stripe :data="books" highlight-current-row="true" height="600" style="width: 100%;margin-top: 1%"
+	<el-row :gutter="10" align="left">
+		<el-col title="按系列查询" :span="8">
+			<el-form-item label="系列">
+				<el-select v-model="seriesName" :model-value="seriesName" clearable placeholder="请选择系列"
+					@change="selectBySeries" clear-icon="<el-icon><CloseBold /></el-icon>">
+					<el-option v-for="item in series" :key="item.seriesId" :label="item.seriesName"
+						:value="item.seriesName"></el-option>
+				</el-select>
+				<el-icon class="is-loading">
+					<Loading />
+				</el-icon>
+			</el-form-item>
+		</el-col>
+		<el-col title="按书名查询" :span="5">
+			<el-form-item label="书籍">
+				<el-input v-model="searchName" type="text" clearable placeholder="请输入书名">
+				</el-input>
+			</el-form-item>
+		</el-col>
+		<el-col :span="2">
+			<el-button type="primary" @click="selectByName">查询</el-button>
+		</el-col>
+	</el-row>
+
+	<el-table stripe :data="books" :highlight-current-row=true height="600" style="width: 100%;margin-top: 1%"
 		label-width="20%">
 		<!--    <el-table-column prop="bookId" label="书籍编号" width="120px"></el-table-column>-->
 		<el-table-column fixed prop="bookPicture" label="封面">
@@ -29,10 +53,12 @@
 		</el-table-column>
 	</el-table>
 </template>
+
 <script setup>
 import {
 	reactive,
-	ref
+	ref,
+	onBeforeMount
 } from "vue";
 
 import {
@@ -45,9 +71,36 @@ import {
 	useStore
 } from "vuex";
 
+
 let books = ref([])
 let router = useRouter()
 let store = useStore()
+
+
+let searchName = ref('')
+let selectByName = (() => {
+	axios.get(`api/book?searchName=${searchName.value}`).then(Response => {
+		books.value = Response.data
+	})
+})
+
+let series = ref('')
+onBeforeMount(async () => {
+	await axios.get('api/series').then(Response => {
+		series.value = Response.data
+	})
+})
+
+let seriesName = ref('')
+let selectBySeries = (() => {
+	console.log(seriesName.value)
+	axios.get(`api/selectBySeries?seriesName=${seriesName.value}`).then(Response => {
+		books.value = Response.data
+		console.log(books.value + "按照系列查询")
+	})
+})
+
+
 
 axios.get('api/book').then(Response => {
 	books.value = Response.data
@@ -99,6 +152,9 @@ let buy = ((v) => {
 		})
 	}
 })
+
+
+
 </script>
 
 <style scoped>

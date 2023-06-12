@@ -12,6 +12,7 @@ import com.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -79,5 +80,16 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
     @Override
     public Long getCount(String keyword) {
         return bookMapper.getCount(keyword);
+    }
+
+    @Override
+    public List<Book> selectBySeries(String seriesName) {
+        QueryWrapper<Category> categoryQueryWrapper = new QueryWrapper<>();
+        QueryWrapper<Category> eq = categoryQueryWrapper.select("series_id").eq("series_name", seriesName);
+        Category category = categoryMapper.selectOne(eq);
+
+        HashMap bookHashMap = new HashMap<String,Integer>();
+        bookHashMap.put("series_id",category.getSeriesId());
+        return bookMapper.selectByMap(bookHashMap);
     }
 }

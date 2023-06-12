@@ -86,7 +86,7 @@ public class ExcelController {
         try {
             workbook = new XSSFWorkbook(photo.getInputStream());
             List<Book> bookList = readExcelValue(workbook);
-            System.out.println(bookList.toString());
+//            System.out.println(bookList.toString());
             bookList.forEach(e->{
 //                此处可以修改便利导入数据库，注意sql命令并没有补全，目前仅仅是作为一个测试用的sql，有很大的问题
                 System.out.println(e+"\n\n\n\n\n正在进行插入操作\n\n\n\n\n\n\n\n\n\n\n");

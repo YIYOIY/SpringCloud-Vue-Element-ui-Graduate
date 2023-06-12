@@ -107,6 +107,11 @@ let back = (() => {
   if (confirm("确认注销?")) {
     axios.delete(`api/user?userId=${store.state.userId}`,
     ).then(Response => {
+      sessionStorage.removeItem('user')
+      store.state.userId = '';
+      store.state.userName = '';
+      store.state.userPassword = '';
+      store.state.isUser = false;
       let message = Response.data
       alert(message)
       store.state.isUser = false

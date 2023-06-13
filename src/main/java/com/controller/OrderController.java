@@ -68,7 +68,7 @@ public class OrderController {
         try {
             boolean addBag = orderService.addOrder(order);
             if (addBag) {
-                return ResponseEntity.ok("添加成功");
+                return ResponseEntity.ok("购买成功");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("添加失败");
             }

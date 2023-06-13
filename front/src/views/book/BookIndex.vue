@@ -1,9 +1,21 @@
 <template>
-	<el-row :gutter="10" align="left">
+	<div style="width: 100%;height: 100%;margin: 5px 10px">
+		<el-carousel style="width: 100%;height: 100%" :interval=400 :initial-index=0 height="450px" direction="horizontal"
+			type="card" :autoplay="true" arrow="hover" pause-on-hover loop indicator-position="outside" trigger="hover">
+			<el-carousel-item v-for="item in books" :key="item.bookId">
+				<el-image :src=item.bookPicture style="width: 40%" @click="inf(item.bookId)">
+				</el-image>
+			</el-carousel-item>
+		</el-carousel>
+	</div>
+
+
+
+	<el-row :gutter="10">
 		<el-col title="按系列查询" :span="8">
 			<el-form-item label="系列">
 				<el-select v-model="seriesName" :model-value="seriesName" clearable placeholder="请选择系列"
-					@change="selectBySeries" clear-icon="<el-icon><CloseBold /></el-icon>">
+					@change="selectBySeries">
 					<el-option v-for="item in series" :key="item.seriesId" :label="item.seriesName"
 						:value="item.seriesName"></el-option>
 				</el-select>
@@ -28,7 +40,7 @@
 		<!--    <el-table-column prop="bookId" label="书籍编号" width="120px"></el-table-column>-->
 		<el-table-column fixed prop="bookPicture" label="封面">
 			<template v-slot="scope">
-				<el-image :src="scope.row.bookPicture" style="width: 100%;height: 100%;">
+				<el-image :src="scope.row.bookPicture" style="width: 100%;height: 100%;" @click="inf(scope.row.bookId)">
 				</el-image>
 			</template>
 		</el-table-column>
@@ -36,10 +48,10 @@
 		<el-table-column prop="bookName" class-name="bookName" label="书名"></el-table-column>
 		<el-table-column prop="bookAuthor" label="作者"></el-table-column>
 		<el-table-column prop="seriesName" label="系列"></el-table-column>
-		<el-table-column prop="bookPrice" label="价格"></el-table-column>
-		<el-table-column prop="bookAddDate" label="发布日期"></el-table-column>
+		<el-table-column prop="bookPrice" label="价格" sortable></el-table-column>
+		<el-table-column prop="bookAddDate" label="发布日期" sortable></el-table-column>
 		<el-table-column prop="bookFactory" label="出版社"></el-table-column>
-		<el-table-column prop="booknum" label="库存">
+		<el-table-column prop="booknum" label="库存" sortable>
 			<template v-slot="scope">
 				<el-tag type="success">{{ scope.row.bookNum }}</el-tag>
 			</template>
@@ -51,6 +63,7 @@
 					v-show="scope.row.bookNum > 0">购买</el-button>
 			</template>
 		</el-table-column>
+
 	</el-table>
 </template>
 
@@ -70,6 +83,7 @@ import axios from 'axios'
 import {
 	useStore
 } from "vuex";
+import { ElMessage } from "element-plus";
 
 
 let books = ref([])
@@ -93,10 +107,8 @@ onBeforeMount(async () => {
 
 let seriesName = ref('')
 let selectBySeries = (() => {
-	console.log(seriesName.value)
 	axios.get(`api/selectBySeries?seriesName=${seriesName.value}`).then(Response => {
 		books.value = Response.data
-		console.log(books.value + "按照系列查询")
 	})
 })
 
@@ -141,12 +153,26 @@ let buy = ((v) => {
 			}
 		}).then(Response => {
 			let message = Response.data;
-			console.log(message);
-			if (confirm(message + "是否前往购物车?")) {
-				router.push({
-					name: 'userOrder'
-				})
-			}
+			ElMessage({
+				showClose: true,
+				message: message,
+				type: 'success'
+			})
+			// ElMessage.warning({
+			// showClose: true,
+			// message: '是否前往购物车?',
+			// type: 'warning',
+			// onClose: () => {
+			// 	router.push({
+			// 		name: 'userOrder'
+			// 	})
+			// }
+			// })
+			// if (confirm(message + "是否前往购物车?")) {
+			// 	router.push({
+			// 		name: 'userOrder'
+			// 	})
+			// }
 		}).catch(Error => {
 			console.log(Error)
 		})

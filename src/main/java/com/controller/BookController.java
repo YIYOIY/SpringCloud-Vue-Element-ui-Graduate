@@ -180,7 +180,7 @@ public class BookController {
             }
 //            }
         } catch (Exception e) {
-            throw new SelfExcept("bookController的delete出现的问题");
+            throw new SelfExcept("bookController的delete出现的问题"+e);
         } finally {
 //            GetDriver.closeresource(getconnection, null);
         }

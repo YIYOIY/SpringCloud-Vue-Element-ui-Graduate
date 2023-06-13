@@ -1,7 +1,7 @@
 <template >
   <div id="building">
     <div class="allbc">
-      <el-card class="box-card" shadow="ahoverlways">
+      <el-card class="box-card" shadow="hover">
         <template #header>
           <div class="card-header">
             <span>登录页面</span>
@@ -11,22 +11,23 @@
         </template>
 
         <template #default>
-          <el-form :rules="rule" status-icon :model="people" size="large" label-position="right" ref="form">
+          <el-form :rules="rule" status-icon :model="people" label-width="100px" label-position="left" ref="form"
+            style="max-width: 500px" size="large">
             <el-form-item label="用户名" prop="userName">
-              <el-input type="text" v-model="people.userName"></el-input>
+              <el-input type="text" v-model="people.userName" clearable></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-              <el-input type="password" show-password v-model="people.password"></el-input>
+              <el-input type="password" show-password v-model="people.password" clearable></el-input>
             </el-form-item>
 
             <el-form-item label="身份识别" prop="userType">
               <el-row justify="space-between" :gutter="20">
                 <el-radio-group v-model="people.userType" title="身份">
                   <el-col :span="8" title="管理员">
-                    <el-radio label="admin"></el-radio>
+                    <el-radio label="admin">管理员</el-radio>
                   </el-col>
                   <el-col :span="8" :offset="8" title="用户">
-                    <el-radio label="user"></el-radio>
+                    <el-radio label="user">用户</el-radio>
                   </el-col>
                 </el-radio-group>
               </el-row>
@@ -55,6 +56,7 @@ import { useStore } from "vuex";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
+import { ElMessage } from "element-plus";
 
 // onMounted(() => {
 //   // 为了方便编写代码
@@ -81,7 +83,7 @@ const rule = reactive({
   password: [{
     required: true,
     message: '你他妈的密码错了我就弹窗骂你',
-    trigger: 'blur'
+    trigger: 'change'
   }],
   userType: [{
     required: true,
@@ -139,10 +141,18 @@ const submitForm = () => {
 
   function insert(resp) {
     if (!resp) {
-      alert("用户名或密码错误!你他妈的大傻逼!")
+      ElMessage({
+        showClose: true,
+        message: '用户名或密码错误!你他妈的大傻逼!',
+        type: 'error'
+      })
     } else {
       if (type === 'admin') {
-        alert('当前给vuex赋值管理员')
+        ElMessage({
+          showClose: true,
+          message: '当前给vuex赋值管理员',
+          type: 'success'
+        })
         store.state.adminName = resp.adminName
         store.state.adminPassword = resp.adminPassword
         store.state.isAdmin = true
@@ -150,7 +160,12 @@ const submitForm = () => {
           path: '/admin'
         })
       } else {
-        alert('当前给vuex赋值用户')
+        ElMessage({
+          showClose: true,
+          message: '当前给vuex赋值用户',
+          type: 'success'
+        })
+        ElMessage.success('登录成功')
         store.state.userName = resp.userName
         store.state.userPassword = resp.userPassword
         store.state.userId = resp.userId
@@ -198,7 +213,7 @@ function enroll() {
 }
 
 .allbc {
-  margin: 5% 20%;
+  margin: 5% 30%;
   z-index: 1;
   opacity: 0.9;
 }

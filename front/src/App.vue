@@ -12,8 +12,20 @@
       <component :is="Component" :key="route.name" v-if="!route.meta.keepAlive" />
     </router-view>
   </div>
-
-
+  <el-backtop :right="20" :bottom="30">
+    <div style="
+        height: 100%;
+        width: 100%;
+        background-color: white;
+        box-shadow: var(--el-box-shadow-lighter);
+        text-align: center;
+        line-height: 40px;
+        color: rgb(109, 229, 151);
+        border-radius:15px;
+      ">
+      UP
+    </div>
+  </el-backtop>
   <div class="footer">
 
   </div>

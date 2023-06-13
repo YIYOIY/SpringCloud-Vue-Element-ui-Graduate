@@ -25,12 +25,15 @@
 						}}</span>
 					</div>
 					<h4 class="h3" style="float: left; width: 100%">
-						<span style="margin-right: 20%">购买数量:</span>{{ number }}
+						<span style="margin-right: 20%">购买数量:</span>
+						<el-slider v-model="number" show-input :max="book.book.bookNum" />
 					</h4>
 					<div style="text-align: center; margin-top: 2%">
-						<el-button @click="number++" type="info" round v-show="book.book.bookNum > number">加一</el-button>
-						<el-button @click="number--" type="info" round v-if="number > 1">减一</el-button>
-						<el-button style="float: left; width: 50%" type="warning" @click="buy()">购买</el-button>
+						<!-- <el-button @click="number++" type="info" round v-show="book.book.bookNum > number">加一</el-button> -->
+						<!-- <el-button @click="number--" type="info" round v-if="number > 1">减一</el-button> -->
+
+						<el-button style=" float: left; width: 50%" type="success" @click="buy()"
+							v-show="book.book.bookNum >= 1">购买</el-button>
 						<el-button type="primary" @click="cancelBuy()">返回</el-button>
 					</div>
 				</el-card>
@@ -74,7 +77,7 @@ import { useStore } from "vuex";
 let router = useRouter();
 let store = useStore();
 import { reactive, ref } from "vue";
-let number = ref(1);
+let number = ref(1)
 const props = defineProps(["id"]);
 
 // let book = ref(null)
@@ -129,7 +132,6 @@ let buy = () => {
 		});
 	} else {
 		bag.bookNum = number.value;
-		console.log(bag.bookNum + "购买数量");
 		let addBag = JSON.stringify(bag);
 		axios
 			.post(`api/order`, addBag, {

@@ -3,28 +3,32 @@
     <navgation-index />
   </div>
 
+  <el-affix :offset="20">
 
-  <el-button type="success" v-if="login">
-    <router-link to="/login">登录</router-link>
-  </el-button>
 
-  <el-button type="primary" v-if="login">
-    <router-link :to="{
-        path: '/adduser',
-        query: {
-          enroll: true
+
+    <el-button type="success" v-if="login">
+      <router-link to="/login">登录</router-link>
+    </el-button>
+
+    <el-button type="primary" v-if="login">
+      <router-link :to="{
+          path: '/adduser',
+          query: {
+            enroll: true
+          }
         }
-      }
-      ">注册
-    </router-link>
-  </el-button>
+        ">注册
+      </router-link>
+    </el-button>
 
-  <el-button type="info" v-if="!login">
-    <router-link to="/login">切换账号</router-link>
-  </el-button>
-  <el-button type="danger" v-if="!login" @click="loginout()">
-    <router-link to="/login">退出账号</router-link>
-  </el-button>
+    <el-button type="info" v-if="!login">
+      <router-link to="/login">切换账号</router-link>
+    </el-button>
+    <el-button type="danger" v-if="!login" @click="loginout()">
+      <router-link to="/login">退出账号</router-link>
+    </el-button>
+  </el-affix>
   <h1 :style="{ opacity: opacity }">路上捡的书<sub>买不买不买滚</sub></h1>
 </template>
 

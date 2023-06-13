@@ -25,7 +25,7 @@
         <span>{{ scope.row.book.bookPrice }} 元</span>
       </template>
     </el-table-column>
-    <el-table-column prop="total" label="总价">
+    <el-table-column prop="total" label="总价" sortable>
       <template v-slot="scope">
         <span>{{ scope.row.book.bookPrice * scope.row.bookNum }} 元</span>
       </template>
@@ -52,6 +52,7 @@ import { onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from 'axios'
 import { useStore } from "vuex";
+import { ElMessage, ElNotification } from "element-plus";
 let order = ref([])
 
 let pageNo = ref(1);
@@ -79,12 +80,12 @@ let buy = ((v, num, bookId) => {
   if (confirm("确认购买?")) {
     axios.put(`api/buyOrder?orderId=${v}&num=${num}&bookId=${bookId}`).then(Response => {
       let message = Response.data
-      alert(message)
+      ElMessage.success(message)
       axios.get(`api/userOrder?pageNo=${pageNo.value}&userId=${store.state.userId}`).then(Response => {
         order.value = Response.data
       })
     }).catch(Error => {
-      alert(Error.message + "请稍后重试!")
+      ElMessage.error(Error.message + "请稍后重试!")
     })
   }
 })
@@ -93,12 +94,12 @@ let del = ((v) => {
   if (confirm("确认删除?")) {
     axios.delete(`api/order?orderId=${v}`).then(Response => {
       let message = Response.data
-      alert(message)
+      ElNotification.success(message)
       axios.get(`api/userOrder?pageNo=${pageNo.value}&userId=${store.state.userId}`).then(Response => {
         order.value = Response.data
       })
     }).catch(Error => {
-      alert(Error.message + "请稍后重试!")
+      ElMessage.error(Error.message + "请稍后重试!")
     })
   }
 })

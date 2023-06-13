@@ -8,16 +8,22 @@
     </el-table-column>
     <el-table-column prop="book.bookName" class-name="bookName" label="书名"></el-table-column>
     <el-table-column prop="book.bookAddDate" label="上架日期"></el-table-column>
-    <el-table-column prop="orderTime" label="购买日期">
+
+    <el-table-column prop="orderTime" label="购买日期" width="250px">
       <template v-slot="scope">
-        <el-date-picker size="small" v-model="scope.row.orderTime" type="date" format="YYYY/MM/DD-HH-mm-ss"
-          placeholder="购买日期" disabled style="font-size:xx-small">
+        <el-date-picker size="small" v-model="scope.row.orderTime" type="datetime" format="YYYY年MM月DD日HH时mm分ss秒"
+          placeholder="购买日期" disabled>
         </el-date-picker>
       </template>
     </el-table-column>
-    <el-table-column prop="bookNum" label="购买数量">
+    <el-table-column prop=" bookNum" label="购买数量">
       <template v-slot="scope">
         <span>{{ scope.row.bookNum }} 本</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="book.bookNum" label="库存数量">
+      <template v-slot="scope">
+        <span>{{ scope.row.book.bookNum }} 本</span>
       </template>
     </el-table-column>
     <el-table-column prop="book.bookPrice" label="单价">
@@ -31,11 +37,11 @@
       </template>
     </el-table-column>
     <el-table-column prop="orderStatus" label="状态"></el-table-column>
-    <el-table-column prop="[orderId,orderStutus]" label="操作">
+    <el-table-column prop="[orderId,orderStutus,book.bookNum]" label="操作">
       <template v-slot="scope">
         <el-button class="el-button" round color="#626aef"
           @click="buy(scope.row.orderId, scope.row.bookNum, scope.row.bookId)"
-          :disabled="scope.row.orderStatus == `已购买`">购买</el-button>
+          :disabled="(scope.row.orderStatus == `已购买`) || (scope.row.bookNum > scope.row.book.bookNum)">购买</el-button>
 
         <el-button class="el-button" round type="danger" @click="del(scope.row.orderId)">删除</el-button>
       </template>
@@ -80,12 +86,16 @@ let buy = ((v, num, bookId) => {
   if (confirm("确认购买?")) {
     axios.put(`api/buyOrder?orderId=${v}&num=${num}&bookId=${bookId}`).then(Response => {
       let message = Response.data
-      ElMessage.success(message)
+      ElNotification.success({
+        message: message,
+        position: 'top-left',
+        title: '购买成功'
+      })
       axios.get(`api/userOrder?pageNo=${pageNo.value}&userId=${store.state.userId}`).then(Response => {
         order.value = Response.data
       })
-    }).catch(Error => {
-      ElMessage.error(Error.message + "请稍后重试!")
+    }).catch(error => {
+      ElMessage.error(error.response.data)
     })
   }
 })

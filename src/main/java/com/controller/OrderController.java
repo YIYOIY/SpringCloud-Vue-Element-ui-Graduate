@@ -93,12 +93,12 @@ public class OrderController {
     @PutMapping("/buyOrder")
     public ResponseEntity<String> buybag(Integer orderId,Integer num,Integer bookId) {
         try {
-            stringRedisTemplate.delete("books");
             boolean addBag = orderService.updateOrder(orderId,num,bookId);
             if (addBag) {
+                stringRedisTemplate.delete("books");
                 return ResponseEntity.ok("购买成功");
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("购买失败");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("购买失败");
             }
         } catch (Exception e) {
             throw new SelfExcept(e + "bagController的delete出现的问题");

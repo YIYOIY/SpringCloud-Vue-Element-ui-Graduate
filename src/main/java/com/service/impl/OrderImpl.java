@@ -59,15 +59,19 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
 
     @Override
     public boolean updateOrder(Integer orderId,Integer num,Integer bookId) {
-        UpdateWrapper<Order> orderUpdateWrapper = new UpdateWrapper<>();
-        UpdateWrapper<Order> up = orderUpdateWrapper.set("order_status", "已购买").eq("order_id", orderId);
-
-//        设置书籍数量同步更新
-        UpdateWrapper<Book> bookUpdateWrapper = new UpdateWrapper<>();
+        //        设置书籍数量同步更新，同时核查书籍库存是否足够用户购买数量
         QueryWrapper<Book> bookQueryWrapper = new QueryWrapper<>();
         QueryWrapper<Book> eq1 = bookQueryWrapper.select("book_num").eq("book_id", bookId);
         Book book = bookMapper.selectOne(eq1);
+        if(book.getBookNum()<num){
+            return false;
+        }
+//        设置书籍数量更新
+        UpdateWrapper<Book> bookUpdateWrapper = new UpdateWrapper<>();
         UpdateWrapper<Book> eq = bookUpdateWrapper.set("book_num", book.getBookNum()-num).eq("book_id", bookId);
+
+        UpdateWrapper<Order> orderUpdateWrapper = new UpdateWrapper<>();
+        UpdateWrapper<Order> up = orderUpdateWrapper.set("order_status", "已购买").eq("order_id", orderId);
 
         return (orderMapper.update(null,up)>0 && bookMapper.update(null,eq)>0);
     }

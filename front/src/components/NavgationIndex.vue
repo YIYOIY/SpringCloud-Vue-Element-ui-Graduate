@@ -62,7 +62,7 @@
       <el-menu-item-group>
         <template #title>个人中心</template>
         <el-menu-item index="3-1"><router-link to="/user" active-class="active-class"
-            exact-active-class="exact-active">用户信息</router-link></el-menu-item>
+            exact-active-class="exact-active">个人信息</router-link></el-menu-item>
         <el-menu-item index="3-2"><router-link to="/userOrder" active-class="active-class"
             exact-active-class="exact-active">购物车</router-link></el-menu-item>
       </el-menu-item-group>

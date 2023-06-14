@@ -27,12 +27,13 @@
     </div>
   </el-backtop>
   <div class="footer">
-
+    <FooterIndex />
   </div>
 </template>
 
 <script setup>
 import HeaderIndex from "@/components/HeaderIndex.vue";
+import FooterIndex from "./components/FooterIndex.vue";
 
 const debounce = (fn, delay) => {
   let timer = null;
@@ -70,6 +71,11 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 
 .footer {
   height: 10%;
+  width: 100%;
+  top: 90%;
+  left: 30%;
+  position: absolute;
+  z-index: 1;
 }
 
 a {

@@ -31,9 +31,7 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
 //        return orderMapper.userGetAll(userId, pageStart);
 //        QueryWrapper<Order> orderQueryWrapper = new QueryWrapper<>();
 //        QueryWrapper<Order> user = orderQueryWrapper.eq("user_id", userId);
-
         List<Order> orders = orderMapper.userGetAll(userId,page);
-        System.out.println(orders);
         return orders;
     }
 
@@ -84,5 +82,10 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
     @Override
     public Long userGetCount(Integer userId) {
         return orderMapper.selectCount(new QueryWrapper<Order>().eq("user_id",userId).and(i->i.isNotNull("book_id")));
+    }
+
+    @Override
+    public Order getId(Integer orderId) {
+        return orderMapper.getId(orderId);
     }
 }

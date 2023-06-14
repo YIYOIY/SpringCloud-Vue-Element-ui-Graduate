@@ -20,4 +20,6 @@ public interface OrderService extends IService<Order> {
     boolean updateOrder(Integer bagId,Integer num,Integer bookId);
     Long adminGetCount();
     Long userGetCount(Integer userId);
+
+    Order getId(Integer orderId);
 }

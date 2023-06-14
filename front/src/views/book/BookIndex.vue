@@ -1,6 +1,6 @@
 <template>
-	<div style="width: 100%;height: 100%;margin: 5px 10px">
-		<el-carousel style="width: 100%;height: 100%" :interval=400 :initial-index=0 height="450px" direction="horizontal"
+	<div style="width: 100%;height: 100%;margin: 2% 10px">
+		<el-carousel style="width: 100%;height: 100%" :interval=400 :initial-index=0 height="550px" direction="horizontal"
 			type="card" :autoplay="true" arrow="hover" pause-on-hover loop indicator-position="outside" trigger="hover">
 			<el-carousel-item v-for="item in books" :key="item.bookId">
 				<el-image :src=item.bookPicture style="width: 40%" @click="inf(item.bookId)">
@@ -35,7 +35,7 @@
 		</el-col>
 	</el-row>
 
-	<el-table stripe :data="books" :highlight-current-row=true height="600" style="width: 100%;margin-top: 1%"
+	<el-table stripe :data="books" :highlight-current-row=true height="800" style="width: 100%;margin-top: 1%"
 		label-width="20%">
 		<!--    <el-table-column prop="bookId" label="书籍编号" width="120px"></el-table-column>-->
 		<el-table-column fixed prop="bookPicture" label="封面">
@@ -51,20 +51,26 @@
 		<el-table-column prop="bookPrice" label="价格" sortable></el-table-column>
 		<el-table-column prop="bookAddDate" label="发布日期" sortable></el-table-column>
 		<el-table-column prop="bookFactory" label="出版社"></el-table-column>
-		<el-table-column prop="booknum" label="库存" sortable>
-			<template v-slot="scope">
-				<el-tag type="success">{{ scope.row.bookNum }}</el-tag>
-			</template>
-		</el-table-column>
+		<el-table-column prop="bookNum" label="库存" sortable></el-table-column>
 		<el-table-column prop="bookId" label="操作">
 			<template v-slot="scope">
-				<el-button class="el-button" round type="success" @click="inf(scope.row.bookId)">详情</el-button>
+				<el-button class="el-button" round type="success" @click="inf(scope.row.bookId)">书籍详情</el-button>
 				<el-button class="el-button" round @click="buy(scope.row.bookId)"
-					v-show="scope.row.bookNum > 0">购买</el-button>
+					v-show="scope.row.bookNum > 0">加入购物车</el-button>
 			</template>
 		</el-table-column>
 
 	</el-table>
+
+	<div style="width: 100%;height: 100%;margin: 15% 30%">
+		<el-carousel style="width: 100%;height: 100%" :interval=400 :initial-index=0 height="550px" direction="vertical"
+			type="card" :autoplay="true" arrow="hover" pause-on-hover loop indicator-position="outside" trigger="hover">
+			<el-carousel-item v-for="item in books" :key="item.bookId">
+				<el-image :src=item.bookPicture style="width: 50%" @click="inf(item.bookId)">
+				</el-image>
+			</el-carousel-item>
+		</el-carousel>
+	</div>
 </template>
 
 <script setup>

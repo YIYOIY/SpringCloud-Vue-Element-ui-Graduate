@@ -62,13 +62,20 @@ public class OrderController {
         }
     }
 
+    @ResponseBody
+    @GetMapping("/order")
+    public Order getOrderById(Integer orderId){
+        Order byId = orderService.getId(orderId);
+        return byId;
+    }
+
 
     @PostMapping("/order")
     public ResponseEntity<String> addOrder(@RequestBody Order order) {
         try {
             boolean addBag = orderService.addOrder(order);
             if (addBag) {
-                return ResponseEntity.ok("购买成功");
+                return ResponseEntity.ok("添加成功");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("添加失败");
             }

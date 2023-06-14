@@ -14,14 +14,10 @@
     <el-table-column prop="bookName" class-name="bookName" label="书名"></el-table-column>
     <el-table-column prop="bookAuthor" label="作者"></el-table-column>
     <el-table-column prop="seriesName" label="系列"></el-table-column>
-    <el-table-column prop="bookPrice" label="价格"></el-table-column>
-    <el-table-column prop="bookAddDate" label="发布日期"></el-table-column>
+    <el-table-column prop="bookPrice" label="价格" sortable></el-table-column>
+    <el-table-column prop="bookAddDate" label="发布日期" sortable></el-table-column>
     <el-table-column prop="bookFactory" label="出版社"></el-table-column>
-    <el-table-column prop="booknum" label="库存">
-      <template v-slot="scope">
-        <el-tag type="success">{{ scope.row.bookNum }}</el-tag>
-      </template>
-    </el-table-column>
+    <el-table-column prop="bookNum" label="库存" sortable></el-table-column>
     <el-table-column prop="bookId" label="操作">
       <template v-slot="scope">
         <el-button class="el-button" round color="#626aef" @click="alter(scope.row.bookId)">修改</el-button>

@@ -25,6 +25,7 @@ import Category from "@/views/category/Category.vue";
 
 import AdminOrder from "@/views/order/AdminOrder.vue";
 import UserOrder from "@/views/order/UserOrder.vue";
+import OrderConfirm from "@/views/order/OrderConfirm.vue";
 
 export default createRouter({
   history: createWebHistory(),
@@ -291,6 +292,24 @@ export default createRouter({
           }
         }
       },
-    },
+    },{
+      name:'orderConfirm',
+      path:'/orderConfirm',
+      component:OrderConfirm,
+      beforeEnter: (to, from, next) => {
+        if (to.name === "orderConfirm") {
+          if (store.state.isUser||store.state.isAdmin) {
+            next();
+          } else {
+            next({path:'/login'});
+          }
+        }
+      },
+      props({query}){
+        return{
+          orderId: query.orderId,
+        }
+      }
+    }
   ],
 });

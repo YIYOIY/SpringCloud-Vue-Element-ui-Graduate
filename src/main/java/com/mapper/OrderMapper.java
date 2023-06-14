@@ -21,6 +21,8 @@ public interface OrderMapper extends BaseMapper<Order>{
 //        @Select("select bagId,bookNumber,addTime,bookName,bookPicture,bookPrice,userName from book,bag,user where bag.bookId=book.bookId and bag.userId=user.userId limit #{pageStart},5 ")
         List<Order> adminGetAll(Integer pageStart);
 
+        Order getId(Integer orderId);
+
 //        public boolean addBag(Order order) ;
 
 //        public boolean deleteBag(Integer bagId) ;

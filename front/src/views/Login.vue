@@ -46,7 +46,6 @@
         </template>
       </el-card>
     </div>
-    <p class="bot">2023-YOI-https://github.com/YIYOIY/VueAndBook.git</p>
   </div>
 </template>
 
@@ -157,7 +156,7 @@ const submitForm = () => {
         store.state.adminPassword = resp.adminPassword
         store.state.isAdmin = true
         router.push({
-          path: '/admin'
+          path: '/book'
         })
       } else {
         ElMessage({
@@ -171,7 +170,7 @@ const submitForm = () => {
         store.state.userId = resp.userId
         store.state.isUser = true
         router.push({
-          path: '/user',
+          path: '/book',
         })
       }
     }
@@ -216,12 +215,5 @@ function enroll() {
   margin: 5% 30%;
   z-index: 1;
   opacity: 0.9;
-}
-
-.bot {
-  text-align: center;
-  color: rgb(86, 121, 109);
-  margin-top: 8%;
-  opacity: 0.8;
 }
 </style>

@@ -8,10 +8,10 @@
     </el-table-column>
     <el-table-column prop="book.bookName" class-name="bookName" label="书名"></el-table-column>
     <el-table-column prop="user.userName" label="用户"></el-table-column>
-    <el-table-column prop="orderTime" label="购买日期" width="250px">
+    <el-table-column prop="orderTime" label="加入购物车日期" width="250px">
       <template v-slot="scope">
         <el-date-picker size="small" v-model="scope.row.orderTime" type="datetime" format="YYYY年MM月DD日HH时mm分ss秒"
-          placeholder="购买日期" disabled>
+          placeholder="加入购物车日期" disabled>
         </el-date-picker>
       </template>
     </el-table-column>

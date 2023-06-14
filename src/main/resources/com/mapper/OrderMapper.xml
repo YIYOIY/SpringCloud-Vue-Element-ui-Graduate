@@ -12,6 +12,11 @@
         FROM t_order where user_id=#{userId} order By order_time desc
     </select>
 
+    <select id="getId" resultMap="adminGet">
+        SELECT order_id, book_num, user_id, book_id, order_time, order_status
+        FROM t_order where order_id=#{orderId} order By order_time desc
+    </select>
+
     <resultMap id="adminGet" type="order">
         <id column="order_id" property="orderId"></id>
         <result column="book_num" property="bookNum"></result>

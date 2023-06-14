@@ -35,7 +35,7 @@
                 value-format="YYYY-MM-DD" />
             </el-form-item>
             <el-form-item label="数量">
-              <el-input v-model="book.book.bookNum" :model-value="book.book.bookNum"></el-input>
+              <el-input v-model.number="book.book.bookNum" :model-value="book.book.bookNum"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -109,7 +109,6 @@ import { UploadFilled } from '@element-plus/icons-vue'
 let router = useRouter()
 
 const prop = defineProps(['bookId'])
-
 let bookId = toRef(prop, 'bookId')
 console.log(bookId.value + "!!!!!!!!!!!!!!!!!!!!!!")
 

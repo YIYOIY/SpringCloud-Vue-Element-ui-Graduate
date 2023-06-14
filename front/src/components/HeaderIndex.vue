@@ -29,7 +29,7 @@
       <router-link to="/login">退出账号</router-link>
     </el-button>
   </el-affix>
-  <h1 :style="{ opacity: opacity }">路上捡的书<sub>买不买不买滚</sub></h1>
+  <h1 :style="{ opacity: opacity }">当当网 COPY 的书<sub>DangDang</sub></h1>
 </template>
 
 <script setup>

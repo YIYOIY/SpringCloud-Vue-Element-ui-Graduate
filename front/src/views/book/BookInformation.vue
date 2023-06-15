@@ -34,7 +34,8 @@
 
 						<el-button style=" float: left; width: 50%" type="success" @click="buy()"
 							v-show="book.book.bookNum >= 1">加入购物车</el-button>
-						<el-button type="primary" @click="cancelBuy()">返回</el-button>
+
+						<el-button type="primary" @click="back()">返回</el-button>
 					</div>
 				</el-card>
 			</el-col>
@@ -82,9 +83,11 @@ let number = ref(1)
 const props = defineProps(["id"]);
 
 // let book = ref(null)
-let cancelBuy = (() => {
+
+
+let back = (() => {
 	router.push({
-		name: "book",
+		name: "book"
 	});
 })
 
@@ -162,6 +165,9 @@ let buy = () => {
 				console.log(Error);
 			});
 	}
+
+
+
 };
 </script>
 

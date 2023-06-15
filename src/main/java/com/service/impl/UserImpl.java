@@ -51,6 +51,12 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
 
     @Override
     public boolean addUser(User user) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>(user);
+        userQueryWrapper.select("user_password").eq("user_password", user.getUserPassword()).eq("user_name",user.getUserName());
+        User userPassword = userMapper.selectOne(userQueryWrapper);
+        if (userPassword!=null){
+            return false;
+        }
         return userMapper.insert(user) > 0 ? true : false;
     }
 

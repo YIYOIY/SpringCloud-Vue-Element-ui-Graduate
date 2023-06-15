@@ -15,7 +15,7 @@
       </el-radio-group>
     </div>
     <br />
-    <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="user" :rules="rule">
+    <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="user.user" :rules="rule">
       <el-form-item label="姓名" prop="userName">
         <el-input v-model="user.user.userName"></el-input>
       </el-form-item>

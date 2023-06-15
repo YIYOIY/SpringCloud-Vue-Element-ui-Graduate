@@ -15,8 +15,8 @@
       </el-radio-group>
     </div>
     <br />
-    <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="user">
-      <el-form-item label="姓名">
+    <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="user.user" :rules="rule">
+      <el-form-item label="姓名" prop="userName">
         <el-input v-model="user.user.userName" :model-value="user.user.userName"></el-input>
       </el-form-item>
       <el-form-item label="性别">
@@ -32,14 +32,14 @@
           type="date" format="YYYY 年 MM 月 DD 日">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="密码">
-        <el-input type="password" show-password v-model="user.user.userPassword"
+      <el-form-item label="密码" prop="userPassword">
+        <el-input type=" password" show-password v-model="user.user.userPassword"
           :model-value="user.user.userPassword"></el-input>
       </el-form-item>
       <el-form-item label="电话">
         <el-input v-model="user.user.userPhone" :model-value="user.user.userPhone"></el-input>
       </el-form-item>
-      <el-form-item label="地址">
+      <el-form-item label="地址" prop="userAddress">
         <el-input v-model="user.user.userAddress" :model-value="user.user.userAddress"></el-input>
       </el-form-item>
 
@@ -101,6 +101,24 @@ let alter = (() => {
   })
 })
 
+let rule = reactive({
+  userName: [
+    { required: true, message: "请输入姓名", trigger: "blur" },
+    { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" },
+  ],
+  userAddress: [
+    {
+      required: false,
+      message: "Please select Activity zone",
+      trigger: "blur",
+    },
+    { min: 1, max: 100, message: "长度在 1 到 100 个字符", trigger: "blur" },
+  ],
+  userPassword: [
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 6, max: 25, message: "长度在 6 到 25 个字符", trigger: "blur" },
+  ],
+});
 
 let back = (() => {
   console.log("这里是用户自己删除")

@@ -70,9 +70,9 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 }
 
 .footer {
-  height: 10%;
+  height: 2%;
   width: 100%;
-  top: 90%;
+  top: 1%;
   left: 30%;
   position: absolute;
   z-index: 1;

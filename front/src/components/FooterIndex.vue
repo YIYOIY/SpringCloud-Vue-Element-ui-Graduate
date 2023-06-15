@@ -1,6 +1,6 @@
 <template>
   <div class="bot">
-    <el-affix position="bottom" :offset="20">
+    <el-affix>
       2023-SECOND TERM-CLASS 2 SOFTWARE TECHNOLOGY 2021 - YOI MADE
     </el-affix>
   </div>

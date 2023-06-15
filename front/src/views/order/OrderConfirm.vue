@@ -164,6 +164,9 @@ let buy = ((v, num, bookId) => {
                 position: 'top-left',
                 title: '购买成功'
             })
+            router.push({
+                name: 'userOrder'
+            })
             axios.get(`api/userOrder?pageNo=${pageNo.value}&userId=${store.state.userId}`).then(Response => {
                 order.value = Response.data
             })

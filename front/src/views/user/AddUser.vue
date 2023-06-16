@@ -42,7 +42,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="sucess" @click="add()">新增</el-button>
+        <el-button type="success" @click="add()">新增</el-button>
         <el-button type="primary" @click="cancelAdd()">取消</el-button>
       </el-form-item>
     </el-form>
@@ -54,6 +54,7 @@ import { ref, reactive } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import { ElMessage, ElNotification } from "element-plus";
 const size = ref("default")
 const labelPosition = ref("left")
 let router = useRouter()
@@ -94,23 +95,40 @@ let rule = reactive({
     { min: 6, max: 25, message: "长度在 6 到 25 个字符", trigger: "blur" },
   ],
 });
-
+const form = ref(null)
 const add = (() => {
-  let addUser = JSON.stringify(user.user)
-  console.log(addUser)
-  axios.post('api/addUser', addUser, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-    let message = Response.data
-    if (isEnroll.value) {
-      alert("注册成功!")
-      router.push('/login')
-    } else {
-      if (confirm(message + "是否跳转到用户首页?")) {
-        router.push('/adminUsers')
-      }
+  form.value.validate(valid => {
+    if (!valid) {
+      ElMessage.error("请输入信息符合要求!");
+      return false;
     }
-  }).catch(Error => {
-    alert(Error.message + "添加失败,请稍后重试!")
-  })
+
+    let addUser = JSON.stringify(user.user)
+    console.log(addUser)
+    axios.post('api/addUser', addUser, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
+      let message = Response.data
+      if (isEnroll.value) {
+        ElNotification({
+          message: message,
+          title: '录入成功！',
+          type: 'success',
+          Position: 'top-left'
+        });
+        router.push('/login')
+      } else {
+        if (confirm(message + "是否跳转到用户首页?")) {
+          router.push('/adminUsers')
+        }
+      }
+    }).catch(Error => {
+      ElNotification({
+        message: Error.response.data + "  请重新输入!",
+        title: '错误',
+        type: 'error',
+        Position: 'top-right'
+      })
+    })
+  });
 })
 
 const cancelAdd = (() => {

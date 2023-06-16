@@ -58,6 +58,7 @@
 </template>
 
 <script setup>
+import { ElMessage, ElNotification } from "element-plus";
 import { useRouter } from "vue-router";
 import { ref, reactive, onMounted } from "vue";
 import axios from "axios";
@@ -86,19 +87,34 @@ onMounted(async () => {
     console.log(user.user)
   })
 })
-
+const form = ref(null)
 let alter = (() => {
-  let alterUser = JSON.stringify(user.user)
-  axios.put('api/user', alterUser, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-    let message = Response.data
-    if (confirm(message)) {
+  form.value.validate(valid => {
+    if (!valid) {
+      ElMessage.error("请输入信息符合要求!");
+      return false;
+    }
+    let alterUser = JSON.stringify(user.user)
+    axios.put('api/user', alterUser, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
+      let message = Response.data
+      ElNotification({
+        message: message,
+        title: '修改成功！',
+        type: 'success',
+        Position: 'top-left'
+      });
       router.push({
         name: 'user',
       })
-    }
-  }).catch(Error => {
-    alert(Error.message)
-  })
+    }).catch(Error => {
+      ElNotification({
+        message: Error.response.data + "  请重新输入!",
+        title: '错误',
+        type: 'error',
+        Position: 'top-right'
+      })
+    })
+  });
 })
 
 let rule = reactive({
@@ -125,13 +141,18 @@ let back = (() => {
   if (confirm("确认注销?")) {
     axios.delete(`api/user?userId=${store.state.userId}`,
     ).then(Response => {
+      let message = Response.data
+      ElNotification({
+        message: message,
+        title: '成功！',
+        type: 'success',
+        Position: 'top-left'
+      });
       sessionStorage.removeItem('user')
       store.state.userId = '';
       store.state.userName = '';
       store.state.userPassword = '';
       store.state.isUser = false;
-      let message = Response.data
-      alert(message)
       store.state.isUser = false
       store.state.userPassword = ''
       store.state.userPetName = ''
@@ -141,7 +162,12 @@ let back = (() => {
         name: 'book'
       })
     }).catch(Error => {
-      alert(Error.message + "请稍后重试!")
+      ElNotification({
+        message: Error.response.data + "  请重新输入!",
+        title: '错误',
+        type: 'error',
+        Position: 'top-right'
+      })
     })
   }
 })

@@ -52,6 +52,7 @@
 import { useRouter } from "vue-router";
 import { ref, reactive, onMounted, toRef } from "vue";
 import axios from "axios";
+import { ElNotification } from "element-plus";
 let router = useRouter();
 
 const prop = defineProps(["userId"]);
@@ -112,7 +113,12 @@ let alter = () => {
       }
     })
     .catch((Error) => {
-      alert(Error.message);
+      ElNotification({
+        message: Error.response.data + "  请重新输入!",
+        title: '错误',
+        type: 'error',
+        Position: 'top-right'
+      })
     });
 };
 

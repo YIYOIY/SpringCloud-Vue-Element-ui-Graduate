@@ -8,6 +8,7 @@ import com.service.BookService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +27,8 @@ import java.util.UUID;
  */
 @RestController
 public class ExcelController {
-
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
     @Autowired
     private BookMapper bookMapper;
     @Autowired
@@ -80,6 +82,10 @@ public class ExcelController {
 
     @RequestMapping("importExcel")
     public void excelInput(MultipartFile photo) {
+        Boolean books = stringRedisTemplate.delete("books");
+        if (books){
+            System.out.println("redis中的books缓存已清空");
+        }
 //        注意这个photo要和前端上传的upload的name一致即name=photo
         String excelFileName = photo.getOriginalFilename();     // 获取excel文件名
         Workbook workbook = null;

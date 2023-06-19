@@ -53,7 +53,7 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
     @Override
     public boolean addUser(User user) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        QueryWrapper<User> eq = userQueryWrapper.eq("user_name", user.getUserName()).eq("user_password", user.getUserPassword());
+        QueryWrapper<User> eq = userQueryWrapper.eq("user_name", user.getUserName());
         User user1 = userMapper.selectOne(eq);
 
         if (user1!=null){
@@ -78,16 +78,13 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
         objects.add("女");
         objects.add("保密");
         boolean b = objects.stream().anyMatch(sex -> sex.equals(user.getUserSex()));
-
-        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        QueryWrapper<User> check = userQueryWrapper.eq("user_name", user.getUserName()).eq("user_password", user.getUserPassword());
-        User user1 = userMapper.selectOne(check);
-        if (user1!=null){
+        if(!b){
             return false;
         }
 
+
         UpdateWrapper < User > userUpdateWrapper = new UpdateWrapper<>();
-        UpdateWrapper<User> eq = userUpdateWrapper.set(user.getUserName() != null, "user_name", user.getUserName())
+        UpdateWrapper<User> eq = userUpdateWrapper
                 .set(user.getUserPassword() != null, "user_password", user.getUserPassword())
                 .set(user.getUserSex() != null , "user_sex", user.getUserSex())
                 .set(user.getUserAddress() != null, "user_address", user.getUserAddress())

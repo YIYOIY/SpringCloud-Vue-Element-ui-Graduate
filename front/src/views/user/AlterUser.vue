@@ -17,7 +17,7 @@
     <br />
     <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="user.user" :rules="rule">
       <el-form-item label="姓名" prop="userName">
-        <el-input v-model="user.user.userName"></el-input>
+        <el-input type="text" v-model="user.user.userName" disabled></el-input>
       </el-form-item>
       <el-form-item label="性别" prop="userSex">
         <el-radio-group v-model="user.user.userSex">
@@ -61,10 +61,10 @@ const size = ref("default");
 const labelPosition = ref("left");
 
 let rule = reactive({
-  userName: [
-    { required: true, message: "请输入姓名", trigger: "blur" },
-    { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" },
-  ],
+  // userName: [
+  //   { required: true, message: "请输入姓名", trigger: "blur" },
+  //   { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" },
+  // ],
   userAddress: [
     {
       required: false,
@@ -74,7 +74,7 @@ let rule = reactive({
     { min: 1, max: 100, message: "长度在 1 到 100 个字符", trigger: "blur" },
   ],
   userPassword: [
-    { required: true, message: "请输入密码", trigger: "blur" },
+    { required: false, message: "请输入密码", trigger: "blur" },
     { min: 6, max: 25, message: "长度在 6 到 25 个字符", trigger: "blur" },
   ],
 });

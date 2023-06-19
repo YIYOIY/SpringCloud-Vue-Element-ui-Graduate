@@ -65,7 +65,7 @@ public class UserController {
             if (addUser) {
                 return ResponseEntity.ok("添加成功");
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("添加失败，密码用户名重复！");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("添加失败，用户名重复！");
             }
         } catch (Exception e) {
             throw new SelfExcept("userController的addUser出现的问题");
@@ -103,7 +103,7 @@ public class UserController {
             if (alterUser) {
                 return ResponseEntity.ok("更新成功");
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("更新失败，密码用户名重复！");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("更新失败，信息重复！");
             }
         } catch (Exception e) {
             throw new SelfExcept("userController的updateUser出现的问题"+e);

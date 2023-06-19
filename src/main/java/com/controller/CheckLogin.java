@@ -45,7 +45,7 @@ public class CheckLogin {
                 return null;
             }
         } catch (Exception e) {
-            throw new SelfExcept("CheckLogin的admin出现的问题");
+            throw new SelfExcept("CheckLogin的admin出现的问题"+e);
         }
     }
 

@@ -16,11 +16,16 @@ spring:
       max-file-size: 40MB        # 设置单个文件最大大小为10MB
       max-request-size: 100MB
       enabled: true
-
+#修改此处file路径为当前项目的static/img路径就能看见图片添加后的回显，否则回显不显示但是运行正常
+  #例如C:\Users\yo\Desktop\note\vuespringbootTotalProject\WebDevelopment\back\demo\src\main\resources\static\img
   web:
     resources:
-      static-locations: file:C:\Users\yo\Desktop\vuespringbootTotalProject\WebDevelopment\back\demo\src\main\resources\static\img,classpath:/static/img/,classpath:/public,classpath:/resources,classpath:/META-INF/resource
-
+#      使用开发模式的暴露静态资源路径，获取图片方式一
+#      static-locations: file:C:\Users\yo\Desktop\note\vuespringbootTotalProject\WebDevelopment\back\demo\src\main\resources\static\img,classpath:/static/img/,classpath:/public,classpath:/resources,classpath:/META-INF/resource
+#      使用开发模式下，绑定静态资源路径，获取图片方式三，注意引用了下方的配置user。lo
+      static-locations: file:${user.lo},classpath:/static/img/,classpath:/public,classpath:/resources,classpath:/META-INF/resource
+#      使用运行时的文件保存方法不用开放静态资源路径，获取图片方式二
+#      static-locations: classpath:/static/img/,classpath:/public,classpath:/resources,classpath:/META-INF/resource
 
   redis:
 # host: 192.168.1.104
@@ -59,3 +64,9 @@ mybatis-plus:
   mapper-locations: classpath*:com/mapper/*.xml
 server:
   port: 8090
+  address:
+
+#通过设置fileLocation来进行静态资源的映射
+user:
+#  lo: "C:/Users/yo/Desktop/note/vuespringbootTotalProject/WebDevelopment/back/demo/src/main/resources/static/img"
+  lo: C:\Users\yo\Desktop\note\vuespringbootTotalProject\WebDevelopment\back\demo\src\main\resources\static\img

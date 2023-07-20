@@ -19,12 +19,51 @@ module.exports = defineConfig({
 		port: 9090,
 		open: true,
 		proxy: {
-			'/api': {
-				target: 'http://localhost:8090/',
+			// 使用本地
+			// '/api': {
+			// 	target: 'http://localhost:87',
+			// 	changeOrigin: true,
+			// 	pathRewrite: {
+			// 		'^/api': ''
+			// 	},
+			// 	bypass: function(req, res, proxyOptions) {
+			// 		console.log(proxyOptions.target)
+			// 	}
+			// },
+			// 使用直连
+			'/excel': {
+				target: 'http://localhost:88',
 				changeOrigin: true,
 				pathRewrite: {
-					'^/api': ''
+					'^/excel': ''
 				},
+				bypass: function(req, res, proxyOptions) {
+					console.log(proxyOptions.target)
+				}
+			},
+			// 使用直连
+			'/pict': {
+				target: 'http://localhost:88',
+				pathRewrite: {
+					'^/pict': ''
+				},
+				changeOrigin: true,
+				bypass: function(req, res, proxyOptions) {
+					console.log(proxyOptions.target)
+				}
+			},
+			// 使用网关
+			'/api': {
+				target: 'http://localhost:89',
+				changeOrigin: true,
+				bypass: function(req, res, proxyOptions) {
+					console.log(proxyOptions.target)
+				}
+			},
+			// 使用网关
+			'/img': {
+				target: 'http://localhost:89',
+				changeOrigin: true,
 				bypass: function(req, res, proxyOptions) {
 					console.log(proxyOptions.target)
 				}

@@ -80,9 +80,9 @@
 
       <div style="width: 40%;float: right;margin-right: 1%">
         <el-image :src='book.book.bookPicture' style="width: 100%; height: 50%" v-show="havePicture"></el-image>
-        <el-button type="warning" v-show="havePicture"><a href="api/test/download">下载图片</a></el-button>
+        <el-button type="warning" v-show="havePicture"><a href="pict/test/download">下载图片</a></el-button>
         <el-button @click="havePicture = !havePicture" type="primary" v-show="havePicture">清空图片</el-button>
-        <el-upload class=" upload-demo" drag action="api/test/up" multiple limit="100" encytype="multipart/form-data"
+        <el-upload class=" upload-demo" drag action="pict/test/up" multiple limit="100" encytype="multipart/form-data"
           ref="pict" name="photo" v-show="!havePicture" @keydown.y="handleBookPicture()">
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
           <div class="el-upload__text">
@@ -116,7 +116,7 @@ console.log(bookId.value + "!!!!!!!!!!!!!!!!!!!!!!")
 let havePicture = ref(true);
 let handleBookPicture = (() => {
   setTimeout(() => {
-    axios.get('api/getPicture').then(Response => {
+    axios.get('pict/getPicture').then(Response => {
       book.book.bookPicture = Response.data
       if (book.book.bookPicture != null && book.book.bookPicture != "")
         console.log(book.book.bookPicture + "图片")

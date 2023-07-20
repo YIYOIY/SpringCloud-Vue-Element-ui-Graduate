@@ -68,11 +68,11 @@
       <div style="width: 40%;float: right;margin-right: 1%">
         <img :src='PICTURE' style="width: 100%; height: 100%" v-show="havePicture"
           alt="当前后端未设置项目的图片文件路径在配置文件中，所以无法看到回显，但数据保存成功,重新启动项目即可看到书籍图片在书籍列表中" />
-        <el-button type="warning" v-show="havePicture"><a href="api/test/download">下载图片</a></el-button>
+        <el-button type="warning" v-show="havePicture"><a href="pict/test/download">下载图片</a></el-button>
         <el-button @click="havePicture = !havePicture" type="primary" v-show="havePicture">清空图片</el-button>
         <el-button @click="havePicture = !havePicture" type="primary" v-show="havePicture">从excel中导入书籍</el-button>
 
-        <el-upload class=" upload-demo" drag action="api/importExcel" multiple :limit="1" encytype="multipart/form-data"
+        <el-upload class=" upload-demo" drag action="excel/importExcel" multiple :limit="1" encytype="multipart/form-data"
           name="photo" v-show="!havePicture">
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
           <div class="el-upload__text">
@@ -98,7 +98,7 @@
 
 
 
-        <el-upload ref="pict" class="upload-demo" action="api/test/up" multiple :limit="1" encytype="multipart/form-data"
+        <el-upload ref="pict" class="upload-demo" action="pict/test/up" multiple :limit="1" encytype="multipart/form-data"
           name="photo" v-show="!havePicture" :auto-upload="false">
           <template #trigger>
             <el-button type="primary">选择要上传的图片，限制一张</el-button>
@@ -169,7 +169,7 @@ let handleBookPicture = (() => {
   pict.value.submit()
   pict.value.clearFiles()
   setTimeout(() => {
-    axios.get('api/getPicture').then(Response => {
+    axios.get('pict/getPicture').then(Response => {
       console.log(Response.data + "后端返回的值")
       if (Response.data != null && Response.data != "") {
         //对后端返回值验证后进行赋值

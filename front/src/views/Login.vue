@@ -121,8 +121,7 @@ const submitForm = () => {
   if (type === 'admin') {
     axios.post(
       `/api/${type}`,
-      admin,
-      { headers: { 'Content-Type': 'application/json' } }
+      admin, { headers: { 'Content-Type': 'application/json' } }
     ).then(Response => {
       resp = Response.data
       insert(resp)
@@ -130,8 +129,7 @@ const submitForm = () => {
   } else {
     axios.post(
       `/api/${type}`,
-      user,
-      { headers: { 'Content-Type': 'application/json' } }
+      user, { headers: { 'Content-Type': 'application/json' } }
     ).then(Response => {
       resp = Response.data
       insert(resp)

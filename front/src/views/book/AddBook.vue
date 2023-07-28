@@ -121,13 +121,22 @@
 
   </div>
 </template>
-
 <script setup>
-
 import { useRouter } from "vue-router";
 import { reactive, ref, onMounted } from "vue";
-import { ElForm, ElFormItem, ElInput, ElButton, ElDatePicker, ElUpload, ElIcon, ElNotification } from "element-plus";
-import axios from "axios";
+import {
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElButton,
+  ElDatePicker,
+  ElUpload,
+  ElIcon,
+  ElNotification,
+  ElMessage
+} from "element-plus";
+import {addBook, getSeries} from "@/api/BookApi";
+import {getPicture} from "@/api/ImgAndExcelApi";
 let router = useRouter()
 
 
@@ -149,17 +158,15 @@ const book = reactive({
 
 let series = ref('');
 
-
 onMounted(() => {
-  axios.get('api/series').then(Response => {
+  getSeries().then(Response => {
     series.value = Response.data
     console.log(series.value)
   }).catch(Error => {
-    alert(Error.message)
+    ElMessage.error(Error.data.message)
+    console(Error)
   })
 })
-
-
 
 let PICTURE = ref('');
 let havePicture = ref(false);
@@ -169,7 +176,7 @@ let handleBookPicture = (() => {
   pict.value.submit()
   pict.value.clearFiles()
   setTimeout(() => {
-    axios.get('pict/getPicture').then(Response => {
+    getPicture().then(Response => {
       console.log(Response.data + "后端返回的值")
       if (Response.data != null && Response.data != "") {
         //对后端返回值验证后进行赋值
@@ -181,7 +188,8 @@ let handleBookPicture = (() => {
         havePicture.value = true
       }
     }).catch(Error => {
-      alert(Error.message)
+      ElNotification.error(Error.data.message)
+      console(Error)
     })
   }, 100);
 })
@@ -216,17 +224,17 @@ let add = (() => {
       })
       return false
     }
-    let addBook = JSON.stringify(book.book)
-    console.log(addBook)
-    axios.post('api/book', addBook, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-      let message = Response.data
-      if (confirm(message + "!  是否跳转到书籍页")) {
+    let Book = JSON.stringify(book.book)
+    console.log(Book)
+    addBook(Book).then(Response => {
+      if (confirm(Response.message + "!  是否跳转到书籍页")) {
         router.push({
           name: 'adminBooks',
         })
       }
     }).catch(Error => {
-      alert(Error.message)
+      ElMessage.error(Error.data.message)
+      console.log(Error)
     })
   })
 })
@@ -239,8 +247,6 @@ let back = (() => {
 })
 
 </script>
-
-
 <style scoped>
 .el-radio-group {
   margin-right: 12px;

@@ -31,8 +31,9 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import axios from "axios";
+import {addAdmin} from "@/api/AdminApi";
 import { useRouter } from "vue-router";
+import {ElMessage} from "element-plus";
 
 const size = ref("default")
 const labelPosition = ref("left")
@@ -45,15 +46,14 @@ const admin = reactive({
 })
 
 const add = (() => {
-  let addAdmin = JSON.stringify(admin.admin)
-  console.log(addAdmin)
-  axios.post('api/addAdmin', addAdmin, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-    let message = Response.data
+  let aAdmin = JSON.stringify(admin.admin)
+    addAdmin(aAdmin).then(Response => {
+    let message = Response.message
     if (confirm(message + " 是否跳转到管理员首页?")) {
       router.push('/admin')
     }
   }).catch(Error => {
-    alert(Error.message + "添加失败,请稍后重试!")
+    ElMessage.error(Error.data.message + "添加失败,请稍后重试!")
   })
 })
 

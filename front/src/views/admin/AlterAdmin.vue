@@ -34,7 +34,9 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { ref, reactive, onMounted, toRef } from "vue";
-import axios from "axios";
+import {alterAdmin,alterAdminGet} from "@/api/AdminApi";
+import {ElMessage} from "element-plus";
+
 let router = useRouter()
 
 const prop = defineProps(['adminId'])
@@ -52,24 +54,23 @@ const admin = reactive({
 
 console.log(admin.admin.adminName)
 onMounted(async () => {
-  await axios.get(`api/alterAdmin?adminId=${id.value}`).then(Response => {
+   alterAdminGet(id.value).then(Response => {
     admin.admin = Response.data
-    console.log(admin.admin)
   })
 })
 
 
 let alter = (() => {
-  let alterAdmin = JSON.stringify(admin.admin)
-  axios.put('api/admin', alterAdmin, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-    let message = Response.data
+  let Admin = JSON.stringify(admin.admin)
+  alterAdmin(Admin).then(Response => {
+    let message = Response.message
     if (confirm(message + "!  是否跳转到管理员页")) {
       router.push({
         name: 'admin',
       })
     }
   }).catch(Error => {
-    alert(Error.message)
+    ElMessage.error(Error.data.message)
   })
 })
 

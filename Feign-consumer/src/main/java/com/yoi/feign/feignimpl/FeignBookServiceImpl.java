@@ -1,12 +1,10 @@
 package com.yoi.feign.feignimpl;
 
 import com.yoi.entity.Book;
+import com.yoi.entity.ReturnEnum;
+import com.yoi.entity.ReturnInfo;
 import com.yoi.feign.FeignBookService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 /**
  * @author 游弋
@@ -15,32 +13,32 @@ import java.util.List;
 @Component
 public class FeignBookServiceImpl implements FeignBookService {
     @Override
-    public List<Book> index(@RequestParam(value = "searchName",required = false)String searchName,@RequestParam(value = "BookpageNo",required = false) Integer BookpageNo) {
-        return null;
+    public ReturnInfo index(String searchName,Integer BookpageNo) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 
     @Override
-    public Book lookUp(Integer bookId) {
-        return null;
+    public ReturnInfo lookUp(Integer bookId) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 
     @Override
-    public List<Book> selectBySeries(String seriesName) {
-        return null;
+    public ReturnInfo selectBySeries(String seriesName) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 
     @Override
-    public ResponseEntity<String> addBook(Book book) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo addBook(Book book) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 
     @Override
-    public ResponseEntity<String> deleteBook(Integer bookId) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo deleteBook(Integer bookId) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 
     @Override
-    public ResponseEntity<String> updateBook(Book book) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo updateBook(Book book) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 }

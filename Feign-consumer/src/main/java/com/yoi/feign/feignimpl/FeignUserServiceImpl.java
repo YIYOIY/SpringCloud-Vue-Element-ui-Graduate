@@ -1,5 +1,7 @@
 package com.yoi.feign.feignimpl;
 
+import com.yoi.entity.ReturnEnum;
+import com.yoi.entity.ReturnInfo;
 import com.yoi.entity.User;
 import com.yoi.feign.FeignUserService;
 import org.springframework.http.ResponseEntity;
@@ -16,27 +18,27 @@ import java.util.List;
 @Component
 public class FeignUserServiceImpl implements FeignUserService {
     @Override
-    public List<User> index(HttpServletRequest req, @RequestParam(value = "searchName",required = false) String searchName,@RequestParam(value = "oper",required = false) String oper) {
-        return null;
+    public ReturnInfo index(HttpServletRequest req, @RequestParam(value = "searchName",required = false) String searchName,@RequestParam(value = "oper",required = false) String oper) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 
     @Override
-    public User userSelf(Integer userId) {
-        return null;
+    public ReturnInfo userSelf(Integer userId) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 
     @Override
-    public ResponseEntity<String> addUser(User user) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo addUser(User user) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 
     @Override
-    public ResponseEntity<String> deleteUser(Integer userId) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo deleteUser(Integer userId) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 
     @Override
-    public ResponseEntity<String> updateUser(User user) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo updateUser(User user) {
+        return new ReturnInfo().withEnumNoData(ReturnEnum.WAIT);
     }
 }

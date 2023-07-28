@@ -19,15 +19,15 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import axios from 'axios'
+import {deleteAdmin,getAdmin} from "@/api/AdminApi";
+import {ElMessage} from "element-plus";
 
 let admins = ref([])
 let router = useRouter()
 
-axios.get('api/admin').then(Response => {
+getAdmin().then(Response => {
   admins.value = Response.data
 })
-
 
 //注意这是解构
 const rn = ({ row, rowIndex }) => {
@@ -41,9 +41,7 @@ const rn = ({ row, rowIndex }) => {
 }
 
 let alter = ((v) => {
-  console.log(v + "这里是管理员修改")
   let id = ref(v)
-  console.log(id.value + "给修改传递参数")
   router.push({
     name: 'alterAdmin',
     query: {
@@ -53,16 +51,14 @@ let alter = ((v) => {
 })
 
 let del = ((v) => {
-  console.log(v + "这里是管理员删除")
   if (confirm("确认删除?")) {
-    axios.delete(`api/admin?adminId=${v}`).then(Response => {
-      let message = Response.data
-      alert(message)
-      axios.get('api/admin').then(Response => {
+    deleteAdmin(v).then(Response => {
+      ElMessage.success(Response.message)
+      getAdmin().then(Response => {
         admins.value = Response.data
       })
     }).catch(Error => {
-      alert(Error.message + "删除失败,请稍后重试!")
+      ElMessage.error(Error.data.message + "删除失败,请稍后重试!")
     })
   }
 })

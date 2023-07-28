@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<!-- <p v-show="false">{{ book.book.bookName }}</p> -->
 		<el-row>
 			<el-col :span="12">
 				<h2>书籍简介</h2>
@@ -72,20 +71,31 @@
 </template>
 
 <script setup>
-import axios from "axios";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 let router = useRouter();
+let route = useRoute();
 let store = useStore();
 import { reactive, ref } from "vue";
-import { ElNotification } from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
+import {getBooksById} from "@/api/BookApi";
+import {addOrder} from "@/api/OrderApi";
+let isOrder = ref(false)
+if (route.query.order) {
+  isOrder.value = true
+}
 let number = ref(1)
 const props = defineProps(["id"]);
 
 // let book = ref(null)
 
-
 let back = (() => {
+  if (isOrder.value){
+    router.push({
+      name: "userOrder"
+    });
+  }else
 	router.push({
 		name: "book"
 	});
@@ -107,10 +117,19 @@ const book = reactive({
 	},
 });
 
-axios.get(`api/lookup?bookId=${props.id}`).then((res) => {
+getBooksById(props.id).then((res) => {
 	book.book = res.data;
+  if (res.code!==200){
+    ElMessage({
+      message: res.message,
+      grouping: true,
+      type: 'error',
+      center: true,
+      showClose: true,
+    })
+    router.push('/book')
+  }
 });
-console.log(book);
 
 
 
@@ -125,7 +144,6 @@ let bag = reactive({
 let buy = () => {
 	bag.bookId = book.book.bookId;
 	bag.userId = store.state.userId;
-	console.log(bag + "购买操作");
 	if (
 		store.state.userId == "" ||
 		store.state.userId == undefined ||
@@ -137,38 +155,32 @@ let buy = () => {
 	} else {
 		bag.bookNum = number.value;
 		let addBag = JSON.stringify(bag);
-		axios
-			.post(`api/order`, addBag, {
-				headers: {
-					"Content-Type": "application/json",
-				},
-			})
-			.then((Response) => {
-				let message = Response.data;
+    addOrder( addBag).then((Response) => {
 				ElNotification({
 					title: '成功加入购物车',
-					message: message,
+					message: Response.message,
 					type: 'success',
 					position: 'top-left',
 				})
-				// if (confirm(message + "是否前往购物车?")) {
-				// 	router.push({
-				// 		name: "userOrder",
-				// 	});
-				// } else {
-				// 	router.push({
-				// 		name: "book",
-				// 	});
-				// }
-			})
-			.catch((Error) => {
+				if (confirm(Response.message + "是否前往购物车?")) {
+					router.push({
+						name: "userOrder",
+					});
+				} else {
+					router.push({
+						name: "book",
+					});
+				}
+			}).catch((Error) => {
+        ElMessage.error(Error.data.message)
 				console.log(Error);
 			});
 	}
-
-
-
 };
+
+
+
+
 </script>
 
 <style scoped>

@@ -1,14 +1,15 @@
-import{createStore} from "vuex";
+import {createStore} from "vuex";
+
 export default createStore({
-    state:{
-        userId:'',
-        userName:'',
-        userPassword:'',
+    state: {
+        userId: '',
+        userName: '',
+        userPassword: '',
 
-        adminName:'',
-        adminPassword:'',
+        adminName: '',
+        adminPassword: '',
 
-        isAdmin:false,
-        isUser:false,
+        isAdmin: false,
+        isUser: false,
     }
 })

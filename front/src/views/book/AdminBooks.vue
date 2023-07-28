@@ -29,11 +29,12 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
+import {deleteBook, getBooks} from "@/api/BookApi";
+import {ElMessage} from "element-plus";
 let books = ref([]);
 let router = useRouter();
 
-axios.get("api/book").then((Response) => {
+getBooks().then((Response) => {
   books.value = Response.data;
 });
 
@@ -50,17 +51,14 @@ let alter = (v) => {
 
 let del = (v) => {
   if (confirm("确认删除?")) {
-    axios
-      .delete(`api/book?bookId=${v}`)
-      .then((Response) => {
-        let message = Response.data;
-        alert(message);
-        axios.get("api/book").then((Response) => {
+    deleteBook(v).then((Response) => {
+        ElMessage.success(Response.message);
+      getBooks().then((Response) => {
           books.value = Response.data;
         });
-      })
-      .catch((Error) => {
-        alert(Error.message + "请稍后重试!");
+      }).catch((Error) => {
+        ElMessage.error(Error.data.message)
+        console(Error + "请稍后重试!");
       });
   }
 };

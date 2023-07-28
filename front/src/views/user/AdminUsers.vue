@@ -3,7 +3,7 @@
     <el-button @click="add()" type="info" style="margin-top: 5%">添加新用户</el-button>
 
     <el-table :data="users" highlight-current-row="true" height="100%" style="width: 100%;margin-top: 3%"
-      label-width="20%" :row-class-name="rn">
+              label-width="20%" :row-class-name="rn">
       <el-table-column prop="userId" label="编号"></el-table-column>
       <el-table-column prop="userName" class-name="userName" label="用户名"></el-table-column>
       <el-table-column prop="userSex" label="性别"></el-table-column>
@@ -21,22 +21,22 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import axios from 'axios'
-let users = ref([])
-let router = useRouter()
+import {ref} from "vue";
+import {useRouter} from "vue-router";
+import {deleteUser, getUsers} from "@/api/UserApi";
+import {useStore} from "vuex";
+import {ElMessage, ElNotification} from "element-plus";
 
-axios.get('api/users').then(Response => {
-  console.log("已经在获取users")
+const store = useStore()
+let router = useRouter()
+let users = ref([])
+
+getUsers().then(Response => {
   users.value = Response.data
 })
 
-
 //注意这是解构
-const rn = ({ row, rowIndex }) => {
-  // console.log(row)
-  // console.log(rowIndex)
+const rn = ({row, rowIndex}) => {
   if (rowIndex % 2 !== 0) {
     return 'light-row'
   } else {
@@ -45,9 +45,7 @@ const rn = ({ row, rowIndex }) => {
 }
 
 let alter = ((v) => {
-  console.log(v + "这里是用户修改")
   let id = ref(v)
-  console.log(id.value + "给用户修改修改传递参数")
   router.push({
     name: 'alterUser',
     query: {
@@ -56,31 +54,25 @@ let alter = ((v) => {
   })
 })
 
-import { useStore } from "vuex";
-const store = useStore()
 
 let del = ((v) => {
-  // axios.post(`api/user`,
-  //     {_method:'delete',userId:`${v}`}
-  console.log(v + "这里是用户删除")
   if (confirm("确认删除?")) {
-    axios.delete(`api/user?userId=${v}`,
-    ).then(Response => {
-      let message = Response.data
+    deleteUser(v).then(Response => {
       if (store.state.userId == v) {
-        sessionStorage.removeItem('user')
-        store.state.userId = '';
-        store.state.userName = '';
-        store.state.userPassword = '';
-        store.state.isUser = false;
+        router.push("/login")
       }
-      alert(message)
-
-      axios.get('api/users').then(Response => {
+      ElNotification({
+            message: Response.message,
+            title: '删除成功！',
+            type: 'success',
+            position: "top-right"
+          }
+      )
+      getUsers().then(Response => {
         users.value = Response.data
       })
     }).catch(Error => {
-      alert(Error.message + "请稍后重试!")
+      ElMessage.error(Error.data.message + "请稍后重试!")
     })
   }
 })
@@ -90,6 +82,7 @@ let add = (() => {
     name: 'addUser'
   })
 })
+
 </script>
 <style scoped>
 /deep/ .userName .cell {

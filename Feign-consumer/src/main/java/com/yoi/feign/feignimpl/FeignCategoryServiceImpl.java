@@ -1,13 +1,11 @@
 package com.yoi.feign.feignimpl;
 
 import com.yoi.entity.Category;
+import com.yoi.entity.ReturnInfo;
 import com.yoi.feign.FeignCategoryService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @author 游弋
@@ -16,32 +14,32 @@ import java.util.List;
 @Component
 public class FeignCategoryServiceImpl implements FeignCategoryService {
     @Override
-    public List<Category> index(HttpServletRequest req,@RequestParam(value = "searchName",required = false) String searchName) {
-        return null;
+    public ReturnInfo index(HttpServletRequest req,String searchName) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
     @Override
-    public List<Category> getSeries() {
-        return null;
+    public ReturnInfo getSeries() {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
     @Override
-    public ResponseEntity<String> addBookSeries(Category Series) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo addBookSeries(Category Series) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
     @Override
-    public ResponseEntity<String> deleteBookSeries(Integer seriesId) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo deleteBookSeries(Integer seriesId) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
     @Override
-    public Category alterBookSeries(Integer seriesId) {
-        return null;
+    public ReturnInfo alterBookSeries(Integer seriesId) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
     @Override
-    public ResponseEntity<String> updateBookSeries(Category category) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo updateBookSeries(Category category) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 }

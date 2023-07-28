@@ -55,26 +55,20 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-import axios from 'axios'
+import { ref } from "vue";
 import { ElMessage, ElNotification } from "element-plus";
+import {checkBag, deleteOrder, getAdminOrder, getAdminPageCount} from "@/api/OrderApi";
 let order = ref([])
 let pageNo = ref(1);
 let pageTotal = ref(1);
-let router = useRouter()
-
-axios.get('api/adminPageCount').then(Response => {
+getAdminPageCount().then(Response => {
   pageTotal.value = Response.data
 })
-
-axios.get(`api/adminOrder?pageNo=${pageNo.value}`).then(Response => {
+getAdminOrder(pageNo.value).then(Response => {
   order.value = Response.data
-  console.log(order.value)
 })
-
 let pageNoo = (() => {
-  axios.get(`api/adminOrder?pageNo=${pageNo.value}`).then(Response => {
+  getAdminOrder(pageNo.value).then(Response => {
     order.value = Response.data
   })
 })
@@ -82,32 +76,30 @@ let pageNoo = (() => {
 let buy = ((v, num, bookId) => {
   console.log("这里是购物车的购买" + v)
   if (confirm("确认购买?")) {
-    axios.put(`api/buyOrder?orderId=${v}&num=${num}&bookId=${bookId}`).then(Response => {
-      let message = Response.data
-      ElMessage.success(message)
-      axios.get('api/adminOrder').then(Response => {
+    checkBag(v,num,bookId).then(Response => {
+      ElMessage.success(Response.message)
+      getAdminOrder(pageNo.value).then(Response => {
         order.value = Response.data
       })
     }).catch(Error => {
-      ElMessage.error(Error.message + "请稍后重试!")
+      ElMessage.error(Error.data.message + "请稍后重试!")
     })
   }
 })
 
 let del = ((v) => {
   if (confirm("确认删除?")) {
-    axios.delete(`api/order?orderId=${v}`).then(Response => {
-      let message = Response.data
-      ElNotification.success(message)
-      axios.get('api/adminOrder').then(Response => {
+    deleteOrder(v).then(Response => {
+      ElNotification.success(Response.message)
+      getAdminOrder.get(pageNo.value).then(Response => {
         order.value = Response.data
       })
     }).catch(Error => {
-      ElMessage.error(Error.response.data + "请稍后重试!")
+      console.log(Error)
+      ElMessage.error(Error.data.message + "请稍后重试!")
     })
   }
 })
-
 </script>
 <style scoped>
 /deep/ .bookName .cell {

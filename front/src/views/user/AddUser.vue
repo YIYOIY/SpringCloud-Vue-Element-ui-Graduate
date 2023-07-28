@@ -51,10 +51,10 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import axios from "axios";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { ElMessage, ElNotification } from "element-plus";
+import {addUser} from "@/api/UserApi";
 const size = ref("default")
 const labelPosition = ref("left")
 let router = useRouter()
@@ -95,6 +95,7 @@ let rule = reactive({
     { min: 6, max: 25, message: "长度在 6 到 25 个字符", trigger: "blur" },
   ],
 });
+
 const form = ref(null)
 const add = (() => {
   form.value.validate(valid => {
@@ -103,26 +104,25 @@ const add = (() => {
       return false;
     }
 
-    let addUser = JSON.stringify(user.user)
-    console.log(addUser)
-    axios.post('api/addUser', addUser, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-      let message = Response.data
+    let User = JSON.stringify(user.user)
+    console.log(User)
+    addUser(User).then(Response => {
       if (isEnroll.value) {
         ElNotification({
-          message: message,
+          message: Response.message,
           title: '录入成功！',
           type: 'success',
           Position: 'top-left'
         });
         router.push('/login')
       } else {
-        if (confirm(message + "是否跳转到用户首页?")) {
+        if (confirm(Response.message + "是否跳转到用户首页?")) {
           router.push('/adminUsers')
         }
       }
     }).catch(Error => {
       ElNotification({
-        message: Error.response.data + "  请重新输入!",
+        message: Error.data.message + " 请重新输入!",
         title: '错误',
         type: 'error',
         Position: 'top-right'

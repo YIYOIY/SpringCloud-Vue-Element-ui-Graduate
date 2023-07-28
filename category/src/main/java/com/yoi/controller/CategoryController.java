@@ -2,13 +2,12 @@ package com.yoi.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.yoi.entity.Category;
+import com.yoi.entity.ReturnEnum;
+import com.yoi.entity.ReturnInfo;
 import com.yoi.exception.SelfExcept;
 import com.yoi.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -18,7 +17,7 @@ public class CategoryController {
     private CategoryService seriesService;
     @CrossOrigin
     @GetMapping("/bookSeries")
-    public List<Category> index(HttpServletRequest req, String searchName) {
+    public ReturnInfo index(HttpServletRequest req, String searchName) {
         HttpSession session = req.getSession();
         try {
             if (StringUtils.isEmpty(searchName)) {
@@ -31,7 +30,7 @@ public class CategoryController {
             }else {
                 session.setAttribute("BookSerieskeyword", searchName);
             }
-            return seriesService.getAll(searchName);
+            return new ReturnInfo(200,"查询成功！",seriesService.getAll(searchName));
         } catch (Exception e) {
             throw new SelfExcept(e+"bookSeriesController的index出现的问题");
         }
@@ -40,19 +39,19 @@ public class CategoryController {
 
 
     @GetMapping("/series")
-    public List<Category> getSeries(){
+    public ReturnInfo getSeries(){
         List<Category> seriesName = seriesService.getSeriesName();
-        return seriesName;
+        return new ReturnInfo(200,"查询成功！",seriesName);
     }
 
     @PostMapping("/bookSeries")
-    public ResponseEntity<String> addBookSeries(@RequestBody Category Series) {
+    public ReturnInfo addBookSeries(@RequestBody Category Series) {
         try {
             boolean addBookSeries = seriesService.addBookSeries(Series);
             if (addBookSeries) {
-                return ResponseEntity.ok("添加成功");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.ADD_SUCCESS);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("添加失败");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.ALTER_FAILED);
             }
         }catch (Exception e) {
             throw new SelfExcept(e+"bookSeriesController的add出现的问题");
@@ -60,18 +59,13 @@ public class CategoryController {
     }
 
     @DeleteMapping("/bookSeries")
-    public ResponseEntity<String> deleteBookSeries(Integer seriesId) {
+    public ReturnInfo deleteBookSeries(Integer seriesId) {
         try {
-            //            删除前检查购物车
-//            Long aLong = seriesService.checkBagData(seriesId);
-//            if (aLong > 0) {
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败,用户购物车存在此类型书籍");
-//            } else {
                 boolean deleteBookSeries = seriesService.deleteBookSeries(seriesId);
                 if (deleteBookSeries) {
-                    return ResponseEntity.ok("删除成功");
+                    return new ReturnInfo().withEnumNoData(ReturnEnum.DELETE_SUCCESS);
                 } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败");
+                    return new ReturnInfo().withEnumNoData(ReturnEnum.DELETE_FAILED);
                 }
 //            }
         } catch (Exception e) {
@@ -81,22 +75,22 @@ public class CategoryController {
 
 
     @GetMapping("/bookSeriesBySeriesId")
-    public Category alterBookSeries(Integer seriesId) {
+    public ReturnInfo alterBookSeries(Integer seriesId) {
         try {
-            return seriesService.getBySeriesId(seriesId);
+            return new ReturnInfo(200,"查询成功！",seriesService.getBySeriesId(seriesId));
         } catch (Exception e) {
             throw new SelfExcept(e+"bookSeriesController的alter出现的问题");
         }
     }
 
     @PutMapping("/bookSeries")
-    public ResponseEntity<String> updateBookSeries(@RequestBody Category category) {
+    public ReturnInfo updateBookSeries(@RequestBody Category category) {
         try {
             boolean alterBookSeries = seriesService.updateBookSeries(category);
             if (alterBookSeries) {
-                return ResponseEntity.ok("更新成功");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.ALTER_SUCCESS);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("更新失败");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.ALTER_FAILED);
             }
         } catch (Exception e) {
             throw new SelfExcept(e+"bookSeriesController的update出现的问题");

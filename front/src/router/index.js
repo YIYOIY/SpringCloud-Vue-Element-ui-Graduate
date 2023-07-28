@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import {checkToken} from "@/api/LoginApi";
 
 import Book from "@/views/book/BookIndex.vue";
 import AlterBooks from "@/views/book/AlterBooks.vue";
@@ -26,8 +27,11 @@ import Category from "@/views/category/Category.vue";
 import AdminOrder from "@/views/order/AdminOrder.vue";
 import UserOrder from "@/views/order/UserOrder.vue";
 import OrderConfirm from "@/views/order/OrderConfirm.vue";
+import {ElMessage} from "element-plus";
 
-export default createRouter({
+
+
+let router=createRouter({
   history: createWebHistory(),
   routes: [
     {
@@ -42,16 +46,7 @@ export default createRouter({
       component: UserIndex,
       beforeEnter: (to, from, next) => {
         if (to.name === "user") {
-          let password = store.state.userPassword;
-          let name = store.state.userName;
-          let user = {
-            userName: name,
-            userPassword: password,
-          };
-          if (password && name) {
-            sessionStorage.setItem("user", user);
-            // 一个时间只能登录一个身份时开启下面的
-            // sessionStorage.removeItem('admin')
+          if (store.state.isUser){
             next();
           } else {
             next(false);
@@ -65,18 +60,9 @@ export default createRouter({
       component: AdminIndex,
       beforeEnter: (to, from, next) => {
         if (to.name === "admin") {
-          let password = store.state.adminPassword;
-          let name = store.state.adminName;
-          let admin = {
-            adminName: name,
-            adminPassword: password,
-          };
-          if (password && name) {
-            sessionStorage.setItem("admin", admin);
-            // 一个时间只能登录一个身份时开启下面的语句
-            // sessionStorage.removeItem('user')
+          if (store.state.isAdmin) {
             next();
-          } else {
+          }else {
             next(false);
           }
         } else next({ path: "/login" });
@@ -313,3 +299,44 @@ export default createRouter({
     }
   ],
 });
+
+router.beforeEach((to,from,next)=>{
+  if (to.path === '/login') { // 如果跳转登录页面,则移除token
+    store.state.adminPassword=''
+    store.state.adminName=''
+    store.state.userPassword=''
+    store.state.userName=''
+    store.state.isAdmin=false
+    store.state.isUser=false
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('store')
+    next()
+  }
+  else if (to.path === '/book'||to.name ==='addUser'||to.name ==='information'){
+    next()
+  }
+  else {
+    let token = sessionStorage.getItem('token');
+    if (token === null || token === '') { //token不存在页跳转到登录页面
+      router.replace({path:'/login'})
+    } else {
+      // 检验token是否正确
+      checkToken(token).then((response) => {
+        if (response.code!==200) {
+          ElMessage.error('检验失败'+response)
+          router.replace({path:'/login'}) // 如果token失效,返回到登录页面
+        }else {
+          next();
+        }
+      }).catch(Error=>{
+        if (Error.data.code!==200) {
+          ElMessage.error('检验失败' + Error.data.message)
+          router.replace({path: '/login'}) // 如果token失效,返回到登录页面
+          next({path: '/login'})
+        }
+      })
+    }
+  }
+})
+
+export default router

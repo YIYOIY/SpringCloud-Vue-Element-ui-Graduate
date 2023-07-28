@@ -104,25 +104,26 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { reactive, onBeforeMount, toRef, ref } from "vue";
-import axios from "axios";
 import { UploadFilled } from '@element-plus/icons-vue'
+import {getPicture} from "@/api/ImgAndExcelApi";
+import {ElMessage} from "element-plus";
+import {alterBook, getBooksById, getSeries} from "@/api/BookApi";
 let router = useRouter()
-
 const prop = defineProps(['bookId'])
 let bookId = toRef(prop, 'bookId')
 console.log(bookId.value + "!!!!!!!!!!!!!!!!!!!!!!")
 
-
 let havePicture = ref(true);
 let handleBookPicture = (() => {
   setTimeout(() => {
-    axios.get('pict/getPicture').then(Response => {
+    getPicture().then(Response => {
       book.book.bookPicture = Response.data
       if (book.book.bookPicture != null && book.book.bookPicture != "")
         console.log(book.book.bookPicture + "图片")
       havePicture.value = true
     }).catch(Error => {
-      alert(Error.message)
+      ElMessage.Error(Error.data.message)
+      console.log(Error)
     })
   }, 500);
 })
@@ -146,37 +147,33 @@ const book = reactive({
 
 let series = ref('')
 onBeforeMount(async () => {
-  await axios.get(`api/lookup?bookId=${bookId.value}`).then(Response => {
+  await getBooksById(bookId.value).then(Response => {
     book.book = Response.data
     console.log(book.book.bookName + "@@@@@@@@@@@@@@@@@@@@@@@@@@@")
   })
-  await axios.get('api/series').then(Response => {
+  await getSeries().then(Response => {
     series.value = Response.data
     console.log(series.value)
   }).catch(Error => {
-    alert(Error.message)
+    ElMessage.Error(Error.data.message)
+    console(Error)
   })
 })
 
-
-
-
-
-
 let alter = (() => {
-  let alterBook = JSON.stringify(book.book)
-  axios.put('api/book', alterBook, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-    let message = Response.data
-    if (confirm(message + "!  是否跳转到书籍页")) {
+  let Book = JSON.stringify(book.book)
+  alterBook(Book).then(Response => {
+    console.log(Response)
+    if (confirm(Response.message + "! 是否跳转到书籍页")) {
       router.push({
         name: 'adminBooks',
       })
     }
   }).catch(Error => {
-    alert(Error.message)
+    ElMessage.Error(Error.data.message)
+    console(Error)
   })
 })
-
 
 let back = (() => {
   router.push({

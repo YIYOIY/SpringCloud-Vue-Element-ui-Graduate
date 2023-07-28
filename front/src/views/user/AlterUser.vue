@@ -51,20 +51,14 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { ref, reactive, onMounted, toRef } from "vue";
-import axios from "axios";
 import { ElNotification } from "element-plus";
+import {alterUser, alterUserGet} from "@/api/UserApi";
 let router = useRouter();
-
 const prop = defineProps(["userId"]);
 let id = toRef(prop, "userId");
 const size = ref("default");
 const labelPosition = ref("left");
-
 let rule = reactive({
-  // userName: [
-  //   { required: true, message: "请输入姓名", trigger: "blur" },
-  //   { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" },
-  // ],
   userAddress: [
     {
       required: false,
@@ -89,32 +83,25 @@ const user = reactive({
     userAddress: "",
   },
 });
-console.log(user.user.userName);
+
 onMounted(async () => {
-  await axios.get(`api/user?userId=${id.value}`).then((Response) => {
+  await alterUserGet(id.value).then((Response) => {
     user.user = Response.data;
-    console.log(user.user);
   });
 });
 
 let alter = () => {
-  let alterUser = JSON.stringify(user.user);
-  console.log(alterUser);
-  axios
-    .put("api/user", alterUser, {
-      headers: { "Content-Type": "application/json" },
-    })
-    .then((Response) => {
-      let message = Response.data;
-      if (confirm(message + "!  是否跳转到用户页")) {
+  let User = JSON.stringify(user.user);
+  console.log(User);
+  alterUser(User).then((Response) => {
+      if (confirm(Response.message + "!  是否跳转到用户页")) {
         router.push({
           name: "adminUsers",
         });
       }
-    })
-    .catch((Error) => {
+    }).catch((Error) => {
       ElNotification({
-        message: Error.response.data + "  请重新输入!",
+        message: Error.data.message + "  请重新输入!",
         title: '错误',
         type: 'error',
         Position: 'top-right'

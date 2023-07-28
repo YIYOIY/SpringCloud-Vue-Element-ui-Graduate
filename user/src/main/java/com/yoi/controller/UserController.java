@@ -2,13 +2,12 @@ package com.yoi.controller;
 
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.yoi.entity.ReturnEnum;
+import com.yoi.entity.ReturnInfo;
 import com.yoi.entity.User;
 import com.yoi.exception.SelfExcept;
 import com.yoi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +21,7 @@ public class UserController {
 
     @CrossOrigin
     @GetMapping("/users")
-    public List<User> index(HttpServletRequest req, String searchName, String oper) {
+    public ReturnInfo index(HttpServletRequest req, String searchName, String oper) {
         HttpSession session = req.getSession();
         try {
             if (StringUtils.isNotEmpty(oper) && oper.equals("getByName")) {
@@ -38,32 +37,30 @@ public class UserController {
                     searchName = "";
                 }
             }
-
             List<User> users = userService.getAll(searchName);
-
-            return users;
+            return new ReturnInfo(200,"获取用户列表成功！",users);
         } catch (Exception e) {
             throw new SelfExcept("userController的index出现的问题");
         }
     }
 
     @GetMapping("/user")
-    public User userSelf(Integer userId) {
+    public ReturnInfo userSelf(Integer userId) {
         try {
             User user = userService.getById(userId);
-            return user;
+            return new ReturnInfo(200,"获取用户信息成功！",user);
         } catch (Exception e) {
             throw new SelfExcept("userController的userSelf出现的问题");
         }
     }
     @PostMapping("/addUser")
-    public ResponseEntity<String> addUser(@RequestBody User user) {
+    public ReturnInfo addUser(@RequestBody User user) {
         try {
             boolean addUser = userService.addUser(user);
             if (addUser) {
-                return ResponseEntity.ok("添加成功");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.USER_SUCCESS);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("添加失败，用户名重复！");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.USER_FAILED);
             }
         } catch (Exception e) {
             throw new SelfExcept("userController的addUser出现的问题");
@@ -72,7 +69,7 @@ public class UserController {
 
 
     @DeleteMapping("/user")
-    public ResponseEntity<String> deleteUser(Integer userId) {
+    public ReturnInfo deleteUser(Integer userId) {
         try {
 //            删除前检查购物车
 //            Long aLong = userService.checkBagData(userId);
@@ -81,27 +78,27 @@ public class UserController {
 //            } else {
                 boolean deleteUser = userService.deleteUser(userId);
                 if (deleteUser) {
-                    return ResponseEntity.ok("删除成功");
+                    return new ReturnInfo().withEnumNoData(ReturnEnum.DELETE_SUCCESS);
                 } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败");
+                    return new ReturnInfo().withEnumNoData(ReturnEnum.DELETE_FAILED);
                 }
 //            }
 
         } catch (Exception e) {
-            throw new SelfExcept("userController的deleteUser出现的问题");
+            throw new SelfExcept("userController的deleteUser出现的问题"+e);
         }
     }
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @PutMapping("/user")
-    public ResponseEntity<String> updateUser(@RequestBody User user) {
+    public ReturnInfo updateUser(@RequestBody User user) {
         try {
             System.out.println(user);
             boolean alterUser = userService.updateUser(user);
             if (alterUser) {
-                return ResponseEntity.ok("更新成功");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.ALTER_SUCCESS);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("更新失败，信息重复！");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.ALTER_FAILED);
             }
         } catch (Exception e) {
             throw new SelfExcept("userController的updateUser出现的问题"+e);

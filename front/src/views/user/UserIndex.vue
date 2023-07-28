@@ -63,6 +63,7 @@ import { useRouter } from "vue-router";
 import { ref, reactive, onMounted } from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
+import {alterUser, alterUserGet, deleteUser} from "@/api/UserApi";
 let router = useRouter()
 let store = useStore();
 const size = ref("default")
@@ -82,23 +83,23 @@ const user = reactive({
 console.log(user.user.userName)
 
 onMounted(async () => {
-  await axios.get(`api/user?userId=${store.state.userId}`).then(Response => {
+  await alterUserGet(store.state.userId).then(Response => {
     user.user = Response.data
-    console.log(user.user)
   })
 })
+
 const form = ref(null)
+
 let alter = (() => {
   form.value.validate(valid => {
     if (!valid) {
       ElMessage.error("请输入信息符合要求!");
       return false;
     }
-    let alterUser = JSON.stringify(user.user)
-    axios.put('api/user', alterUser, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-      let message = Response.data
+    let User = JSON.stringify(user.user)
+    alterUser(User).then(Response => {
       ElNotification({
-        message: message,
+        message: Response.message,
         title: '修改成功！',
         type: 'success',
         Position: 'top-left'
@@ -108,7 +109,7 @@ let alter = (() => {
       })
     }).catch(Error => {
       ElNotification({
-        message: Error.response.data + "  请重新输入!",
+        message: Error.data.message + "  请重新输入!",
         title: '错误',
         type: 'error',
         Position: 'top-right'
@@ -118,10 +119,6 @@ let alter = (() => {
 })
 
 let rule = reactive({
-  // userName: [
-  //   { required: true, message: "请输入姓名", trigger: "blur" },
-  //   { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" },
-  // ],
   userAddress: [
     {
       required: false,
@@ -137,36 +134,26 @@ let rule = reactive({
 });
 
 let back = (() => {
-  console.log("这里是用户自己删除")
   if (confirm("确认注销?")) {
-    axios.delete(`api/user?userId=${store.state.userId}`,
-    ).then(Response => {
-      let message = Response.data
+    deleteUser(store.state.userId).then(Response => {
       ElNotification({
-        message: message,
+        message: Response.message,
         title: '成功！',
         type: 'success',
         Position: 'top-left'
       });
-      sessionStorage.removeItem('user')
-      store.state.userId = '';
-      store.state.userName = '';
-      store.state.userPassword = '';
-      store.state.isUser = false;
-      store.state.isUser = false
-      store.state.userPassword = ''
-      store.state.userPetName = ''
-      store.state.userId = ''
-      sessionStorage.removeItem('user')
       router.push({
-        name: 'book'
+        name: 'login'
       })
     }).catch(Error => {
       ElNotification({
-        message: Error.response.data + "  请重新输入!",
+        message: Error.data.message + "  请重新输入!",
         title: '错误',
         type: 'error',
         Position: 'top-right'
+      })
+      router.push({
+        name: 'login'
       })
     })
   }

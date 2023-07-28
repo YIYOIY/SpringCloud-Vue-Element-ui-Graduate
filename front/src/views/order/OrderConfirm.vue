@@ -122,11 +122,9 @@
 <script setup>
 import { reactive, ref, toRef } from "vue";
 import { useRouter } from "vue-router";
-import axios from 'axios'
-import { useStore } from "vuex";
 import { ElMessage, ElNotification } from "element-plus";
+import {checkBag, getOrder} from "@/api/OrderApi";
 let router = useRouter()
-let store = useStore();
 const prop = defineProps(['orderId'])
 let orderId = toRef(prop, 'orderId')
 let order = ref([])
@@ -147,41 +145,35 @@ let customer = reactive({
 })
 
 console.log(orderId.value)
-axios.get(`api/order?orderId=${orderId.value}`).then(Response => {
+getOrder(orderId.value).then(Response => {
     order.value = Response.data
     console.log(order.value)
 })
 
 
-
 let buy = ((v, num, bookId) => {
     console.log("这里是购物车的购买" + v)
     if (confirm("确认购买?")) {
-        axios.put(`api/buyOrder?orderId=${v}&num=${num}&bookId=${bookId}`).then(Response => {
-            let message = Response.data
+      checkBag(v,num,bookId).then(Response => {
             ElNotification.success({
-                message: message,
+                message: Response.messgae,
                 position: 'top-left',
                 title: '购买成功'
             })
             router.push({
                 name: 'userOrder'
             })
-            axios.get(`api/userOrder?pageNo=${pageNo.value}&userId=${store.state.userId}`).then(Response => {
-                order.value = Response.data
-            })
-        }).catch(error => {
-            ElMessage.error(error.response.data)
-        })
+      }).catch(error => {
+        ElMessage.error(error.data.message)
+      })
     }
 })
 
-let back = ((v) => {
+let back = (() => {
     router.push({
         name: 'userOrder'
     })
 })
-
 </script>
 <style scoped>
 /deep/ .bookName .cell {

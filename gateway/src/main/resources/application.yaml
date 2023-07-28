@@ -51,7 +51,6 @@ seata:
 
 
 
-
 #  cloud:
 #    gateway:
 #      discovery:

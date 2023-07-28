@@ -4,13 +4,13 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yoi.entity.Book;
+import com.yoi.entity.ReturnEnum;
+import com.yoi.entity.ReturnInfo;
 import com.yoi.exception.SelfExcept;
 import com.yoi.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,14 +36,12 @@ public class BookController {
      */
     @CrossOrigin
     @GetMapping("/book")
-    public List<Book> index(@RequestParam(value = "searchName",required = false)String searchName,@RequestParam(value = "BookpageNo",required = false) Integer BookpageNo) {
+    public ReturnInfo index(@RequestParam(value = "searchName",required = false)String searchName, @RequestParam(value = "BookpageNo",required = false) Integer BookpageNo) {
         ListOperations<String, String> redisList = stringRedisTemplate.opsForList();
         List<Book> all = null;
-
         if (BookpageNo == null) {
             BookpageNo = 1;
         }
-
         try {
             if (StringUtils.isEmpty(searchName)) {
                 searchName = "";
@@ -63,7 +61,7 @@ public class BookController {
                             throw new RuntimeException(e);
                         }
                     });
-                    return books;
+                    return new ReturnInfo(200,"书籍获取成功！",books);
                 }
             }
 //                session.setAttribute("BookpageNo", BookpageNo);
@@ -96,34 +94,30 @@ public class BookController {
                 });
                 redisList.leftPushAll("books", redisBooks);
             }
-
 //            数据库数据总数量
             long count = bookService.getCount(searchName);
             long pagecount = (count + 4) / 5;
 //            session.setAttribute("Bookpagecount", pagecount);
-
-
-            return all;
+            return new ReturnInfo(200,"书籍获取成功",all);
         } catch (Exception e) {
             throw new SelfExcept("bookController的index出现的问题" + e);
         }
     }
 
 
-
     @GetMapping("/lookup")
-    public Book lookUp(Integer bookId) {
+    public ReturnInfo lookUp(Integer bookId) {
         Book book = bookService.getById(bookId);
-        return book;
+        return new ReturnInfo(200,"书籍查询成功！",book);
     }
 
 
     @GetMapping("/selectBySeries")
-    public List<Book> selectBySeries(@RequestParam("seriesName") String seriesName) {
+    public ReturnInfo selectBySeries(@RequestParam("seriesName") String seriesName) {
         System.out.println(seriesName);
         List<Book> bookList = bookService.selectBySeries(seriesName);
         System.out.println(bookList);
-        return bookList;
+        return new ReturnInfo(200,"书籍类型获取成功！",bookList);
     }
 
 //    @CrossOrigin
@@ -140,37 +134,30 @@ public class BookController {
 
 
     @PostMapping("/book")
-    public ResponseEntity<String> addBook(@RequestBody Book book) {
+    public ReturnInfo addBook(@RequestBody Book book) {
         try {
             stringRedisTemplate.delete("books");
             boolean addBook = bookService.addBook(book);
             if (addBook) {
-                return ResponseEntity.ok("添加成功");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.ADD_SUCCESS);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("添加失败");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.ADD_FAILED);
             }
         } catch (Exception e) {
-            System.out.println(e);
             throw new SelfExcept("bookController的add出现的问题" + e);
         }
     }
 
     @DeleteMapping("/book")
-    public ResponseEntity<String> deleteBook(Integer bookId) {
+    public ReturnInfo deleteBook(Integer bookId) {
         try {
             stringRedisTemplate.delete("books");
-            //            删除前检查购物车
-//            Long aLong = bookService.checkBagData(bookId);
-//            if (aLong > 0) {
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败,改图书被某些用户加入购物车!");
-//            } else {
             boolean deleteBook = bookService.deleteBook(bookId);
             if (deleteBook) {
-                return ResponseEntity.ok("删除成功");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.DELETE_SUCCESS);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.DELETE_FAILED);
             }
-//            }
         } catch (Exception e) {
             throw new SelfExcept("bookController的delete出现的问题"+e);
         }
@@ -178,15 +165,15 @@ public class BookController {
 
 
     @PutMapping("/book")
-    public ResponseEntity<String> updateBook(@RequestBody Book book) {
+    public ReturnInfo updateBook(@RequestBody Book book) {
         try {
             stringRedisTemplate.delete("books");
             boolean alterBook = bookService.updateBook(book);
             if (alterBook) {
 //                添加书籍封面时是否可以返回一个url通过路由进行编程式跳转或者刷新
-                return ResponseEntity.ok("修改成功");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.ALTER_SUCCESS);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("修改失败");
+                return new ReturnInfo().withEnumNoData(ReturnEnum.ALTER_FAILED);
             }
         } catch (Exception e) {
             System.out.println(e);

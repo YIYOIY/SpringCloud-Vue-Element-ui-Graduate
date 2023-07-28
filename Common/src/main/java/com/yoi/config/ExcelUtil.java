@@ -3,7 +3,6 @@ package com.yoi.config;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
-
 /**
  * @author 游弋
  * @create 2023-06-08 1:28 PM
@@ -14,7 +13,6 @@ public class ExcelUtil {
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
 //        添加一个sheet，对应excel的一个sheet
         XSSFSheet sheet = xssfWorkbook.createSheet(name);
-
 //        创建单元格样式，并设置值表头 设置表头居中,创建一个居中格式
         XSSFCellStyle cellStyle = xssfWorkbook.createCellStyle();
         cellStyle.setAlignment(HorizontalAlignment.CENTER);

@@ -19,11 +19,9 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
-import { reactive, onBeforeMount, toRef } from "vue";
-import axios from "axios";
-import { SuccessFilled, UploadFilled } from '@element-plus/icons-vue'
-let router = useRouter()
+import { reactive } from "vue";
+import {addSeries} from "@/api/CategoryApi";
+import {ElMessage} from "element-plus";
 let emit = defineEmits(['finish', 'cancel'])
 
 const series = reactive({
@@ -32,24 +30,16 @@ const series = reactive({
   }
 })
 
-
 let add = (() => {
-  let addSeries = JSON.stringify(series.series)
-  axios.post('api/bookSeries', addSeries, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-    let message = Response.data
-    alert(message)
+  let Series = JSON.stringify(series.series)
+  addSeries(Series).then(Response => {
+    ElMessage.success(Response.message)
     emit('finish')
+    series.series=''
   }).catch(Error => {
-    alert(Error.message)
+    alert(Error.data.message)
   })
 })
-
-
-// let back = (() => {
-//   router.push({
-//     name: 'category'
-//   })
-// })
 
 let back = (() => {
   emit('cancel')

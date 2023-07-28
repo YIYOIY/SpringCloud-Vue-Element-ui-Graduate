@@ -2,6 +2,7 @@ package com.yoi.controller;
 
 import com.yoi.config.ExcelUtil;
 import com.yoi.entity.Book;
+import com.yoi.entity.ReturnInfo;
 import com.yoi.mapper.BookMapper;
 import com.yoi.service.BookService;
 import org.apache.poi.ss.usermodel.*;
@@ -81,7 +82,7 @@ public class ExcelController {
 
 
     @RequestMapping("importExcel")
-    public void excelInput(MultipartFile photo) {
+    public ReturnInfo excelInput(MultipartFile photo) {
         Boolean books = stringRedisTemplate.delete("books");
         if (books){
             System.out.println("redis中的books缓存已清空");
@@ -98,8 +99,10 @@ public class ExcelController {
                 System.out.println(e+"\n\n\n\n\n正在进行插入操作\n\n\n\n\n\n\n\n\n\n\n");
                 bookService.addBook(e);
             });
+            return new ReturnInfo<>(200,"数据已从execel导入成功！");
         } catch (IOException e) {
             e.printStackTrace();
+            return new ReturnInfo<>(200,"数据已从execel导入成功！");
         }
     }
 

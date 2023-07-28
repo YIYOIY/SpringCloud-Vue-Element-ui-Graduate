@@ -1,15 +1,12 @@
 package com.yoi.feign.feignimpl;
 
 import com.yoi.entity.Admin;
+import com.yoi.entity.ReturnInfo;
 import com.yoi.entity.User;
 import com.yoi.feign.FeignAdminService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * @author 游弋
@@ -18,38 +15,43 @@ import java.util.List;
 @Component
 public class FeignAdminServiceImpl implements FeignAdminService {
     @Override
-    public List<Admin> index(HttpServletRequest req, String searchName, String oper) {
-        return null;
+    public ReturnInfo index(HttpServletRequest req, String searchName, String oper) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
     @Override
-    public ResponseEntity<String> addAdmin(Admin admin) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo addAdmin(Admin admin) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
     @Override
-    public ResponseEntity<String> deleteAdmin(Integer adminId) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo deleteAdmin(Integer adminId) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
     @Override
-    public Admin alterAdmin(Integer adminId) {
-        return null;
+    public ReturnInfo alterAdmin(Integer adminId) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
     @Override
-    public ResponseEntity<String> updateAdmin(Admin admin) {
-        return ResponseEntity.ok("后台服务超时或宕机，稍后再试！");
+    public ReturnInfo updateAdmin(Admin admin) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
 
     @Override
-    public Admin adminLogin(Admin admin) {
-        return null;
+    public ReturnInfo adminLogin(Admin admin) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 
     @Override
-    public User userLogin(User user) {
-        return null;
+    public ReturnInfo userLogin(User user) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
+    }
+
+    @Override
+    public ReturnInfo userLogin(String token) {
+        return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
     }
 }

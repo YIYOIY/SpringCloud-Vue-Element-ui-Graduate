@@ -2,27 +2,26 @@ package com.yoi.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.yoi.entity.Admin;
+import com.yoi.entity.ReturnInfo;
 import com.yoi.exception.SelfExcept;
 import com.yoi.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
 public class AdminController {
+
     @Autowired
     private AdminService adminService;
 
     @CrossOrigin
     @GetMapping("/admin")
-    public List<Admin> index(HttpServletRequest req,@RequestParam(value = "searchName",required = false) String searchName,@RequestParam(value = "oper",required = false) String oper) {
+    public ReturnInfo index(HttpServletRequest req, @RequestParam(value = "searchName",required = false) String searchName, @RequestParam(value = "oper",required = false) String oper) {
         HttpSession session = req.getSession();
+        String token = req.getHeader("token");
         try {
             if (StringUtils.isNotEmpty(oper) && oper.equals("getByName")) {
                 if (StringUtils.isEmpty(searchName)) {
@@ -38,64 +37,63 @@ public class AdminController {
                 }
             }
             List<Admin> admins = adminService.getAll(searchName);
-            return admins;
+            return new ReturnInfo(200,"用户信息获取成功",admins);
         } catch (Exception e) {
-            throw new SelfExcept("AdminController的index出现的问题");
+            throw new SelfExcept("AdminController的index出现的问题 \t"+e);
         }
     }
 
     @PostMapping("/addAdmin")
-    public ResponseEntity<String> addAdmin(@RequestBody Admin admin) {
+    public ReturnInfo addAdmin(@RequestBody Admin admin) {
         try {
-            System.out.println(admin+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             boolean Admin = adminService.addAdmin(admin);
             if (Admin) {
-                return ResponseEntity.ok("添加成功");
+                return new ReturnInfo(200,"添加管理员成功");
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("添加失败");
+                return new ReturnInfo(401,"添加管理员失败");
             }
         } catch (Exception e) {
-            throw new SelfExcept("AdminController的add出现的问题");
+            throw new SelfExcept("AdminController的add出现的问题 \t"+e);
         }
     }
 
 
     @DeleteMapping("/admin")
-    public ResponseEntity<String> deleteAdmin(Integer adminId) {
+    public ReturnInfo deleteAdmin(@RequestParam("adminId") Integer adminId) {
         try {
             boolean deleteAdmin = adminService.deleteAdmin(adminId);
             if (deleteAdmin) {
-                return ResponseEntity.ok("删除成功");
+                return new ReturnInfo(200,"删除成功管理员成功");
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败");
+                return new ReturnInfo(200,"删除成功管理员失败");
             }
         } catch (Exception e) {
-            throw new SelfExcept("AdminController的delete出现的问题");
+            throw new SelfExcept("AdminController的delete出现的问题\t"+e);
         }
     }
 
 
     @GetMapping("/alterAdmin")
-    public Admin alterAdmin(Integer adminId) {
+    public ReturnInfo alterAdmin(@RequestParam("adminId") Integer adminId) {
         try {
             Admin alterAdmin = adminService.getByAdminId(adminId);
-            return alterAdmin;
+            return new ReturnInfo(200,"获取管理员数据成功",alterAdmin);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new SelfExcept("AdminController的alter获取数据回显出现的问题\t"+e);
         }
     }
 
     @PutMapping("/admin")
-    public ResponseEntity<String> updateAdmin(@RequestBody Admin admin) {
+    public ReturnInfo updateAdmin(@RequestBody Admin admin) {
         try {
             boolean alterdmin = adminService.updateAdmin(admin);
             if (alterdmin) {
-                return  ResponseEntity.ok("更新成功");
+                return  new ReturnInfo(200,"更新成功管理员成功");
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("更新失败");
+                return new ReturnInfo(200,"更新成功管理员失败");
             }
         } catch (Exception e) {
-            throw new SelfExcept("AdminController的update出现的问题");
+            throw new SelfExcept("AdminController的update出现的问题\t"+e);
         }
     }
 

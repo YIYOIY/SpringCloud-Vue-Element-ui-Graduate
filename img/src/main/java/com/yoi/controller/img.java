@@ -1,12 +1,13 @@
 package com.yoi.controller;
 
+import com.yoi.entity.ReturnInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -22,7 +23,7 @@ import java.util.UUID;
  * @author 游弋
  * @create 2023-06-07 3:43 PM
  */
-@Controller
+@RestController
 public class img {
     private String picturePath;
 //    使用yaml配置对象的方式进行一次设置，持续引用
@@ -31,7 +32,7 @@ public class img {
 
 
     @RequestMapping("/test/up")
-    public ResponseEntity<String> testUp(HttpSession session, MultipartFile photo) throws IOException {
+    public ReturnInfo testUp(HttpSession session, MultipartFile photo) throws IOException {
 //        获取上传的文件名
         String filename = photo.getOriginalFilename();
 
@@ -52,24 +53,22 @@ public class img {
 //            }
 //        }
 
-
         FILEPATH= FILEPATH.replaceAll("\\\\","/");;
 
         System.out.println("已经获得当前项目图片文件夹在当前设备的绝对路径："+FILEPATH);
         Path path2 = Paths.get(FILEPATH);
         String finalPath = path2 + File.separator + filename;
         photo.transferTo(new File(finalPath));
-
 //        上传成功后返回成功信息
         picturePath="img/"+filename;
         System.out.println("返回前端的图片请求路径"+picturePath);
-        return ResponseEntity.ok(picturePath);
+        return new ReturnInfo(200,"图片传输完成！",picturePath);
     }
 
     @RequestMapping("/getPicture")
-    public ResponseEntity<String> getPicture(){
+    public ReturnInfo getPicture(){
         String picture=picturePath;
-        return ResponseEntity.ok(picture);
+        return new ReturnInfo(200,"图片路径获取完成！",picture);
     }
     @RequestMapping("/test/download")
     public ResponseEntity<byte[]> testResponseEntity(HttpSession session) throws IOException {

@@ -1,13 +1,10 @@
 <template>
-  <div style="margin: 15% 30%">
-
-    <div style="width: 60%;float: left">
-
+  <div style="margin: 5% 20%">
+    <div style="width: 100%;float: left">
       <el-form size="default" label-position="left" ref="form" width="100%" :model="series">
         <el-form-item label="系列">
           <el-input v-model="series.series.seriesName" :model-value="series.series.seriesName"></el-input>
         </el-form-item>
-
         <el-form-item>
           <el-row style="width:100%" justify="space-evenly">
             <el-col span="24">
@@ -18,7 +15,6 @@
             </el-col>
           </el-row>
         </el-form-item>
-
       </el-form>
     </div>
   </div>
@@ -26,14 +22,14 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import { reactive, onBeforeMount, toRef } from "vue";
-import axios from "axios";
+import {reactive} from "vue";
+import {alterSeries, getSeriesByID} from "@/api/CategoryApi";
+import {ElMessage} from "element-plus";
+import {inject} from "vue";
+let emit = defineEmits(['finish', 'cancel'])
 let router = useRouter()
 
-const prop = defineProps(['seriesId'])
-let seriesId = toRef(prop, 'seriesId')
-console.log(seriesId.value + "!!!!!!!!!!!!!!!!!!!!!!")
-
+let seriesId = inject("seriesId")
 const series = reactive({
   series: {
     seriesName: "",
@@ -41,35 +37,25 @@ const series = reactive({
   }
 })
 
-
-onBeforeMount(async () => {
-  await axios.get(`api/bookSeriesBySeriesId?seriesId=${seriesId.value}`).then(Response => {
-    series.series = Response.data
-    console.log(series.series.seriesName + "@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-  })
+getSeriesByID(seriesId.value).then(Response => {
+  series.series = Response.data
 })
 
-
 let alter = (() => {
-  let alterSeries = JSON.stringify(series.series)
-
-  axios.put('api/bookSeries', alterSeries, { headers: { 'Content-Type': 'application/json' } }).then(Response => {
-    let message = Response.data
-    if (confirm(message + "!  是否跳转到系列页")) {
-      router.push({
-        name: 'category',
-      })
-    }
+  let Series = JSON.stringify(series.series)
+  alterSeries(Series).then(Response => {
+      ElMessage.success(Response.message)
+      emit('finish')
+      series.seriesName=''
   }).catch(Error => {
-    alert(Error.message)
+    ElMessage(Error.data.message)
   })
 })
 
 let back = (() => {
-  router.push({
-    name: 'category'
-  })
+  emit('cancel')
+  location.reload()
+  router.go(0)
 })
 </script>
 
-<style scoped></style>

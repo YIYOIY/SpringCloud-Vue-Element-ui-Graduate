@@ -11,5 +11,7 @@ export default createStore({
 
         isAdmin: false,
         isUser: false,
+
+        menu:1,
     }
 })

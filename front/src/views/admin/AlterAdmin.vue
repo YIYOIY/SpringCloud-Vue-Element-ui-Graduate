@@ -24,8 +24,8 @@
         <el-input v-model="admin.admin.adminPassword" show-password prop="adminPassword"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="danger" @click="alter()">修改</el-button>
-        <el-button type="success" @click="back()">返回</el-button>
+        <el-button type="danger" plain round @click="alter()">修改</el-button>
+        <el-button type="success"  plain round @click="back()">返回</el-button>
       </el-form-item>
     </el-form>
   </div>

@@ -1,59 +1,55 @@
 <template>
-  <div style="margin: 10% 2%;text-align: center;align-content: center">
-    <div class="control">
-      <p style="margin-left: 5%">size control</p>
-      <el-radio-group v-model="size">
-        <el-radio label="large">large</el-radio>
-        <el-radio label="default">default</el-radio>
-        <el-radio label="small">small</el-radio>
-      </el-radio-group>
-      <p style="margin-left: 5%">Position Control</p>
-      <el-radio-group v-model="labelPosition">
-        <el-radio label="left">left</el-radio>
-        <el-radio label="right">right</el-radio>
-        <el-radio label="top">top</el-radio>
-      </el-radio-group>
-    </div>
-    <br />
-    <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="user.user" :rules="rule">
+  <div id="building">
+    <el-form  label-position="top" ref="form" label-width="100" :model="user.user" :rules="rule" style="width: 100%">
+      <div style="left: 10%;max-width: 15%;position: absolute">
+
       <el-form-item label="姓名" prop="userName">
-        <el-input v-model="user.user.userName" :model-value="user.user.userName" disabled></el-input>
+        <el-input v-model="user.user.userName" disabled clearable placeholder="在此输入账户名称"></el-input>
       </el-form-item>
+
       <el-form-item label="性别">
-        <el-select v-model="user.user.userSex" filterable clearable placeholder="选择性别">
+        <el-select v-model="user.user.userSex" filterable clearable placeholder="选择性别" style="border-radius: 18px">
           <el-option label="男" value="男" />
           <el-option label="女" value="女" />
           <el-option label="保密" value="保密" />
         </el-select>
-        <!-- <el-input v-model="user.user.userSex" :model-value="user.user.userSex"></el-input> -->
-      </el-form-item>
-      <el-form-item label="生日" clearable>
-        <el-date-picker clearable v-model="user.user.userBirth" :model-value="user.user.userBirth" align="right"
-          type="date" format="YYYY 年 MM 月 DD 日">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="密码" prop="userPassword">
-        <el-input type=" password" show-password v-model="user.user.userPassword"
-          :model-value="user.user.userPassword"></el-input>
-      </el-form-item>
-      <el-form-item label="电话">
-        <el-input v-model="user.user.userPhone" :model-value="user.user.userPhone"></el-input>
-      </el-form-item>
-      <el-form-item label="地址" prop="userAddress">
-        <el-input v-model="user.user.userAddress" :model-value="user.user.userAddress"></el-input>
       </el-form-item>
 
-      <el-form-item label-width="80">
-        <el-row justify="space-around" gutter="20">
+      <el-form-item label="出生日期">
+        <el-date-picker clearable v-model="user.user.userBirth"
+          type="date" format="YYYY 年 MM 月 DD 日" placeholder="在此选择出生日期">
+        </el-date-picker>
+      </el-form-item>
+      </div>
+
+      <div style="right: 50%;max-width: 25%;position: absolute">
+        <el-form-item label="账户密码" prop="userPassword">
+          <el-input type="password" show-password v-model="user.user.userPassword" clearable  placeholder="在此输入账户密码"></el-input>
+        </el-form-item>
+
+        <el-form-item label="联系方式">
+          <el-input v-model="user.user.userPhone"  clearable  placeholder="在此输入联系方式"></el-input>
+        </el-form-item>
+      </div>
+
+      <div style="right: 10%;width: 25%;position: absolute">
+        <el-form-item label="地址" prop="userAddress" @change="next">
+          <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10 }" v-model="user.user.userAddress"
+                    clearable placeholder="在此输入收货地址"></el-input>
+        </el-form-item>
+      </div>
+    </el-form>
+
+      <div style="right: 30%;top:75%;width:50%;position: absolute">
+        <el-row class="control" gutter="40">
           <el-col :span="12">
-            <el-button type="success" dark @click="alter()">修改</el-button>
+            <el-button type="success"  @click="alter()" plain round>修改</el-button>
           </el-col>
           <el-col :span="12">
-            <el-button type="danger" dark @click="back()">注销</el-button>
+            <el-button type="danger"  @click="back()" plain round>注销</el-button>
           </el-col>
         </el-row>
-      </el-form-item>
-    </el-form>
+      </div>
   </div>
 </template>
 
@@ -61,13 +57,10 @@
 import { ElMessage, ElNotification } from "element-plus";
 import { useRouter } from "vue-router";
 import { ref, reactive, onMounted } from "vue";
-import axios from "axios";
 import { useStore } from "vuex";
 import {alterUser, alterUserGet, deleteUser} from "@/api/UserApi";
 let router = useRouter()
 let store = useStore();
-const size = ref("default")
-const labelPosition = ref("left")
 
 const user = reactive({
   user: {
@@ -161,22 +154,48 @@ let back = (() => {
 </script>
 
 <style scoped>
-.el-radio-group {
-  margin-right: 12px;
+#building {
+  background: url(../../assets/static/alterUser.jpg);
+  width: 100%;
+  height: 100%;
+  font-size: large;
+  position: fixed;
+  background-size: 100% 85%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  z-index: -1;
+}
+
+.el-button{
+  width: 100%;
+  height: 100%;
 }
 
 .el-input {
-  width: 30%;
+  --el-input-border-radius: 18px;
 }
 
-.control {
-  float: left;
-  width: 30%;
+
+/deep/ .el-form-item__label {
+  font-size: 20px;
+  color: #fff;
+}
+
+/deep/ .el-step__description, el-step__title {
+  font-size: 15px;
+  color: #fff;
 }
 
 .el-form {
-  margin-left: 10%;
-  float: right;
-  width: 60%;
+  font-size: 30px;
+  margin: 6% 10%;
+  width: 40%;
+}
+
+.control {
+  top: 30%;
+  left: 35%;
+  width: 50%;
 }
 </style>

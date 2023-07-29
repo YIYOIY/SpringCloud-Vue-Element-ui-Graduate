@@ -6,15 +6,17 @@
     <el-dialog v-model="alterView" title="修改系列" width="50%" style="height: 50%;width: 50%">
       <AlterCategory :open="alterView" @cancel="cancel" @finish="alterFinish"></AlterCategory>
     </el-dialog>
-    <el-button @click="addView = !addView" type="info" style="margin-top: 5%">添加新系列</el-button>
+
+    <el-button @click="addView = !addView" plain round type="warning" style="margin-top: 5%">添加新系列</el-button>
+
     <el-table :data="series" highlight-current-row="true" height="100%" style="width: 100%;margin-top: 3%"
       label-width="30%" :row-class-name="rn">
       <el-table-column prop="seriesId" label="编号"></el-table-column>
       <el-table-column prop="seriesName" label="系列名"></el-table-column>
       <el-table-column prop="seriesId" label="操作">
         <template v-slot="scope">
-          <el-button color="#626aef" round @click="alter(scope.row.seriesId)">修改</el-button>
-          <el-button type="danger" round @click="del(scope.row.seriesId)">删除</el-button>
+          <el-button color="#626aef" plain round @click="alter(scope.row.seriesId)">修改</el-button>
+          <el-button type="danger" plain round @click="del(scope.row.seriesId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -26,7 +28,7 @@ import AddCategory from "./AddCategory.vue";
 import AlterCategory from "@/views/category/AlterCategory.vue";
 import {ref} from "vue";
 import {deleteSeries} from "@/api/CategoryApi";
-import {ElMessage} from "element-plus";
+import {ElLoading, ElMessage} from "element-plus";
 import {getSeries} from "@/api/BookApi";
 import {provide} from "vue";
 
@@ -65,7 +67,16 @@ let alter = ((v) => {
 
 let alterFinish=(()=>{
   alterView.value = false
-  location.reload()
+
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+  setTimeout(() => {
+    location.reload()
+    loading.close()
+  }, 2000)
 })
 
 let del = ((v) => {

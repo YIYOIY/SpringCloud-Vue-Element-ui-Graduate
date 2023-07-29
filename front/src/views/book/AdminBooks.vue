@@ -1,6 +1,19 @@
 <template>
-  <el-button @click="add()" type="info" style="margin-top: 1%">添加新书籍</el-button>
-  <el-button type="warning"><a href="excel/exportExcel">excel表格导出所有书籍</a></el-button>
+  <div style="width: 20%;height:100%;margin: 8% 5%">
+    <el-row :gutter="10" >
+
+      <el-col :span="12">
+        <el-button @click="add()" plain round type="warning" style="margin-top: 1%">添加新书籍</el-button>
+      </el-col>
+
+      <el-col :span="12">
+        <el-button plain round type="primary"><a href="excel/exportExcel">excel表格导出所有书籍</a></el-button>
+      </el-col>
+    </el-row>
+
+  </div>
+
+
   <el-table stripe :data="books" :highlight-current-row=true height="100%" style="width: 96%; margin-left:2%"
     label-width="30%">
     <!--    <el-table-column prop="bookId" label="书籍编号" width="120px"></el-table-column>-->
@@ -20,8 +33,14 @@
     <el-table-column prop="bookNum" label="库存" sortable></el-table-column>
     <el-table-column prop="bookId" label="操作">
       <template v-slot="scope">
-        <el-button class="el-button" round color="#626aef" @click="alter(scope.row.bookId)">修改</el-button>
-        <el-button class="el-button" round type="danger" @click="del(scope.row.bookId)">删除</el-button>
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-button class="el-button" plain round color="#626aef" @click="alter(scope.row.bookId)">修改</el-button>
+          </el-col>
+          <el-col :span="12">
+            <el-button class="el-button" plain round type="danger" @click="del(scope.row.bookId)">删除</el-button>
+          </el-col>
+        </el-row>
       </template>
     </el-table-column>
   </el-table>
@@ -74,9 +93,8 @@ const add = () => {
   padding-left: 25%;
 }
 
-.el-button {
-  margin-left: 10%;
-  width: 80%;
-  margin-top: 2%;
+a{
+  color: #69c4e0;
+  text-decoration-line: none;
 }
 </style>

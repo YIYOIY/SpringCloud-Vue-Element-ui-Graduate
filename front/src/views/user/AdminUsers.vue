@@ -1,6 +1,6 @@
 <template>
   <div class="ac">
-    <el-button @click="add()" type="info" style="margin-top: 5%">添加新用户</el-button>
+    <el-button @click="add()"  plain round type="warning" style="margin-top: 5%">添加新用户</el-button>
 
     <el-table :data="users" highlight-current-row="true" height="100%" style="width: 100%;margin-top: 3%"
               label-width="20%" :row-class-name="rn">
@@ -13,19 +13,19 @@
       <el-table-column prop="userBirth" label="生日"></el-table-column>
       <el-table-column prop="userId" label="操作">
         <template v-slot="scope">
-          <el-button type="success" round class="el-button" @click="alter(scope.row.userId)">修改</el-button>
-          <el-button type="primary" round class="el-button" @click="del(scope.row.userId)">删除</el-button>
+          <el-button type="success" round plain class="el-button" @click="alter(scope.row.userId)">修改</el-button>
+          <el-button type="primary" round plain class="el-button" @click="del(scope.row.userId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
 </template>
 <script setup>
-import {ref} from "vue";
+import {nextTick, ref} from "vue";
 import {useRouter} from "vue-router";
 import {deleteUser, getUsers} from "@/api/UserApi";
 import {useStore} from "vuex";
-import {ElMessage, ElNotification} from "element-plus";
+import {ElLoading, ElMessage, ElNotification} from "element-plus";
 
 const store = useStore()
 let router = useRouter()
@@ -40,7 +40,7 @@ const rn = ({row, rowIndex}) => {
   if (rowIndex % 2 !== 0) {
     return 'light-row'
   } else {
-    return 'aterrimus-row'
+    return 'dark-row'
   }
 }
 
@@ -78,6 +78,7 @@ let del = ((v) => {
 })
 
 let add = (() => {
+  const loadingInstance =ElLoading.service({ fullscreen: true })
   router.push({
     name: 'addUser'
   })
@@ -95,11 +96,11 @@ let add = (() => {
 }
 
 /deep/ .light-row {
-  background: #d9e6ea;
+  background: #eff3f3;
 }
 
-/deep/ .aterrimus-row {
-  background: #e7ecef;
+/deep/ .dark-row {
+  background: #e5f5f5;
 }
 
 .ac {

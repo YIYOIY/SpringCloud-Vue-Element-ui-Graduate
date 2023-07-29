@@ -14,7 +14,7 @@
           <template #content>
            {{scope.row.orderTime}}
           </template>
-          <el-button type="info" style="border-radius: 10px">
+          <el-button plain round type="info" >
             {{scope.row.orderTime.substring(0,10)}}
           </el-button>
         </el-tooltip>
@@ -43,10 +43,10 @@
     <el-table-column prop="orderStatus" label="状态"></el-table-column>
     <el-table-column prop="[orderId,orderStutus,book.bookNum]" label="操作">
       <template v-slot="scope">
-        <el-button class="el-button" round color="#626aef"
+        <el-button class="el-button" plain round color="#626aef"
           @click="buy(scope.row.orderId, scope.row.bookNum, scope.row.bookId)"
           :disabled="(scope.row.orderStatus == `已购买`) || (scope.row.bookNum > scope.row.book.bookNum)">购买</el-button>
-        <el-button class="el-button" round type="danger" @click="del(scope.row.orderId)">删除</el-button>
+        <el-button class="el-button" plain round type="danger" @click="del(scope.row.orderId)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>

@@ -1,49 +1,49 @@
 <template>
-  <div style="width: 100%;height: 100%;margin-bottom: 3%">
-    <el-carousel style="width: 100%;height: 100%" :interval=2000 :initial-index=0 height="550px" direction="horizontal"
-                 type="card" :autoplay="true" arrow="hover" pause-on-hover loop indicator-position="outside"
+  <div style="width:100%;height: 100%;margin: 2% 1%" >
+    <el-carousel style="width:100%;height:100%" height="550px" :interval=1500 :initial-index=1  direction="horizontal" type="card" :autoplay="true" arrow="hover" pause-on-hover loop indicator-position="outside"
                  trigger="hover">
-      <el-carousel-item v-for="item in books" :key="item.bookId" style="margin: 2% 10%">
-        <el-image :src=item.bookPicture style="width: 50%" @click="inf(item.bookId)">
-        </el-image>
+      <el-carousel-item v-for="item in books" :key="item.bookId" style="width: 100%;height: 100%" >
+        <el-image :src=item.bookPicture style="width: 25%;height: 90%"  @click="inf(item.bookId)"></el-image>
       </el-carousel-item>
     </el-carousel>
   </div>
 
-
-  <el-row :gutter="10">
-    <el-col title="按系列查询" :span="8">
+  <div style="width: 100%;height: 100%">
+  <el-row :gutter="16">
+    <el-col title="按系列查询" :span="8" :offset="5">
       <el-form-item label="系列">
-        <el-select v-model="seriesName" :model-value="seriesName" clearable placeholder="请选择系列"
-                   @change="selectBySeries">
-          <el-option v-for="item in series" :key="item.seriesId" :label="item.seriesName"
-                     :value="item.seriesName"></el-option>
+        <el-select v-model="seriesName" clearable placeholder="请选择系列" @change="selectBySeries">
+          <el-option v-for="item in series" :key="item.seriesId" :label="item.seriesName" :value="item.seriesName"></el-option>
         </el-select>
         <el-icon class="is-loading" size="large" style="margin: 0 5px">
           <Football/>
         </el-icon>
       </el-form-item>
     </el-col>
+
     <el-col title="按书名查询" :span="5">
       <el-form-item label="书籍">
         <el-input v-model="searchName" type="text" clearable placeholder="请输入书名"/>
       </el-form-item>
     </el-col>
+
     <el-col :span="4">
-      <el-button type="primary" @click="selectByName">查询
-        <el-icon class="is-loading" size="large" style="margin: 0px 5px">
+      <el-button type="primary" @click="selectByName" plain round>查询
+        <el-icon class="is-loading" size="large" style="margin: 0 5px">
           <Aim/>
         </el-icon>
       </el-button>
     </el-col>
   </el-row>
 
-  <el-table stripe :data="books" :highlight-current-row=true height="800" style="width: 100%;margin-top: 1%"
-            label-width="20%">
-    <!--    <el-table-column prop="bookId" label="书籍编号" width="120px"></el-table-column>-->
+  </div>
+
+
+  <el-table stripe :data="books" :highlight-current-row=true height="100%" style="width: 100%">
+<!--    <el-table-column  prop="bookId" label="书籍编号" width="120px"></el-table-column>-->
     <el-table-column fixed prop="bookPicture" label="封面">
       <template v-slot="scope">
-        <el-image :src="scope.row.bookPicture" style="width: 100%;height: 100%;" @click="inf(scope.row.bookId)">
+        <el-image :src="scope.row.bookPicture" style="width: 80%;height: 100%;" @click="inf(scope.row.bookId)">
         </el-image>
       </template>
     </el-table-column>
@@ -57,13 +57,23 @@
     <el-table-column prop="bookNum" label="库存" sortable></el-table-column>
     <el-table-column prop="bookId" label="操作">
       <template v-slot="scope">
-        <el-button class="el-button" round type="success" @click="inf(scope.row.bookId)">书籍详情</el-button>
-        <el-button class="el-button" round @click="buy(scope.row.bookId)"
-                   v-show="scope.row.bookNum > 0">加入购物车
+        <el-button class="Ybutton" plain round type="success" @click="inf(scope.row.bookId)">书籍详情</el-button>
+        <el-button type="primary" plain round @click="buy(scope.row.bookId)" v-show="scope.row.bookNum > 0">加入购物车
         </el-button>
       </template>
     </el-table-column>
   </el-table>
+
+<div>
+  <el-steps :active="active" align-center finish-status="success" style="width: 70%;margin:3% 15%">
+    <el-step title="Step 1" description="注册账户" />
+    <el-step title="Step 2" description="选择书籍加入购物车" />
+    <el-step title="Step 3" description="在购物车进行支付" />
+    <el-step title="Step 4" description="确认收货！" />
+  </el-steps>
+  <el-button type="danger" style="width: 70%;margin:3% 15%" @click="next" plain round>下一步</el-button>
+</div>
+
 </template>
 
 <script setup>
@@ -87,9 +97,13 @@ import {addOrder} from "@/api/OrderApi";
 
 
 let books = ref([])
+let active = ref(0)
 let router = useRouter()
 let store = useStore()
 
+let next=(()=>{
+  active.value++ >3?active.value=0:active.value
+})
 
 let searchName = ref('')
 let selectByName = (() => {
@@ -171,9 +185,9 @@ let buy = ((v) => {
   padding-left: 25%;
 }
 
-.el-button {
+.Ybutton {
   margin-left: 10%;
   margin-top: 2%;
-  width: 80%;
+  margin-bottom: 10%;
 }
 </style>

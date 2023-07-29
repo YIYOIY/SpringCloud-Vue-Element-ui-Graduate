@@ -1,11 +1,6 @@
 <template>
-  <!--  <el-radio-group v-model="isCollapse"  @mouseover="change()">-->
-  <!--    <el-radio-button :label="true"  class="radio">折叠</el-radio-button>-->
-  <!--    <el-radio-button :label="false" class="radio">展开</el-radio-button>-->
-  <!--  </el-radio-group>-->
-  <el-menu default-active="2" class="el-menu-vertical-demo" :collapse="isCollapse" @mouseenter="enter"
+  <el-menu default-active="1" class="el-menu-vertical-demo" :collapse="isCollapse" @mouseenter="enter"
     @mouseleave="leave">
-
     <el-sub-menu index="1">
       <template #title>
         <el-icon>
@@ -24,7 +19,6 @@
         <!-- <el-menu-item index="1-2"><router-link to="/book" active-class="active-class" exact-active-class="exact-active">书城分类</router-link></el-menu-item> -->
       </el-menu-item-group>
     </el-sub-menu>
-
 
     <el-sub-menu index="2" v-show="isAdmin">
       <template #title>
@@ -72,30 +66,20 @@
             exact-active-class="exact-active"><el-icon><CreditCard /></el-icon>购物车</router-link></el-menu-item>
       </el-menu-item-group>
     </el-sub-menu>
-
-    <!--    <el-menu-item index="4">-->
-    <!--      <el-icon><Document/></el-icon>-->
-    <!--      <template #title>three</template>-->
-    <!--    </el-menu-item>-->
-
-    <!--    <el-menu-item index="5">-->
-    <!--      <el-icon><IconMenu/></el-icon>-->
-    <!--      <template #title>four</template>-->
-    <!--    </el-menu-item>-->
-
   </el-menu>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useStore } from "vuex";
-import {Location, Setting, Menu as IconMenu, Document, HomeFilled, Promotion} from '@element-plus/icons-vue'
+import {Location, Setting, HomeFilled} from '@element-plus/icons-vue'
 import { useRoute } from "vue-router";
 const store = useStore()
 const isCollapse = ref(true)
 let route = useRoute()
 const isAdmin = ref(false)
 const isUser = ref(false)
+
 const enter = (() => {
   console.log(store.state.isAdmine + '这里是navigation的判断是否是管理员,或者用户')
   isCollapse.value = false

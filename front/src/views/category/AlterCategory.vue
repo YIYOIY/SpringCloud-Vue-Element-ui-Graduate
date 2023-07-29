@@ -8,10 +8,10 @@
         <el-form-item>
           <el-row style="width:100%" justify="space-evenly">
             <el-col span="24">
-              <el-button type="danger" @click="alter()">修改</el-button>
+              <el-button type="danger" plain round @click="alter()">修改</el-button>
             </el-col>
             <el-col span="24">
-              <el-button type="success" @click="back()">返回</el-button>
+              <el-button type="success" plain round @click="back()">返回</el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -46,7 +46,7 @@ let alter = (() => {
   alterSeries(Series).then(Response => {
       ElMessage.success(Response.message)
       emit('finish')
-      series.seriesName=''
+    series.seriesName=''
   }).catch(Error => {
     ElMessage(Error.data.message)
   })

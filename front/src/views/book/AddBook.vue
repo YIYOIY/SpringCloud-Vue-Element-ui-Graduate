@@ -56,10 +56,10 @@
 
         <el-row :gutter="2" justify="space-around" style="margin: 2% 1%">
           <el-col :offset="3" :span="8">
-            <el-button type="danger" @click="add()">添加</el-button>
+            <el-button type="danger" plain round @click="add()">添加</el-button>
           </el-col>
           <el-col :span="8" :offset="3">
-            <el-button type="success" @click="back()">返回</el-button>
+            <el-button type="success" plain round @click="back()">返回</el-button>
           </el-col>
         </el-row>
 
@@ -68,9 +68,9 @@
       <div style="width: 40%;float: right;margin-right: 1%">
         <img :src='PICTURE' style="width: 100%; height: 100%" v-show="havePicture"
           alt="当前后端未设置项目的图片文件路径在配置文件中，所以无法看到回显，但数据保存成功,重新启动项目即可看到书籍图片在书籍列表中" />
-        <el-button type="warning" v-show="havePicture"><a href="pict/test/download">下载图片</a></el-button>
-        <el-button @click="havePicture = !havePicture" type="primary" v-show="havePicture">清空图片</el-button>
-        <el-button @click="havePicture = !havePicture" type="primary" v-show="havePicture">从excel中导入书籍</el-button>
+        <el-button plain round type="warning" v-show="havePicture"><a href="pict/test/download">下载图片</a></el-button>
+        <el-button plain round @click="havePicture = !havePicture" type="primary" v-show="havePicture">清空图片</el-button>
+        <el-button plain round @click="havePicture = !havePicture" type="primary" v-show="havePicture">从excel中导入书籍</el-button>
 
         <el-upload class=" upload-demo" drag action="excel/importExcel" multiple :limit="1" encytype="multipart/form-data"
           name="photo" v-show="!havePicture">
@@ -98,14 +98,13 @@
 
 
 
-        <el-upload ref="pict" class="upload-demo" action="pict/test/up" multiple :limit="1" encytype="multipart/form-data"
-          name="photo" v-show="!havePicture" :auto-upload="false">
+        <el-upload ref="pict" class="upload-demo" action="pict/test/up" multiple :limit="1" encytype="multipart/form-data" name="photo" v-show="!havePicture" :auto-upload="false">
           <template #trigger>
-            <el-button type="primary">选择要上传的图片，限制一张</el-button>
+            <el-button plain round type="primary">选择要上传的图片，限制一张</el-button>
           </template>
           <el-row :gutter="2" justify="space-around" style="margin: 2% 1%">
             <el-col :offset="3" :span="8">
-              <el-button class="ml-3" type="success" @click="handleBookPicture">
+              <el-button class="ml-3" plain round type="success" @click="handleBookPicture">
                 点击即可上传服务器
               </el-button>
             </el-col>
@@ -137,6 +136,7 @@ import {
 } from "element-plus";
 import {addBook, getSeries} from "@/api/BookApi";
 import {getPicture} from "@/api/ImgAndExcelApi";
+import store from "@/store";
 let router = useRouter()
 
 
@@ -176,6 +176,7 @@ let handleBookPicture = (() => {
   pict.value.submit()
   pict.value.clearFiles()
   setTimeout(() => {
+    let pictVerify=store.state.adminName+store.state.adminPassword
     getPicture().then(Response => {
       console.log(Response.data + "后端返回的值")
       if (Response.data != null && Response.data != "") {

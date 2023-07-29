@@ -69,10 +69,10 @@
 
         <el-row justify="space-evenly">
           <el-col span="24">
-            <el-button type="primary" @click="alter()">修改</el-button>
+            <el-button type="primary"  plain round @click="alter()">修改</el-button>
           </el-col>
           <el-col span="24">
-            <el-button type="success" @click="back()">返回</el-button>
+            <el-button type="success" plain round @click="back()">返回</el-button>
           </el-col>
         </el-row>
 
@@ -80,8 +80,8 @@
 
       <div style="width: 40%;float: right;margin-right: 1%">
         <el-image :src='book.book.bookPicture' style="width: 100%; height: 50%" v-show="havePicture"></el-image>
-        <el-button type="warning" v-show="havePicture"><a href="pict/test/download">下载图片</a></el-button>
-        <el-button @click="havePicture = !havePicture" type="primary" v-show="havePicture">清空图片</el-button>
+        <el-button type="warning" plain round  v-show="havePicture"><a href="pict/test/download">下载图片</a></el-button>
+        <el-button @click="havePicture = !havePicture" plain round type="primary" v-show="havePicture">清空图片</el-button>
         <el-upload class=" upload-demo" drag action="pict/test/up" multiple limit="100" encytype="multipart/form-data"
           ref="pict" name="photo" v-show="!havePicture" @keydown.y="handleBookPicture()">
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>

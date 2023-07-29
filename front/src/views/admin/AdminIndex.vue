@@ -1,6 +1,6 @@
 <template>
   <div class="ac">
-    <el-button @click="add()" type="info" style="margin-top: 5%">添加新管理员</el-button>
+    <el-button @click="add()" plain round type="warning"  style="margin-top: 5%">添加新管理员</el-button>
     <el-table :data="admins" highlight-current-row="true" height="100%" style="width: 100%;margin-top: 3%"
       label-width="25%" :row-class-name="rn">
       <el-table-column prop="adminId" label="编号"></el-table-column>
@@ -8,8 +8,8 @@
       <el-table-column prop="adminPassword" label="密码"></el-table-column>
       <el-table-column prop="adminId" label="操作">
         <template v-slot="scope">
-          <el-button type="success" round class="el-button" @click="alter(scope.row.adminId)">修改</el-button>
-          <el-button type="primary" round class="el-button" @click="del(scope.row.adminId)">删除</el-button>
+          <el-button type="success" plain round class="el-button" @click="alter(scope.row.adminId)">修改</el-button>
+          <el-button type="primary" plain round class="el-button" @click="del(scope.row.adminId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -79,12 +79,12 @@ let add = (() => {
   width: 20%;
 }
 
-::v-deep .light-row {
-  background: #f1f1f5;
+/deep/ .light-row {
+  background: #eff3f3;
 }
 
-::v-deep.aterrimus-row {
-  background: #eaecef;
+/deep/ .aterrimus-row {
+  background: #e5f5f5;
 }
 
 .ac {

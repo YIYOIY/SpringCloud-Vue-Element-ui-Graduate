@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="margin: 2% 3%">
 		<el-row>
 			<el-col :span="12">
 				<h2>书籍简介</h2>
@@ -40,13 +40,11 @@
 			</el-col>
 
 			<el-col :span="12">
-				<el-card shadow="hover" style="
-            margin-top: 10%;
+				<el-card shadow="hover" style="margin-top: 10%;
             width: 80%;
-			height: 80%;
+			      height: 90%;
             align-content: center;
-            text-align: center;
-          ">
+            text-align: center">
 					<el-image :src="book.book.bookPicture" style="width:60%;"></el-image>
 					<h6>图片仅供参考,具体以实物为准!</h6>
 				</el-card>

@@ -27,7 +27,8 @@ import Category from "@/views/category/Category.vue";
 import AdminOrder from "@/views/order/AdminOrder.vue";
 import UserOrder from "@/views/order/UserOrder.vue";
 import OrderConfirm from "@/views/order/OrderConfirm.vue";
-import {ElMessage} from "element-plus";
+import {ElLoading, ElMessage} from "element-plus";
+import {nextTick} from "vue";
 
 
 
@@ -301,6 +302,12 @@ let router=createRouter({
 });
 
 router.beforeEach((to,from,next)=>{
+  const loadingInstance =ElLoading.service({ fullscreen: true ,lock:true,text:'游弋专用加载，其实数据早就好了，就为了让你等！',background: 'rgb(255,176,17)'})
+  nextTick(() => {
+    setTimeout(() => {
+      loadingInstance.close()
+    }, 2000)
+  })
   if (to.path === '/login') { // 如果跳转登录页面,则移除token
     store.state.adminPassword=''
     store.state.adminName=''

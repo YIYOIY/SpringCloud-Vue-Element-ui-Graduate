@@ -77,7 +77,7 @@ public class JwtUtils {
         System.out.println("\n签发时间：" + signDate);
 //        过期时间
         Calendar nowTime = Calendar.getInstance();
-        nowTime.add(Calendar.MINUTE, 3);
+        nowTime.add(Calendar.MINUTE, 30);
         Date expiresDate = nowTime.getTime();
         builder.withExpiresAt(expiresDate);
         System.out.println("\n过期时间：" + expiresDate);

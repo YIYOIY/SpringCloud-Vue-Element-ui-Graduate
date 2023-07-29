@@ -1,62 +1,78 @@
 <template>
-  <div style="margin: 10% 2%;text-align: center;align-content: center">
-    <div class="control">
-      <p style="margin-left: 5%">size control</p>
-      <el-radio-group v-model="size">
-        <el-radio label="large">large</el-radio>
-        <el-radio label="default">default</el-radio>
-        <el-radio label="small">small</el-radio>
-      </el-radio-group>
-      <p style="margin-left: 5%">Position Control</p>
-      <el-radio-group v-model="labelPosition">
-        <el-radio label="left">left</el-radio>
-        <el-radio label="right">right</el-radio>
-        <el-radio label="top">top</el-radio>
-      </el-radio-group>
-    </div>
-    <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="user.user" :rules="rule">
-      <el-form-item label="姓名" clearable prop="userName">
-        <el-input v-model="user.user.userName"></el-input>
-      </el-form-item>
-      <el-form-item label="性别">
-        <el-select v-model="user.user.userSex" filterable clearable placeholder="选择性别">
-          <el-option label="男" value="男" />
-          <el-option label="女" value="女" />
-          <el-option label="保密" value="保密" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="生日" clearable>
-        <el-date-picker clearable v-model="user.user.userBirth" :model-value="user.user.userBirth" align="right"
-          type="date" format="YYYY 年 MM 月 DD 日">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="密码" prop="userPassword" clearable>
-        <el-input type="password" show-password v-model="user.user.userPassword"></el-input>
-      </el-form-item>
-      <el-form-item label="电话">
-        <el-input v-model="user.user.userPhone" :model-value="user.user.userPhone"></el-input>
-      </el-form-item>
+  <div id="building">
+    <el-form label-position="top" ref="form" label-width="100" :model="user.user" :rules="rule" style="width: 100%">
+      <div style="left: 10%;max-width: 15%;position: absolute">
+        <el-form-item label="账户名称"  prop="userName">
+          <el-input v-model="user.user.userName" @change="next" clearable placeholder="在此输入账户名称"></el-input>
+        </el-form-item>
 
-      <el-form-item label="地址" prop="userAddress">
-        <el-input v-model="user.user.userAddress"></el-input>
-      </el-form-item>
+        <el-form-item label="性别">
+          <el-select v-model="user.user.userSex" filterable clearable placeholder="选择性别" @change="next">
+            <el-option label="男" value="男"/>
+            <el-option label="女" value="女"/>
+            <el-option label="保密" value="保密"/>
+          </el-select>
+        </el-form-item>
 
-      <el-form-item>
-        <el-button type="success" @click="add()">新增</el-button>
-        <el-button type="primary" @click="cancelAdd()">取消</el-button>
-      </el-form-item>
+        <el-form-item label="出生日期">
+          <el-date-picker clearable v-model="user.user.userBirth"
+                          type="date" format="YYYY 年 MM 月 DD 日" @change="next" placeholder="在此选择出生日期">
+          </el-date-picker>
+        </el-form-item>
+      </div>
+
+      <div style="right: 50%;max-width: 25%;position: absolute">
+
+        <el-form-item label="账户密码" prop="userPassword">
+          <el-input type="password" show-password v-model="user.user.userPassword" clearable @change="next" placeholder="在此输入账户密码"></el-input>
+        </el-form-item>
+
+        <el-form-item label="联系方式">
+          <el-input v-model="user.user.userPhone"  clearable @change="next" placeholder="在此输入联系方式"></el-input>
+        </el-form-item>
+      </div>
+
+      <div style="right: 10%;width: 25%;position: absolute">
+        <el-form-item label="地址" prop="userAddress" @change="next">
+          <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10 }" v-model="user.user.userAddress"
+                    clearable placeholder="在此输入收货地址"></el-input>
+        </el-form-item>
+      </div>
     </el-form>
+
+    <div style="right: 25%;top:50%;width:50%;position: absolute">
+      <el-row :gutter="40" class="control">
+        <el-col :span="12">
+          <el-button type="success" size="large" @click="add()" plain round>注册</el-button>
+        </el-col>
+        <el-col :span="12">
+          <el-button type="primary" size="large" @click="cancelAdd()" plain round>取消</el-button>
+        </el-col>
+      </el-row>
+    </div>
+
+    <div style="right: 15%;top:55%;width:70%;position: absolute">
+      <el-steps :active="active" align-center finish-status="success" style="width: 70%;margin-top: 6%;margin-left:15%">
+        <el-step title="Step 1" description="填写姓名"/>
+        <el-step title="Step 2" description="输入密码"/>
+        <el-step title="Step 3" description="根据需要填写其他信息"/>
+        <el-step title="Step 4" description="注册！"/>
+      </el-steps>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
-import { useRouter } from "vue-router";
-import { useRoute } from "vue-router";
-import { ElMessage, ElNotification } from "element-plus";
+import {ref, reactive} from "vue";
+import {useRouter} from "vue-router";
+import {useRoute} from "vue-router";
+import {ElMessage, ElNotification} from "element-plus";
 import {addUser} from "@/api/UserApi";
-const size = ref("default")
-const labelPosition = ref("left")
+
+let active = ref(0)
+let next = (() => {
+  active.value++
+})
 let router = useRouter()
 let route = useRoute()
 
@@ -79,8 +95,8 @@ const user = reactive({
 
 let rule = reactive({
   userName: [
-    { required: true, message: "请输入姓名", trigger: "blur" },
-    { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" },
+    {required: true, message: "请输入姓名", trigger: "blur"},
+    {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"},
   ],
   userAddress: [
     {
@@ -88,11 +104,11 @@ let rule = reactive({
       message: "Please select Activity zone",
       trigger: "blur",
     },
-    { min: 1, max: 100, message: "长度在 1 到 100 个字符", trigger: "blur" },
+    {min: 1, max: 100, message: "长度在 1 到 100 个字符", trigger: "blur"},
   ],
   userPassword: [
-    { required: true, message: "请输入密码", trigger: "blur" },
-    { min: 6, max: 25, message: "长度在 6 到 25 个字符", trigger: "blur" },
+    {required: true, message: "请输入密码", trigger: "blur"},
+    {min: 6, max: 25, message: "长度在 6 到 25 个字符", trigger: "blur"},
   ],
 });
 
@@ -138,22 +154,47 @@ const cancelAdd = (() => {
 </script>
 
 <style scoped>
-.el-radio-group {
-  margin-right: 12px;
+#building {
+  background: url(../../assets/static/enroll.jpg);
+  width: 100%;
+  height: 100%;
+  font-size: large;
+  position: fixed;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  z-index: -1;
 }
 
-.el-input {
-  width: 30%;
+/deep/ .el-form-item__label {
+  font-size: 20px;
+  color: #fff;
 }
 
-.control {
-  float: left;
-  width: 30%;
+/deep/ .el-step__description, el-step__title {
+  font-size: 15px;
+  color: #fff;
 }
 
 .el-form {
-  margin-left: 10%;
-  float: right;
-  width: 60%;
+  font-size: 30px;
+  margin: 6% 10%;
+  width: 40%;
 }
+.el-input{
+  --el-input-border-radius: 18px;
+}
+
+/deep/.el-input__inner{
+  border-radius: 18px;
+  width: 100%;
+}
+
+.control {
+  top: 5%;
+  left: 35%;
+  width: 50%;
+}
+
 </style>

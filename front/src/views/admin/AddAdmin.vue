@@ -22,8 +22,8 @@
         <el-input v-model="admin.admin.adminPassword" show-password :model-value="admin.admin.adminPassword"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" @click="add()">新增</el-button>
-        <el-button type="primary" @click="cancelAdd()">取消</el-button>
+        <el-button type="success" plain round @click="add()">新增</el-button>
+        <el-button type="primary" plain round @click="cancelAdd()">取消</el-button>
       </el-form-item>
     </el-form>
   </div>

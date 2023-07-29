@@ -7,10 +7,10 @@
       <el-form-item>
         <el-row style="width:100%" justify="space-evenly">
           <el-col span="24">
-            <el-button type="success" @click="add()">添加</el-button>
+            <el-button type="success" plain round @click="add()">添加</el-button>
           </el-col>
           <el-col span="24">
-            <el-button type="primary" @click="back()">返回</el-button>
+            <el-button type="primary" plain round  @click="back()">返回</el-button>
           </el-col>
         </el-row>
       </el-form-item>

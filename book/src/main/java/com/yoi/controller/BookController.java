@@ -61,7 +61,11 @@ public class BookController {
                             throw new RuntimeException(e);
                         }
                     });
-                    return new ReturnInfo(200,"书籍获取成功！",books);
+                    if (books.size()>=1){
+                        return new ReturnInfo(200,"书籍获取成功！",books);
+                    }else {
+                        return new ReturnInfo(404, "书籍查询失败，未收录此书籍！");
+                    }
                 }
             }
 //                session.setAttribute("BookpageNo", BookpageNo);
@@ -108,7 +112,11 @@ public class BookController {
     @GetMapping("/lookup")
     public ReturnInfo lookUp(Integer bookId) {
         Book book = bookService.getById(bookId);
-        return new ReturnInfo(200,"书籍查询成功！",book);
+        if(book!=null) {
+            return new ReturnInfo(200, "书籍查询成功！", book);
+        }else {
+            return new ReturnInfo(404, "书籍查询失败，未收录此书籍！");
+        }
     }
 
 
@@ -116,7 +124,6 @@ public class BookController {
     public ReturnInfo selectBySeries(@RequestParam("seriesName") String seriesName) {
         System.out.println(seriesName);
         List<Book> bookList = bookService.selectBySeries(seriesName);
-        System.out.println(bookList);
         return new ReturnInfo(200,"书籍类型获取成功！",bookList);
     }
 

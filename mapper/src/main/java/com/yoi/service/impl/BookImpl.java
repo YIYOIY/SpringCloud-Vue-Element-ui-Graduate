@@ -6,7 +6,6 @@ import com.yoi.entity.Book;
 import com.yoi.entity.Category;
 import com.yoi.mapper.BookMapper;
 import com.yoi.mapper.CategoryMapper;
-import com.yoi.mapper.OrderMapper;
 import com.yoi.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,9 +79,14 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
         QueryWrapper<Category> categoryQueryWrapper = new QueryWrapper<>();
         QueryWrapper<Category> eq = categoryQueryWrapper.select("series_id").eq("series_name", seriesName);
         Category category = categoryMapper.selectOne(eq);
-
         HashMap bookHashMap = new HashMap<String,Object>();
         bookHashMap.put("series_id",category.getSeriesId());
-        return bookMapper.selectByMap(bookHashMap);
+        QueryWrapper<Book> bookQueryWrapper = new QueryWrapper<>();
+        QueryWrapper<Book> seriesId = bookQueryWrapper.select("*").eq("series_id", category.getSeriesId());
+        List<Book> books = bookMapper.selectList(seriesId);
+        for (Book book : books) {
+            book.setSeriesName(seriesName);
+        }
+        return books;
     }
 }

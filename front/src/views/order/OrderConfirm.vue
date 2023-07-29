@@ -103,12 +103,12 @@
 
             <el-row>
                 <el-col :span="12">
-                    <el-button class="el-button" round color="#626aef"
+                    <el-button class="el-button" plain round color="#626aef"
                         @click="buy(order.orderId, order.bookNum, order.bookId)"
                         :disabled="(order.orderStatus == `已购买`) || (order.bookNum > order.book.bookNum)">购买</el-button>
                 </el-col>
                 <el-col :span="12">
-                    <el-button class="el-button" round type="danger" @click="back">返回</el-button>
+                    <el-button class="el-button" plain round type="danger" @click="back">返回</el-button>
                 </el-col>
             </el-row>
 

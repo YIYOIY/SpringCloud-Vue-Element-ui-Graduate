@@ -1,4 +1,5 @@
 <template>
+  <div class="ac">
   <el-table stripe :data="order" :highlight-current-row=true height="600" style="width: 100%;margin-top: 3%">
     <el-table-column prop="orderId" label="订单编号" align="center"></el-table-column>
     <el-table-column prop="book.bookPicture" label="封面">
@@ -54,6 +55,7 @@
     <el-button @click="pageNoo(pageNo++)" v-show="pageNo < pageTotal">下一页</el-button>
     <el-button @click="pageNoo(pageNo--)" v-show="pageNo > 1">上一页</el-button>
   </el-button-group>
+  </div>
 </template>
 
 <script setup>
@@ -136,5 +138,9 @@ let del = ((v) => {
 .el-popper.is-customized .el-popper__arrow::before {
   background: linear-gradient(45deg, #b2e68d, #bce689);
   right: 0;
+}
+
+.ac {
+  margin: 5% 5%;
 }
 </style>

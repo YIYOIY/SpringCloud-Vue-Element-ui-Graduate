@@ -1,7 +1,7 @@
 <template>
   <div id="building">
     <el-form label-position="top" ref="form" label-width="100" :model="user.user" :rules="rule" style="width: 100%">
-      <div style="left: 10%;max-width: 15%;position: absolute">
+      <div style="left: 10%;max-width: 15%;position: fixed">
         <el-form-item label="账户名称"  prop="userName">
           <el-input v-model="user.user.userName" clearable placeholder="在此输入账户名称" disabled></el-input>
         </el-form-item>
@@ -22,7 +22,7 @@
       </div>
 
 
-      <div style="right: 50%;max-width: 25%;position: absolute">
+      <div style="right: 50%;max-width: 25%;position: fixed">
 
         <el-form-item label="账户密码" prop="userPassword">
           <el-input type="password" show-password v-model="user.user.userPassword" clearable  placeholder="在此输入账户密码"></el-input>
@@ -131,12 +131,14 @@ let back = () => {
 
 <style scoped>
 #building {
+  margin: 0 0;
+  left: 0;
   background: url(../../assets/static/alterUser.jpg);
   width: 100%;
   height: 100%;
   font-size: large;
   position: fixed;
-  background-size: 100% 85%;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;

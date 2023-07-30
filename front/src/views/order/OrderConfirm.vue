@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div style="width:35%;margin: 3% 5%;float:left">
+        <div style="width:35%;margin: 3% 5%;float:left;margin-top: 5%">
             <el-row>
                 <el-form label-width="100" label-position="left" :model="customer">
                     <el-row :gutter="4">

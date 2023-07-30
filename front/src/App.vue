@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 100%;height: 100%">
 
+    <div class="header">
       <!--    菜单也可以单走横着的方式-->
       <div v-if="store.state.menu===1">
         <NavigationHorizontal/>
@@ -21,7 +21,7 @@
         <!--也可以使用竖着的方式-->
         <HeaderIndex />
       </div>
-
+    </div>
 
       <!--    <router-view></router-view>-->
       <router-view v-slot="{ Component, route }">
@@ -50,7 +50,6 @@
 
       <FooterIndex/>
 
-  </div>
 </template>
 
 <script setup>
@@ -99,5 +98,10 @@ onUnmounted(() => {
 <style>
 a {
   text-decoration-line: none;
+}
+.header{
+  width: 100%;
+  position: fixed;
+  z-index: 2;
 }
 </style>

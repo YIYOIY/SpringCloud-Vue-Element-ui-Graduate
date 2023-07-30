@@ -1,5 +1,6 @@
 <template>
-  <el-table stripe :data="order" :highlight-current-row=true height="600" style="width: 100%;margin-top: 3%">
+  <div class="ac">
+  <el-table stripe :data="order" :highlight-current-row=true height="100%" style="width: 100%">
     <el-table-column prop="orderId" label="订单编号" align="center"></el-table-column>
     <el-table-column prop="book.bookPicture" label="封面">
       <template v-slot="scope">
@@ -52,6 +53,7 @@
     <el-button @click="pageNoo(pageNo++)" v-show="pageNo < pageTotal">下一页</el-button>
     <el-button @click="pageNoo(pageNo--)" v-show="pageNo > 1">上一页</el-button>
   </el-button-group>
+  </div>
 </template>
 
 <script setup>
@@ -115,5 +117,9 @@ let del = ((v) => {
   margin-left: 10%;
   width: 80%;
   margin-top: 2%;
+}
+
+.ac {
+  margin: 5% 5%;
 }
 </style>

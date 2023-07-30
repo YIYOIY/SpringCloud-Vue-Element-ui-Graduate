@@ -153,6 +153,8 @@ const cancelAdd = (() => {
 
 <style scoped>
 #building {
+  margin: 0 0;
+  right: 0;
   background: url(../../assets/static/enroll.jpg);
   width: 100%;
   height: 100%;

@@ -1,6 +1,8 @@
 <template>
   <!--  <el-drawer  v-model="drawer" :show-close="false" direction="btt">-->
   <!--    <ElDivider content-position="center">Hi Yoi's BookShop! Awesome Books !</ElDivider>-->
+<div class="header">
+
 
   <el-menu
       class="el-menu-demo"
@@ -172,6 +174,7 @@
 
 
   <!--  </el-drawer>-->
+</div>
 </template>
 
 <script setup>
@@ -257,6 +260,12 @@ let GotoBookInfor = (() => {
 </script>
 
 <style scoped>
+.header{
+  top: 0;
+  left: 0;
+  width: 100%;
+  position: fixed;
+}
 .search {
   top: 25%;
   left: 20%;

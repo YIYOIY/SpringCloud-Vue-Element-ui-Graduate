@@ -280,6 +280,7 @@ function enroll() {
 }
 
 #building {
+  left: 0;
   background: url(../assets/static/login.png);
   width: 100%;
   height: 100%;

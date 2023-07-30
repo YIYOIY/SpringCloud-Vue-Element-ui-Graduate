@@ -17,11 +17,11 @@
 
     <br />
     <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="admin">
-      <el-form-item label="名称">
-        <el-input v-model="admin.admin.adminName" prop="adminName"></el-input>
+      <el-form-item label="管理员名称">
+        <el-input v-model="admin.admin.adminName" prop="adminName" disabled></el-input>
       </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="admin.admin.adminPassword" show-password prop="adminPassword"></el-input>
+      <el-form-item label="管理员密码">
+        <el-input v-model="admin.admin.adminPassword" show-password prop="adminPassword" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="danger" plain round @click="alter()">修改</el-button>
@@ -63,12 +63,10 @@ onMounted(async () => {
 let alter = (() => {
   let Admin = JSON.stringify(admin.admin)
   alterAdmin(Admin).then(Response => {
-    let message = Response.message
-    if (confirm(message + "!  是否跳转到管理员页")) {
+    ElMessage.success(Response.message)
       router.push({
         name: 'admin',
       })
-    }
   }).catch(Error => {
     ElMessage.error(Error.data.message)
   })

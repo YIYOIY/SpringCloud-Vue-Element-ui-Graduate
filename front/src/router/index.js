@@ -28,7 +28,6 @@ import AdminOrder from "@/views/order/AdminOrder.vue";
 import UserOrder from "@/views/order/UserOrder.vue";
 import OrderConfirm from "@/views/order/OrderConfirm.vue";
 import {ElLoading, ElMessage} from "element-plus";
-import {nextTick} from "vue";
 
 
 
@@ -303,23 +302,35 @@ let router=createRouter({
 
 router.beforeEach((to,from,next)=>{
   const loadingInstance =ElLoading.service({ fullscreen: true ,lock:true,text:'游弋专用加载，其实数据早就好了，就为了让你等！',background: 'rgb(255,176,17)'})
-  nextTick(() => {
     setTimeout(() => {
       loadingInstance.close()
     }, 2000)
-  })
+
+  // 页面加载效果，这个是黑色的
+  // const loading = ElLoading.service({
+  //   lock: true,
+  //   text: 'Loading',
+  //   background: 'rgba(0, 0, 0, 0.7)',
+  // })
+  // setTimeout(() => {
+  //   loading.close()
+  // }, 2000)
+
+
   if (to.path === '/login') { // 如果跳转登录页面,则移除token
     store.state.adminPassword=''
     store.state.adminName=''
+    store.state.adminId=''
     store.state.userPassword=''
     store.state.userName=''
+    store.state.userId=''
     store.state.isAdmin=false
     store.state.isUser=false
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('store')
     next()
   }
-  else if (to.path === '/book'||to.name ==='addUser'||to.name ==='information'){
+  else if (to.path === '/'||to.path === '/book'||to.name ==='addUser'||to.name ==='information'){
     next()
   }
   else {

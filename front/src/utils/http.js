@@ -8,28 +8,28 @@ const http = {
         if (params) config.params = params
         return httpService(config)
     },
-    post(url, params) {
+    post(url, data) {
         const config = {
             method: 'post',
             url: url
         }
-        if (params) config.data = params
+        if (data) config.data = data
         return httpService(config)
     },
-    put(url, params) {
+    put(url, data) {
         const config = {
             method: 'put',
             url: url
         }
-        if (params) config.data = params
+        if (data) config.data = data
         return httpService(config)
     },
-    delete(url, params) {
+    delete(url, data) {
         const config = {
             method: 'delete',
             url: url
         }
-        if (params) config.params = params
+        if (data) config.data = data
         return httpService(config)
     }
 }

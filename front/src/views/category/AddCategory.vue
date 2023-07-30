@@ -19,12 +19,12 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import {reactive} from "vue";
 import {addSeries} from "@/api/CategoryApi";
 import {ElMessage} from "element-plus";
 let emit = defineEmits(['finish', 'cancel'])
 
-const series = reactive({
+let series = reactive({
   series: {
     seriesName: ""
   }
@@ -35,7 +35,6 @@ let add = (() => {
   addSeries(Series).then(Response => {
     ElMessage.success(Response.message)
     emit('finish')
-    series.series=''
   }).catch(Error => {
     alert(Error.data.message)
   })

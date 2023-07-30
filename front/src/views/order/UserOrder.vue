@@ -79,6 +79,7 @@ let inf = ((v) => {
     }
   })
 })
+
 getUserPage(pageNo.value,store.state.userId).then(Response=> {
   pageTotal.value = Response.data
   console.log(pageTotal.value)

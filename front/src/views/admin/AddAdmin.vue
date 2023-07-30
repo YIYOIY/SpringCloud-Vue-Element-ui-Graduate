@@ -15,10 +15,10 @@
       </el-radio-group>
     </div>
     <el-form :size="size" :label-position="labelPosition" ref="form" label-width="auto" :model="admin">
-      <el-form-item label="姓名">
+      <el-form-item label="管理员名称">
         <el-input v-model="admin.admin.adminName" :model-value="admin.admin.adminName"></el-input>
       </el-form-item>
-      <el-form-item label="密码">
+      <el-form-item label="管理员密码">
         <el-input v-model="admin.admin.adminPassword" show-password :model-value="admin.admin.adminPassword"></el-input>
       </el-form-item>
       <el-form-item>
@@ -48,10 +48,8 @@ const admin = reactive({
 const add = (() => {
   let aAdmin = JSON.stringify(admin.admin)
     addAdmin(aAdmin).then(Response => {
-    let message = Response.message
-    if (confirm(message + " 是否跳转到管理员首页?")) {
+      ElMessage.success(Response.message)
       router.push('/admin')
-    }
   }).catch(Error => {
     ElMessage.error(Error.data.message + "添加失败,请稍后重试!")
   })

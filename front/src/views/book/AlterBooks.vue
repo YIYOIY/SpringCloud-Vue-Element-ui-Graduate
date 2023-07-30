@@ -78,24 +78,36 @@
 
       </div>
 
+
       <div style="width: 40%;float: right;margin-right: 1%">
-        <el-image :src='book.book.bookPicture' style="width: 100%; height: 50%" v-show="havePicture"></el-image>
-        <el-button type="warning" plain round  v-show="havePicture"><a href="pict/test/download">下载图片</a></el-button>
-        <el-button @click="havePicture = !havePicture" plain round type="primary" v-show="havePicture">清空图片</el-button>
-        <el-upload class=" upload-demo" drag action="pict/test/up" multiple limit="100" encytype="multipart/form-data"
-          ref="pict" name="photo" v-show="!havePicture" @keydown.y="handleBookPicture()">
-          <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-          <div class="el-upload__text">
-            <em>图片拖入</em> 或<em>点击上传</em>
-            <p> 确定后点击 Y 键可查看上传的图片</p>
-            重新上传图片请先清空列表
-          </div>
-          <template #tip>
-            <div class="el-upload__tip">
-              只能上传图片
-            </div>
-          </template>
-        </el-upload>
+        <el-row v-show="havePicture">
+          <el-col :span="15">
+            <el-image :src='book.book.bookPicture' style="width: 100%; height: 90%" v-show="havePicture"></el-image>
+          </el-col>
+          <el-col :span="9">
+            <el-button type="warning" plain round  v-show="havePicture"><a href="pict/test/download">下载图片</a></el-button>
+            <el-button @click="havePicture = !havePicture" plain round type="primary" v-show="havePicture">清空图片</el-button>
+          </el-col>
+        </el-row>
+
+        <el-row v-show="!havePicture">
+          <el-col>
+            <el-upload class=" upload-demo" drag action="pict/test/up" multiple limit="100" encytype="multipart/form-data"
+                       ref="pict" name="photo" v-show="!havePicture" @keydown.y="handleBookPicture()">
+              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <div class="el-upload__text">
+                <em>图片拖入</em> 或<em>点击上传</em>
+                <p> 确定后点击 Y 键可查看上传的图片</p>
+                重新上传图片请先清空列表
+              </div>
+              <template #tip>
+                <div class="el-upload__tip">
+                  只能上传图片
+                </div>
+              </template>
+            </el-upload>
+          </el-col>
+        </el-row>
       </div>
     </el-form>
   </div>
@@ -106,7 +118,7 @@ import { useRouter } from "vue-router";
 import { reactive, onBeforeMount, toRef, ref } from "vue";
 import { UploadFilled } from '@element-plus/icons-vue'
 import {getPicture} from "@/api/ImgAndExcelApi";
-import {ElMessage} from "element-plus";
+import {ElButton, ElIcon, ElMessage, ElUpload} from "element-plus";
 import {alterBook, getBooksById, getSeries} from "@/api/BookApi";
 let router = useRouter()
 const prop = defineProps(['bookId'])
@@ -163,12 +175,10 @@ onBeforeMount(async () => {
 let alter = (() => {
   let Book = JSON.stringify(book.book)
   alterBook(Book).then(Response => {
-    console.log(Response)
-    if (confirm(Response.message + "! 是否跳转到书籍页")) {
+    ElMessage.success(Response.message)
       router.push({
         name: 'adminBooks',
       })
-    }
   }).catch(Error => {
     ElMessage.Error(Error.data.message)
     console(Error)

@@ -62,7 +62,7 @@ public class CheckLogin {
                 payload.put("name", loginUser.getUserName());
                 //生成JWT令牌
                 String token = JwtUtils.getToken(payload);
-                return new ReturnInfo(200, "登陆成功！", loginUser, token);
+                return new ReturnInfo(200, "登录成功！", loginUser, token);
             } else {
                 return new ReturnInfo(200, "用户不存在，请注册后再登录！");
             }

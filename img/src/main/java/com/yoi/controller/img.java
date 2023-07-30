@@ -45,19 +45,24 @@ public class img {
         filename = s + hzname;
 
 //        如果运行的项目没有初始数据，是一个崭新的项目，可以直接在配置文件中写入图片文件要保存的地址后进行
-//        File file = new File(FILEPATH);
-//        if (!file.exists()){
-//            boolean mkdirs = file.mkdirs();
-//            if (!mkdirs){
-//                System.out.println("创建图片文件夹失败");
-//            }
-//        }
+        File file = new File(FILEPATH);
+        if (!file.exists()){
+            System.out.println("正在创建文件夹！");
+            boolean mkdirs = file.mkdirs();
+            if (!mkdirs){
+                System.out.println("创建图片文件夹失败");
+            }
+        }
 
         FILEPATH= FILEPATH.replaceAll("\\\\","/");;
-
         System.out.println("已经获得当前项目图片文件夹在当前设备的绝对路径："+FILEPATH);
         Path path2 = Paths.get(FILEPATH);
+
+
         String finalPath = path2 + File.separator + filename;
+
+
+
         photo.transferTo(new File(finalPath));
 //        上传成功后返回成功信息
         picturePath="img/"+filename;
@@ -80,6 +85,8 @@ public class img {
         System.out.println(path2+"将要在这个地址进行下载");
         String finalPath = path2 + File.separator + name;
         System.out.println(finalPath+"最终下载路径以及图片名");
+
+
 //创建输入流
         InputStream is = new FileInputStream(finalPath);
 //创建字节数组，is.availiable,获取输入流所对应文件的字节数

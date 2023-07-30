@@ -218,6 +218,7 @@ const submitForm = () => {
           type: 'success'
         })
         store.state.adminName = resp.adminName
+        store.state.adminId = resp.adminId
         store.state.adminPassword = resp.adminPassword
         store.state.isAdmin = true
         router.push({

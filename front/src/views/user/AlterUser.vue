@@ -57,7 +57,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 import {reactive, onMounted, toRef, ref, nextTick} from "vue";
-import {ElLoading, ElMessage, ElNotification} from "element-plus";
+import { ElMessage, ElNotification} from "element-plus";
 import {alterUser, alterUserGet} from "@/api/UserApi";
 let router = useRouter();
 const prop = defineProps(["userId"]);
@@ -87,7 +87,6 @@ const user = reactive({
     userAddress: "",
   },
 });
-
 
 
 onMounted(async () => {

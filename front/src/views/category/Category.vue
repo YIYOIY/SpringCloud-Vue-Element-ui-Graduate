@@ -1,17 +1,17 @@
 <template>
   <div class="ac">
-    <el-dialog v-model="addView" title="添加系列" width="50%">
-      <AddCategory :open="addView" @cancel="cancel" @finish="finsihAdd"></AddCategory>
+    <el-dialog v-model="addView" title="添加系列" width="50%" :destroy-on-close="true">
+      <AddCategory  @cancel="cancel" @finish="finsihAdd"></AddCategory>
     </el-dialog>
-    <el-dialog v-model="alterView" title="修改系列" width="50%" style="height: 50%;width: 50%">
-      <AlterCategory :open="alterView" @cancel="cancel" @finish="alterFinish"></AlterCategory>
+
+    <el-dialog v-model="alterView" title="修改系列" width="50%" style="height: 50%;width: 50%" destroy-on-close>
+      <AlterCategory  @cancel="cancel" @finish="alterFinish"  :sd="sId"></AlterCategory>
     </el-dialog>
 
     <el-button @click="addView = !addView" plain round type="warning" style="margin-top: 5%">添加新系列</el-button>
-
-    <el-table :data="series" highlight-current-row="true" height="100%" style="width: 100%;margin-top: 3%"
-      label-width="30%" :row-class-name="rn">
-      <el-table-column prop="seriesId" label="编号"></el-table-column>
+    <el-table :data="series" :highlight-current-row="true" height="100%" style="width: 100%;margin-top: 3%"
+      label-width="30%">
+      <el-table-column prop="seriesId" label="编号" sortable></el-table-column>
       <el-table-column prop="seriesName" label="系列名"></el-table-column>
       <el-table-column prop="seriesId" label="操作">
         <template v-slot="scope">
@@ -28,22 +28,13 @@ import AddCategory from "./AddCategory.vue";
 import AlterCategory from "@/views/category/AlterCategory.vue";
 import {ref} from "vue";
 import {deleteSeries} from "@/api/CategoryApi";
-import {ElLoading, ElMessage} from "element-plus";
+import {ElMessage} from "element-plus";
 import {getSeries} from "@/api/BookApi";
-import {provide} from "vue";
 
 let series = ref([])
 getSeries().then(Response => {
   series.value = Response.data
 })
-
-const rn = ({ row, rowIndex }) => {
-  if (rowIndex % 2 !== 0) {
-    return 'light-row'
-  } else {
-    return 'aterrimus-row'
-  }
-}
 
 let addView = ref(false)
 let alterView = ref(false)
@@ -55,28 +46,27 @@ let cancel = (() => {
 
 let finsihAdd = (() => {
   addView.value = false
-  location.reload()
+  getSeries().then(Response => {
+    series.value = Response.data
+  })
+  // 本来是因为dialog页面自动缓存，用来强制刷新的，后来发现可以直接使用el-dialog的属性来解决destroy-on-close
+  // location.reload()
 });
 
+
 let sId=ref(0)
-provide('seriesId',sId)
 let alter = ((v) => {
   sId.value=v
   alterView.value = true
 })
-
 let alterFinish=(()=>{
   alterView.value = false
-
-  const loading = ElLoading.service({
-    lock: true,
-    text: 'Loading',
-    background: 'rgba(0, 0, 0, 0.7)',
+  getSeries().then(Response => {
+    series.value = Response.data
   })
-  setTimeout(() => {
-    location.reload()
-    loading.close()
-  }, 2000)
+
+  // 本来是因为dialog页面自动缓存，用来强制刷新的，后来发现可以直接使用el-dialog的属性来解决destroy-on-close
+  //   location.reload()
 })
 
 let del = ((v) => {
@@ -93,6 +83,15 @@ let del = ((v) => {
 })
 </script>
 <style scoped>
+/deep/ .el-table__cell{
+  font-size: 20px;
+  padding-left: 1%
+}
+
+.el-table .el-button {
+  margin-left: 10%;
+  width: 40%;
+}
 .ac {
   margin: 3% 5%;
 }

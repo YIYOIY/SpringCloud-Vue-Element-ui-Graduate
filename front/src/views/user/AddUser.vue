@@ -132,9 +132,7 @@ const add = (() => {
         });
         router.push('/login')
       } else {
-        if (confirm(Response.message + "是否跳转到用户首页?")) {
           router.push('/adminUsers')
-        }
       }
     }).catch(Error => {
       ElNotification({

@@ -1,16 +1,14 @@
 <template>
   <div class="ac">
     <el-button @click="add()"  plain round type="warning" style="margin-top: 5%">添加新用户</el-button>
-
-    <el-table :data="users" highlight-current-row="true" height="100%" style="width: 100%;margin-top: 3%"
-              label-width="20%" :row-class-name="rn">
-      <el-table-column prop="userId" label="编号"></el-table-column>
+    <el-table :data="users" :highlight-current-row="true" height="100%" style="width: 100%;margin-top: 3%" label-width="30%" >
+      <el-table-column prop="userId" label="编号" sortable></el-table-column>
       <el-table-column prop="userName" class-name="userName" label="用户名"></el-table-column>
       <el-table-column prop="userSex" label="性别"></el-table-column>
       <el-table-column prop="userPassword" label="密码"></el-table-column>
       <el-table-column prop="userPhone" label="电话"></el-table-column>
       <el-table-column prop="userAddress" label="地址"></el-table-column>
-      <el-table-column prop="userBirth" label="生日"></el-table-column>
+      <el-table-column prop="userBirth" label="生日" sortable></el-table-column>
       <el-table-column prop="userId" label="操作">
         <template v-slot="scope">
           <el-button type="success" round plain class="el-button" @click="alter(scope.row.userId)">修改</el-button>
@@ -21,11 +19,11 @@
   </div>
 </template>
 <script setup>
-import {nextTick, ref} from "vue";
+import {ref} from "vue";
 import {useRouter} from "vue-router";
 import {deleteUser, getUsers} from "@/api/UserApi";
 import {useStore} from "vuex";
-import {ElLoading, ElMessage, ElNotification} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 
 const store = useStore()
 let router = useRouter()
@@ -35,14 +33,6 @@ getUsers().then(Response => {
   users.value = Response.data
 })
 
-//注意这是解构
-const rn = ({row, rowIndex}) => {
-  if (rowIndex % 2 !== 0) {
-    return 'light-row'
-  } else {
-    return 'dark-row'
-  }
-}
 
 let alter = ((v) => {
   let id = ref(v)
@@ -58,7 +48,7 @@ let alter = ((v) => {
 let del = ((v) => {
   if (confirm("确认删除?")) {
     deleteUser(v).then(Response => {
-      if (store.state.userId == v) {
+      if (store.state.userId === v) {
         router.push("/login")
       }
       ElNotification({
@@ -78,7 +68,6 @@ let del = ((v) => {
 })
 
 let add = (() => {
-  const loadingInstance =ElLoading.service({ fullscreen: true })
   router.push({
     name: 'addUser'
   })
@@ -86,28 +75,16 @@ let add = (() => {
 
 </script>
 <style scoped>
-/deep/ .userName .cell {
-  padding-left: 30px;
+/deep/ .el-table__cell{
+  font-size: 20px;
+  padding-left: 1%
 }
 
 .el-table .el-button {
   margin-left: 10%;
-  width: 80%;
+  width: 40%;
 }
-
-/deep/ .light-row {
-  background: #eff3f3;
-}
-
-/deep/ .dark-row {
-  background: #e5f5f5;
-}
-
 .ac {
   margin: 3% 5%;
-}
-
-.el-button {
-  margin-top: 2%;
 }
 </style>

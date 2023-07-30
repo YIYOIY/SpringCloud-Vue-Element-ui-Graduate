@@ -1,9 +1,9 @@
 <template>
-  <div style="width:100%;height: 100%;margin: 2% 1%" >
+  <div style="width:100%;height: 100%;margin: 2% 0" >
     <el-carousel style="width:100%;height:100%" height="550px" :interval=1500 :initial-index=1  direction="horizontal" type="card" :autoplay="true" arrow="hover" pause-on-hover loop indicator-position="outside"
                  trigger="hover">
-      <el-carousel-item v-for="item in books" :key="item.bookId" style="width: 100%;height: 100%" >
-        <el-image :src=item.bookPicture style="width: 25%;height: 90%"  @click="inf(item.bookId)"></el-image>
+      <el-carousel-item v-for="item in books" :key="item.bookId" style="width: 30%;height: 100%;padding-left: 10%" >
+        <el-image :src=item.bookPicture style="width: 100%;height: 100%"  @click="inf(item.bookId)"></el-image>
       </el-carousel-item>
     </el-carousel>
   </div>
@@ -90,7 +90,7 @@ import {
 import {
   useStore
 } from "vuex";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 import {Aim, Football} from "@element-plus/icons-vue";
 import {getBooks, getBooksByName, getSelectBySeries, getSeries} from "@/api/BookApi";
 import {addOrder} from "@/api/OrderApi";
@@ -162,16 +162,15 @@ let buy = ((v) => {
     let addBag = JSON.stringify(bag)
     addOrder(addBag).then(Response => {
       console.log(Response.message)
-      ElMessage({
-        showClose: true,
-        message: Response.message,
-        type: 'success'
+      ElMessage.success(Response.message)
+      ElNotification.success({
+        title:Response.message,
+        message: Response.message + "可前往购物车查看",
+        position: "bottom-right"
       })
-      if (confirm(Response.message + "是否前往购物车?")) {
-        router.push({
-          name: "userOrder",
-        });
-      }
+        // router.push({
+        //   name: "userOrder",
+        // });
     }).catch(Error => {
       ElMessage.error(Error.data.message)
       console.log(Error)

@@ -20,7 +20,7 @@ public class OrderController {
     private StringRedisTemplate stringRedisTemplate;
 
     @GetMapping("/userOrder")
-    public ReturnInfo index(Integer pageNo, Integer userId) {
+    public ReturnInfo index(@RequestParam(value = "pageNo",required = false)Integer pageNo, @RequestParam(value = "userId",required = false) Integer userId) {
         if (pageNo == null) {
             pageNo = 1;
         }
@@ -33,7 +33,7 @@ public class OrderController {
     }
 
     @GetMapping("/userPageCount")
-    public ReturnInfo userPageCount(Integer userId) {
+    public ReturnInfo userPageCount(@RequestParam(value = "userId",required = false)Integer userId) {
         Long aLong = orderService.userGetCount(userId);
         return new ReturnInfo(200, "获取页面数量成功", ((aLong + 4) / 5));
     }
@@ -45,14 +45,14 @@ public class OrderController {
     }
 
     @GetMapping("/adminOrder")
-    public ReturnInfo indexAdmin(Integer pageNo) {
+    public ReturnInfo indexAdmin(@RequestParam("pageNo") Integer pageNo) {
         System.out.println(pageNo);
         return new ReturnInfo(200, "获取管理员权限下数据成功！", orderService.adminAll(pageNo));
     }
 
 
     @GetMapping("/order")
-    public ReturnInfo getOrderById(Integer orderId) {
+    public ReturnInfo getOrderById(@RequestParam(value = "orderId",required = false)Integer orderId) {
         Order byId = orderService.getId(orderId);
         return new ReturnInfo(200, "获取数据成功！", byId);
     }
@@ -73,7 +73,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/order")
-    public ReturnInfo deleteOrder(Integer orderId) {
+    public ReturnInfo deleteOrder(@RequestParam(value = "orderId",required = false)Integer orderId) {
         try {
             boolean addBag = orderService.deleteOrder(orderId);
             if (addBag) {
@@ -88,7 +88,7 @@ public class OrderController {
 
     @GlobalTransactional(rollbackFor = Exception.class)
     @PutMapping("/buyOrder")
-    public ReturnInfo buybag(Integer orderId, Integer num, Integer bookId) {
+    public ReturnInfo buybag(@RequestParam(value = "orderId",required = false)Integer orderId,@RequestParam(value = "num",required = false) Integer num,@RequestParam(value = "bookId",required = false) Integer bookId) {
         try {
             boolean addBag = orderService.updateOrder(orderId, num, bookId);
             if (addBag) {

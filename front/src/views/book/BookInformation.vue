@@ -153,22 +153,23 @@ let buy = () => {
 	} else {
 		bag.bookNum = number.value;
 		let addBag = JSON.stringify(bag);
-    addOrder( addBag).then((Response) => {
+    addOrder(addBag).then((Response) => {
+      ElMessage.success(Response.message)
 				ElNotification({
 					title: '成功加入购物车',
 					message: Response.message,
 					type: 'success',
-					position: 'top-left',
+					position: 'bottom-left',
 				})
-				if (confirm(Response.message + "是否前往购物车?")) {
-					router.push({
-						name: "userOrder",
-					});
-				} else {
-					router.push({
-						name: "book",
-					});
-				}
+				// if (confirm(Response.message + "是否前往购物车?")) {
+				// 	router.push({
+				// 		name: "userOrder",
+				// 	});
+				// } else {
+				// 	router.push({
+				// 		name: "book",
+				// 	});
+				// }
 			}).catch((Error) => {
         ElMessage.error(Error.data.message)
 				console.log(Error);

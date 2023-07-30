@@ -1,5 +1,6 @@
 package com.yoi.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yoi.entity.Admin;
 import com.yoi.mapper.AdminMapper;
@@ -34,7 +35,14 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
 
     @Override
     public boolean addAdmin(Admin admin) {
-        return adminMapper.addAdmin(admin);
+        QueryWrapper<Admin> adminQueryWrapper = new QueryWrapper<>();
+        QueryWrapper<Admin> eq = adminQueryWrapper.select("admin_name").eq("admin_name", admin.getAdminName());
+        Admin checkSame = adminMapper.selectOne(eq);
+        if (checkSame!=null){
+            return false;
+        }else {
+            return adminMapper.addAdmin(admin);
+        }
     }
 
     @Override

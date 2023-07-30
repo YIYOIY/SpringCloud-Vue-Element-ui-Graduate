@@ -50,7 +50,7 @@ public class AdminController {
             if (Admin) {
                 return new ReturnInfo(200,"添加管理员成功");
             } else {
-                return new ReturnInfo(401,"添加管理员失败");
+                return new ReturnInfo(401,"添加管理员失败，管理员名称重复！");
             }
         } catch (Exception e) {
             throw new SelfExcept("AdminController的add出现的问题 \t"+e);

@@ -55,18 +55,22 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref} from "vue";
 import { ElMessage, ElNotification } from "element-plus";
 import {checkBag, deleteOrder, getAdminOrder, getAdminPageCount} from "@/api/OrderApi";
 let order = ref([])
 let pageNo = ref(1);
 let pageTotal = ref(1);
+
 getAdminPageCount().then(Response => {
   pageTotal.value = Response.data
 })
+
+
 getAdminOrder(pageNo.value).then(Response => {
-  order.value = Response.data
-})
+    order.value = Response.data
+  })
+
 let pageNoo = (() => {
   getAdminOrder(pageNo.value).then(Response => {
     order.value = Response.data
@@ -74,12 +78,12 @@ let pageNoo = (() => {
 })
 
 let buy = ((v, num, bookId) => {
-  console.log("这里是购物车的购买" + v)
   if (confirm("确认购买?")) {
     checkBag(v,num,bookId).then(Response => {
-      ElMessage.success(Response.message)
+      ElNotification.success(Response.message)
       getAdminOrder(pageNo.value).then(Response => {
         order.value = Response.data
+        console.log(order.value)
       })
     }).catch(Error => {
       ElMessage.error(Error.data.message + "请稍后重试!")
@@ -91,8 +95,9 @@ let del = ((v) => {
   if (confirm("确认删除?")) {
     deleteOrder(v).then(Response => {
       ElNotification.success(Response.message)
-      getAdminOrder.get(pageNo.value).then(Response => {
+      getAdminOrder(pageNo.value).then(Response => {
         order.value = Response.data
+        console.log(order.value)
       })
     }).catch(Error => {
       console.log(Error)

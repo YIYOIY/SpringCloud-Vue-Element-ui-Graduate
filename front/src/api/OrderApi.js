@@ -21,6 +21,16 @@ export function getUserOrder(pageNo, userId) {
     )
 }
 
+
+// 获取管理员权限的所有购物信息
+export function getAdminOrder(pageNo) {
+    return http.get(
+        `api/adminOrder?pageNo=${pageNo}`
+    )
+}
+
+
+
 export function getUserPage(params) {
     return http.get(
         `api/userPageCount?userId=` + params)
@@ -41,12 +51,7 @@ export function getAdminPageCount() {
     )
 }
 
-// 获取管理员权限的所有购物信息
-export function getAdminOrder(params) {
-    return http.get(
-        `api/adminOrder?pageNo=` + params
-    )
-}
+
 
 // 购买--更新
 export function checkBag(orderId, num, bookId) {

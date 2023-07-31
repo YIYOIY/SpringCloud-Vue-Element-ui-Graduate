@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author 游弋
@@ -37,4 +38,10 @@ public interface FeignAdminService {
     @GetMapping("/login/checkToken")
     public ReturnInfo userLogin(@RequestParam("token")String token);
 
+    //    测试RequestBody使用
+    @PostMapping("/login/testString")
+    public void testRequestBody(@RequestBody String reqString);
+
+    @PostMapping("/login/testMap")
+    public void testRequestBody(@RequestBody Map<String,Object> reqMap);
 }

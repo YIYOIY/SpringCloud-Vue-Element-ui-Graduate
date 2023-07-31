@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author 游弋
@@ -50,5 +51,17 @@ public class AdminFeignController {
     @GetMapping("/login/checkToken")
     public ReturnInfo userLogin(@RequestParam("token")String token) {
         return feignAdminService.userLogin(token);
+    }
+
+
+    //    测试RequestBody使用
+    @PostMapping("/login/testString")
+    public void testRequestBody(@RequestBody String reqString){
+        feignAdminService.testRequestBody(reqString);
+    }
+
+    @PostMapping("/login/testMap")
+    public void testRequestBody(@RequestBody Map<String,Object> reqMap){
+        feignAdminService.testRequestBody(reqMap);
     }
 }

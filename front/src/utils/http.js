@@ -1,4 +1,5 @@
-import httpService from './request'
+// axios封装的请求，不用每个方法都写一遍了
+import serviceAxios from './service'
 const http = {
     get(url, params) {
         const config = {
@@ -6,7 +7,7 @@ const http = {
             url: url
         }
         if (params) config.params = params
-        return httpService(config)
+        return serviceAxios(config)
     },
     post(url, data) {
         const config = {
@@ -14,7 +15,7 @@ const http = {
             url: url
         }
         if (data) config.data = data
-        return httpService(config)
+        return serviceAxios(config)
     },
     put(url, data) {
         const config = {
@@ -22,7 +23,7 @@ const http = {
             url: url
         }
         if (data) config.data = data
-        return httpService(config)
+        return serviceAxios(config)
     },
     delete(url, data) {
         const config = {
@@ -30,7 +31,7 @@ const http = {
             url: url
         }
         if (data) config.data = data
-        return httpService(config)
+        return serviceAxios(config)
     }
 }
 export default http

@@ -16,7 +16,7 @@ import AdminIndex from "@/views/admin/AdminIndex.vue";
 import AlterAdmin from "@/views/admin/AlterAdmin.vue";
 import AddAdmin from "@/views/admin/AddAdmin.vue";
 
-import Login from "@/views/Login.vue";
+import Login from "@/views/TestRequestBodyLogin.vue";
 import store from "@/store";
 
 

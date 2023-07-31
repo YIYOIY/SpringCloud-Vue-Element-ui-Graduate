@@ -7,6 +7,7 @@ import com.yoi.feign.FeignAdminService;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author 游弋
@@ -53,5 +54,16 @@ public class FeignAdminServiceImpl implements FeignAdminService {
     @Override
     public ReturnInfo userLogin(String token) {
         return new ReturnInfo(404,"后台服务超时或宕机，稍后再试！");
+    }
+
+    //    测试RequestBody使用
+    @Override
+    public void testRequestBody(String reqString) {
+
+    }
+
+    @Override
+    public void testRequestBody(Map<String, Object> reqMap) {
+
     }
 }

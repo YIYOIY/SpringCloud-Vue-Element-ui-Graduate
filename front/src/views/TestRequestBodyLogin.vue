@@ -49,20 +49,6 @@
                       inactive-text="管理员"
                   />
                 </el-col>
-
-                <el-col :span="6">
-                  <el-switch
-                      class="ml-2"
-                      size="large"
-                      name="商家"
-                      v-model="people.type"
-                      inline-prompt
-                      style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-                      active-value="shopkeeper"
-                      active-text="商家"
-                      inactive-text="商家"
-                  />
-                </el-col>
               </el-row>
             </el-form-item>
             <el-row justify="space-evenly" :gutter="20">
@@ -98,7 +84,7 @@ import {onMounted, reactive, ref} from "vue";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import {ElMessage, ElNotification} from "element-plus";
-import {adminLogin,userLogin,shopkeeperLogin} from "@/api/LoginApi";
+import {testMap, testString, userLogin} from "@/api/LoginApi";
 let active=ref(0)
 let router = useRouter()
 const store = useStore()
@@ -158,39 +144,37 @@ const submitForm = () => {
         adminName: people.userName,
         adminPassword: people.password
       }
-      let admin = JSON.stringify(admindata)
+      // let admin = JSON.stringify(admindata) //转换成json字符串
+      let admin = admindata  //js 对象
 
-      let shopkeeperdata = {
-        shopkeeperName: people.userName,
-        shopkeeperPassword: people.password
-      }
-      let shopkeeper = JSON.stringify(shopkeeperdata)
+
       if (people.type === 'admin') {
-        adminLogin(admin).then(Response => {
+        testString(admin).then(Response => {
           // 在axios 的封装中已经剥开一次res.data了所以在这里已经是returninfo的返回值，在这里还要拿到data就是具体的data封装的对象了
-          console.log(Response)
+          console.log(Response+"111111111111111111111")
           let resp = Response.data
           let mes=Response.message
           window.sessionStorage.setItem("token",Response.token);
           insert(resp,mes)
         }).catch(error=>{
-          console.log(error)
+          console.log(error+"111111111111111111111")
           ElMessage.error(error.data.message)
         })
+        testMap(admin).then(Response => {
+          // 在axios 的封装中已经剥开一次res.data了所以在这里已经是returninfo的返回值，在这里还要拿到data就是具体的data封装的对象了
+          console.log(Response+"222222222222222222222")
+          let resp = Response.data
+          let mes=Response.message
+          window.sessionStorage.setItem("token",Response.token);
+          insert(resp,mes)
+        }).catch(error=>{
+          console.log(error+"222222222222222222222")
+          ElMessage.error(error.data.message)
+        })
+
+
       } else if (people.type === 'user') {
         userLogin(user).then(Response => {
-          console.log(Response)
-          let resp = Response.data
-          let mes=Response.message
-          window.sessionStorage.setItem("token",Response.token);
-          insert(resp,mes)
-        }).catch(error=>{
-          console.log(error)
-          ElMessage.error(error.data.message)
-        })
-      }
-      else {
-        shopkeeperLogin(shopkeeper).then(Response => {
           console.log(Response)
           let resp = Response.data
           let mes=Response.message

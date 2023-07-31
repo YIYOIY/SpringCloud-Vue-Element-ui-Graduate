@@ -1,5 +1,6 @@
 package com.yoi.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -91,4 +92,20 @@ public class CheckLogin {
             return new ReturnInfo(500, "token失效！");
         }
     }
+
+//    测试RequestBody使用
+    @PostMapping("/testString")
+    public void testRequestBody(@RequestBody String reqString){
+        Admin admin = JSON.parseObject(reqString, Admin.class);
+        System.out.println(admin+"11111");
+        System.out.println(admin.getAdminName());
+    }
+
+    @PostMapping("/testMap")
+    public void testRequestBody(@RequestBody Map<String,Object> reqMap){
+        Admin admin = JSON.parseObject(JSON.toJSONString(reqMap), Admin.class);
+        System.out.println(admin+"22222");
+        System.out.println(admin.getAdminPassword());
+    }
+
 }

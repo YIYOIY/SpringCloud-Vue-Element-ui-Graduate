@@ -25,3 +25,17 @@ export function checkToken(params) {
         '/api/login/checkToken?token='+params,
     )
 }
+
+export function testString(data) {
+    return http.post(
+        `/api/login/testString`,
+        data
+    )
+}
+
+export function testMap(data) {
+    return http.post(
+        `/api/login/testMap`,
+        data
+    )
+}

@@ -34,7 +34,7 @@
       </div>
 
       <div style="right: 10%;width: 25%;position: absolute">
-        <el-form-item label="地址" prop="userAddress" @change="next">
+        <el-form-item label="地址" prop="userAddress">
           <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10 }" v-model="user.user.userAddress"
                     clearable placeholder="在此输入收货地址"></el-input>
         </el-form-item>
@@ -56,13 +56,17 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import {reactive, onMounted, toRef, ref, nextTick} from "vue";
+import {reactive, onMounted, toRef, ref} from "vue";
 import { ElMessage, ElNotification} from "element-plus";
 import {alterUser, alterUserGet} from "@/api/UserApi";
 let router = useRouter();
 const prop = defineProps(["userId"]);
 let id = toRef(prop, "userId");
 let rule = reactive({
+  userName: [
+    {required: true, message: "请输入姓名", trigger: "blur"},
+    {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"},
+  ],
   userAddress: [
     {
       required: false,
@@ -72,7 +76,7 @@ let rule = reactive({
     { min: 1, max: 100, message: "长度在 1 到 100 个字符", trigger: "blur" },
   ],
   userPassword: [
-    { required: false, message: "请输入密码", trigger: "blur" },
+    { required: true, message: "请输入密码", trigger: "blur" },
     { min: 6, max: 25, message: "长度在 6 到 25 个字符", trigger: "blur" },
   ],
 });

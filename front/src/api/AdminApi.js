@@ -21,7 +21,7 @@ export function getAdmin() {
 
 export function alterAdminGet(params) {
     return http.get(
-            `api/alterAdmin?adminId=${params}`
+        `api/alterAdmin?adminId=${params}`
     )
 }
 

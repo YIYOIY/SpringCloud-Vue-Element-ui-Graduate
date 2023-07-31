@@ -1,12 +1,6 @@
 <template>
-  <el-affix  :offset="20">
-
-  <div class="navigation">
-    <el-button type="primary" plain round style="margin-left: 1px;font-size: 20px" @click="drawer = true">
-      网站导航
-    </el-button>
-
-
+  <p  class="overArea" @mouseover="drawer = true">网站导航</p>
+  <div class="navigation" >
     <el-drawer v-model="drawer" :show-close="false" direction="ltr">
       <template #header="{close}">
         <el-button type="danger" @click="close"  plain round>
@@ -52,7 +46,7 @@
         </el-button>
       </template>
 
-      <el-row :gutter="5" class="search">
+      <el-row :gutter="5" class="search" style="z-index: 2">
         <el-col title="按书名查询" :span="14">
           <el-input v-model="searchName" type="text" clearable placeholder="请输入书名"/>
         </el-col>
@@ -66,17 +60,16 @@
       </el-row>
 
       <ElDivider content-position="center">Hi Yoi's BookShop! Awesome Books !</ElDivider>
-      <navgation-index/>
-      <el-button type="warning" plain round style="margin-left: 1px" @click="store.state.menu=1">
-        切换菜单
-      </el-button>
+
+      <SiderBarNavigation/>
+
+      <el-button type="warning" plain round style="margin-left: 1px" @click="store.state.menu=1">切换菜单</el-button>
     </el-drawer>
-  </div>
-  </el-affix>
+ </div>
 </template>
 
 <script setup>
-import NavgationIndex from "@/components/NavgationIndex.vue";
+import SiderBarNavigation from "@/components/SiderBarNavigation.vue";
 import {onBeforeUpdate, onMounted, onUnmounted, ref} from "vue";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
@@ -158,19 +151,18 @@ let back = (() => {
 
 <style scoped>
 .navigation {
-  top: 4%;
-  float: left;
-  width: 10%;
-  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 
-h1 {
-  width: 20%;
-  margin-left: 46%;
-  font-size: 35px;
-  word-spacing: 10px;
-  color: rgba(246, 149, 66, 0.99);
-  z-index: 1;
+.overArea{
+  opacity: 0;
+  width: 5%;
+  height: 100%;
+  background-color: chocolate;
+  position: fixed;
+  z-index: 2;
 }
 
 .search {

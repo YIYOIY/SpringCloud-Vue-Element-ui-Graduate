@@ -28,7 +28,8 @@ public class JWTInterceptor implements HandlerInterceptor {
             response.setStatus(HttpServletResponse.SC_OK);
             return true;
         }
-
+        StringBuffer requestURL = request.getRequestURL();
+        System.out.println(requestURL);
         Map<String, Object> map = new HashMap<>();
         ReturnInfo<Object> objectReturnInfo = new ReturnInfo<>();
         //令牌建议是放在请求头中，获取请求头中令牌

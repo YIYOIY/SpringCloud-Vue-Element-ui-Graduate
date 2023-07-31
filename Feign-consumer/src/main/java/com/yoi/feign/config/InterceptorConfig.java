@@ -49,6 +49,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
         excludePath.add("/addUser");     //注册
         excludePath.add("/img");  //静态资源
         excludePath.add("/lookup");  //书籍详情
+        excludePath.add("/series");  //系列查询
+        excludePath.add("/selectBySeries");  //根据系列查书籍
 
         registry.addInterceptor(jwtInterceptor) // 注册拦截器
                 .addPathPatterns("/**")

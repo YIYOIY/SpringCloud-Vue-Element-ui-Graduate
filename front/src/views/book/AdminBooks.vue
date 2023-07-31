@@ -17,7 +17,7 @@
   <el-table stripe :data="books" :highlight-current-row=true height="100%" style="width: 96%; margin-left:2%"
     label-width="30%">
     <!--    <el-table-column prop="bookId" label="书籍编号" width="120px"></el-table-column>-->
-    <el-table-column fixed prop="bookPicture" label="封面">
+    <el-table-column prop="bookPicture" label="封面">
       <template v-slot="scope">
         <el-image :src="scope.row.bookPicture" style="width: 100%; height: 100%">
         </el-image>

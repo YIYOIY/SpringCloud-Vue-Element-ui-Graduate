@@ -6,11 +6,21 @@ const Components = require('unplugin-vue-components/webpack')
 const {
 	ElementPlusResolver
 } = require('unplugin-vue-components/resolvers')
+
 const {
 	resolve
 } = require("@babel/core/lib/vendor/import-meta-resolve");
 
 module.exports = defineConfig({
+	pwa: {
+		iconPaths: {
+			favicon32: 'yfavicon.ico',
+			favicon16: 'favicon.ico',
+			appleTouchIcon: 'favicon.ico',
+			maskIcon: 'favicon.ico',
+			msTileImage: 'favicon.ico'
+		}
+	},
 	transpileDependencies: true,
 	lintOnSave: false,
 	publicPath: '/',

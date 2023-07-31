@@ -36,8 +36,6 @@ public class CategoryController {
         }
     }
 
-
-
     @GetMapping("/series")
     public ReturnInfo getSeries(){
         List<Category> seriesName = seriesService.getSeriesName();

@@ -1,39 +1,32 @@
 <template>
+  <div class="header">
+    <!--    菜单也可以单走横着的方式-->
+    <div v-if="store.state.menu===1">
+      <NavigationHorizontal/>
+    </div>
+  </div>
 
-    <div class="header">
-      <!--    菜单也可以单走横着的方式-->
-      <div v-if="store.state.menu===1">
-        <NavigationHorizontal/>
-      </div>
+  <div class="footer" v-if="store.state.menu===0">
+    <FooterBar/>
+  </div>
 
-      <!-- 抽屉式菜单-->
-      <div v-if="store.state.menu===0">
-        <!-- 打开抽屉-->
-        <el-button type="text" style="color: #ffd04b;font-size: 20px" @click="drawer = true" plain round>菜单</el-button>
-        <el-button type="warning" plain round @click="store.state.menu=-1">切换菜单样式</el-button>
-        <el-drawer v-model="drawer" :show-close="false" direction="btt">
-          <ElDivider content-position="center">Hi Yoi's BookShop! Awesome Books !</ElDivider>
-          <NavigationHorizontal/>
-        </el-drawer>
-      </div>
-
-      <div v-if="store.state.menu===-1">
-        <!--也可以使用竖着的方式-->
-        <HeaderIndex />
-      </div>
+  <!--也可以使用竖着的方式-->
+    <div v-if="store.state.menu===-1">
+      <SiderBar/>
     </div>
 
-      <!--    <router-view></router-view>-->
-      <router-view v-slot="{ Component, route }">
-        <!--        <component :is="Component" :key="route.name" v-if="route.meta.keepAlive"></component>-->
-        <keep-alive>
-          <component :is="Component" :key="route.name" v-if="route.meta.keepAlive"></component>
-        </keep-alive>
-        <component :is="Component" :key="route.name" v-if="!route.meta.keepAlive"/>
-      </router-view>
 
-    <el-backtop :right="20" :bottom="20">
-      <div style="
+  <!--    <router-view></router-view>-->
+  <router-view v-slot="{ Component, route }">
+    <!--        <component :is="Component" :key="route.name" v-if="route.meta.keepAlive"></component>-->
+    <keep-alive>
+      <component :is="Component" :key="route.name" v-if="route.meta.keepAlive"></component>
+    </keep-alive>
+    <component :is="Component" :key="route.name" v-if="!route.meta.keepAlive"/>
+  </router-view>
+
+  <el-backtop :right="20" :bottom="20">
+    <div style="
         height: 100%;
         width: 100%;
         background-color: white;
@@ -43,22 +36,24 @@
         color: rgb(109, 229, 151);
         border-radius:15px;
       ">
-        UP
-      </div>
-    </el-backtop>
+      UP
+    </div>
+  </el-backtop>
 
 
-      <FooterIndex/>
+
+
 
 </template>
 
 <script setup>
 import NavigationHorizontal from "@/components/NavgationHorizontal.vue";
-import HeaderIndex from "@/components/HeaderIndex.vue";
-import FooterIndex from "./components/FooterIndex.vue";
 import store from "@/store"
-import {onUnmounted, ref} from "vue";
-let drawer=ref(false)
+import {onUnmounted} from "vue";
+import SiderBar from "@/components/SiderBar.vue";
+import FooterBar from "@/components/FooterBar.vue";
+import FooterBarNavigation from "@/components/FooterBarNavigation.vue";
+
 
 // 在页面加载时读取sessionStorage里的状态信息
 if (sessionStorage.getItem('store')) {
@@ -99,9 +94,17 @@ onUnmounted(() => {
 a {
   text-decoration-line: none;
 }
-.header{
+
+.header {
   width: 100%;
-  position: fixed;
   z-index: 2;
+  position: fixed;
+}
+
+.footer{
+  bottom: 0;
+  width: 100%;
+  z-index: 2;
+  position: fixed;
 }
 </style>

@@ -306,12 +306,10 @@ let GotoBookInfor = (() => {
 
 <style scoped>
 .header {
-  top: 0;
   left: 0;
   width: 100%;
   box-shadow: var(--el-box-shadow-lighter);
 }
-
 .search {
   top: 25%;
   left: 20%;

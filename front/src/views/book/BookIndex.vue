@@ -10,37 +10,37 @@
     </el-carousel>
   </div>
 
-  <div style="width: 100%;height: 100%">
-    <el-row :gutter="16">
-      <el-col title="按系列查询" :span="8" :offset="5">
-        <el-form-item label="系列">
-          <el-select v-model="seriesName" clearable placeholder="请选择系列" @change="selectBySeries">
-            <el-option v-for="item in series" :key="item.seriesId" :label="item.seriesName"
-                       :value="item.seriesName"></el-option>
-          </el-select>
-          <el-icon class="is-loading" size="large" style="margin: 0 5px">
-            <Football/>
-          </el-icon>
-        </el-form-item>
-      </el-col>
+<!--  已在导航栏实现-->
+<!--  <div style="width: 100%;height: 100%">-->
+<!--    <el-row :gutter="16">-->
+<!--      <el-col title="按系列查询" :span="8" :offset="5">-->
+<!--        <el-form-item label="系列">-->
+<!--          <el-select v-model="seriesName" clearable placeholder="请选择系列" @change="selectBySeries">-->
+<!--            <el-option v-for="item in series" :key="item.seriesId" :label="item.seriesName"-->
+<!--                       :value="item.seriesName"></el-option>-->
+<!--          </el-select>-->
+<!--          <el-icon class="is-loading" size="large" style="margin: 0 5px">-->
+<!--            <Football/>-->
+<!--          </el-icon>-->
+<!--        </el-form-item>-->
+<!--      </el-col>-->
 
-      <el-col title="按书名查询" :span="5">
-        <el-form-item label="书籍">
-          <el-input v-model="searchName" type="text" clearable placeholder="请输入书名"/>
-        </el-form-item>
-      </el-col>
+<!--      <el-col title="按书名查询" :span="5">-->
+<!--        <el-form-item label="书籍">-->
+<!--          <el-input v-model="searchName" type="text" clearable placeholder="请输入书名"/>-->
+<!--        </el-form-item>-->
+<!--      </el-col>-->
 
-      <el-col :span="4">
-        <el-button type="primary" @click="selectByName" plain round>查询
-          <el-icon class="is-loading" size="large" style="margin: 0 5px">
-            <Aim/>
-          </el-icon>
-        </el-button>
-      </el-col>
-    </el-row>
+<!--      <el-col :span="4">-->
+<!--        <el-button type="primary" @click="selectByName" plain round>查询-->
+<!--          <el-icon class="is-loading" size="large" style="margin: 0 5px">-->
+<!--            <Aim/>-->
+<!--          </el-icon>-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
 
-  </div>
-
+<!--  </div>-->
 
   <div class="wrap">
     <div class="card_wrap">
@@ -77,38 +77,8 @@
     </div>
   </div>
 
-  <div style="width: 100%;height: 100%">
-    <el-row :gutter="16">
-      <el-col title="按系列查询" :span="8" :offset="5">
-        <el-form-item label="系列">
-          <el-select v-model="seriesName" clearable placeholder="请选择系列" @change="selectBySeries">
-            <el-option v-for="item in series" :key="item.seriesId" :label="item.seriesName"
-                       :value="item.seriesName"></el-option>
-          </el-select>
-          <el-icon class="is-loading" size="large" style="margin: 0 5px">
-            <Football/>
-          </el-icon>
-        </el-form-item>
-      </el-col>
-
-      <el-col title="按书名查询" :span="5">
-        <el-form-item label="书籍">
-          <el-input v-model="searchName" type="text" clearable placeholder="请输入书名"/>
-        </el-form-item>
-      </el-col>
-
-      <el-col :span="4">
-        <el-button type="primary" @click="selectByName" plain round>查询
-          <el-icon class="is-loading" size="large" style="margin: 0 5px">
-            <Aim/>
-          </el-icon>
-        </el-button>
-      </el-col>
-    </el-row>
-
-  </div>
   <el-table stripe :data="books" :highlight-current-row=true height="100%" style="width: 100%">
-    <el-table-column prop="bookName" class-name="bookName" label="书名"></el-table-column>
+    <el-table-column prop="bookName" class-name="bookName" label="书名" align="center" :min-width="80" :show-overflow-tooltip="true"></el-table-column>
     <el-table-column prop="bookPicture" label="封面">
       <template v-slot="scope">
         <el-image :src="scope.row.bookPicture" style="width: 80%;height: 100%;"
@@ -118,11 +88,15 @@
     <!--    <el-table-column prop="bookInfo" label="简介"></el-table-column>-->
     <!--    <el-table-column  prop="bookId" label="书籍编号" width="120px"></el-table-column>-->
     <el-table-column prop="bookAuthor" label="作者"></el-table-column>
+    <el-table-column prop="bookPrice" label="价格">
+      <template v-slot="scope">
+        <el-tag type="danger" effect="dark">{{scope.row.bookPrice}}￥</el-tag>
+      </template>
+    </el-table-column>
     <el-table-column prop="seriesName" label="系列"></el-table-column>
-    <el-table-column prop="bookPrice" label="价格" sortable></el-table-column>
     <!--    <el-table-column prop="bookAddDate" label="发布日期" sortable></el-table-column>-->
     <el-table-column prop="bookFactory" label="出版社"></el-table-column>
-    <el-table-column prop="bookNum" label="库存" sortable></el-table-column>
+<!--    <el-table-column prop="bookNum" label="库存" sortable></el-table-column>-->
     <el-table-column prop="bookId" label="操作">
       <template v-slot="scope">
         <el-button class="Ybutton" plain round type="success" @click="inf(scope.row.bookId)">书籍详情</el-button>
@@ -145,7 +119,7 @@
 </template>
 
 <script setup>
-import {reactive, ref, onBeforeMount} from "vue";
+import {reactive, ref, onMounted} from "vue";
 import {
   useRouter
 } from "vue-router";
@@ -153,9 +127,23 @@ import {
   useStore
 } from "vuex";
 import {ElMessage, ElNotification} from "element-plus";
-import {Aim, Football} from "@element-plus/icons-vue";
-import {getBooks, getBooksByName, getSelectBySeries, getSeries} from "@/api/BookApi";
+import {getBooks, getSelectBySeries} from "@/api/BookApi";
 import {addOrder} from "@/api/OrderApi";
+import emitter from "@/utils/bus";
+// 监听事件，导航栏更改后这里就会触发，书记页面就会根据在导航页面选择的书籍系列展示书籍
+emitter.on('seriesChange',data=>{
+  getSelectBySeries(data).then(Response => {
+    books.value = Response.data
+  })
+})
+// 当用户选择完系列重新点击首页后进行全部书籍的检查
+emitter.on('tooooBookRestart',v=>{
+  getBooks().then(Response => {
+    console.log(v)
+    books.value = Response.data
+  })
+})
+
 
 let books = ref([])
 let active = ref(0)
@@ -166,30 +154,10 @@ let next = (() => {
   active.value++ > 3 ? active.value = 0 : active.value
 })
 
-let searchName = ref('')
-let selectByName = (() => {
-  getBooksByName(searchName.value).then(Response => {
-    books.value = Response.data
-    searchName.value = ''
-  })
-})
-
-let series = ref('')
-onBeforeMount(async () => {
-  await getSeries().then(Response => {
-    series.value = Response.data
-  })
-})
-
-let seriesName = ref('')
-let selectBySeries = (() => {
-  getSelectBySeries(seriesName.value).then(Response => {
+onMounted(async () => {
+  await getBooks().then(Response => {
     books.value = Response.data
   })
-})
-
-getBooks().then(Response => {
-  books.value = Response.data
 })
 
 let inf = ((v) => {
@@ -240,20 +208,25 @@ let buy = ((v) => {
 })
 </script>
 <style scoped>
+
 .wrap {
   display: flex;
   align-items: center;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   height: 100%;
   padding: 8px 0;
 }
 
+
 .card_wrap {
+  flex-direction: row;
+  justify-content: space-evenly;
   display: flex;
   flex-wrap: wrap;
   width: 90%;
 }
+
 
 .card_item {
   flex-basis: 20%;
@@ -261,6 +234,7 @@ let buy = ((v) => {
   padding: 0 3%;
   box-sizing: border-box;
 }
+
 
 .card_content {
   background-color: rgb(247, 247, 247);

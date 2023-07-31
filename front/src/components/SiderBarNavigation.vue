@@ -1,5 +1,5 @@
 <template>
-  <el-menu default-active="1" class="el-menu-vertical-demo" :collapse="isCollapse" @mouseenter="enter"
+  <el-menu default-active=1 class="el-menu-vertical-demo" :collapse="isCollapse" @mouseenter="enter"
     @mouseleave="leave">
     <el-sub-menu index="1">
       <template #title>
@@ -66,17 +66,55 @@
             exact-active-class="exact-active"><el-icon><CreditCard /></el-icon>购物车</router-link></el-menu-item>
       </el-menu-item-group>
     </el-sub-menu>
+
+    <el-sub-menu index="4"  @mouseover="getSer()">
+      <template #title>
+        <el-icon class="is-loading" size="large">
+          <Football/>
+        </el-icon>
+        <span style="margin-left: 5%">系列</span>
+      </template>
+      <el-menu-item :index="item.seriesId" v-for="item in series" :key="item.seriesId"  >
+        <el-tag type="success" effect="dark" @click="selectBySeries(item.seriesName)"  style="width: 100%">{{item.seriesName}}</el-tag>
+      </el-menu-item>
+      <el-menu-item index="1000">
+        <el-tag type="success" effect="plain" @click="resBook()" style="width: 100%">全部书籍</el-tag>
+      </el-menu-item>
+    </el-sub-menu>
   </el-menu>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {onBeforeMount, ref} from "vue";
 import { useStore } from "vuex";
-import {Location, Setting, HomeFilled} from '@element-plus/icons-vue'
+import {Location, Setting, HomeFilled, Football} from '@element-plus/icons-vue'
 import { useRoute } from "vue-router";
+import emitter from "@/utils/bus";
+import {getSeries} from "@/api/BookApi";
 const store = useStore()
 const isCollapse = ref(true)
 let route = useRoute()
+// 在导航栏显示书籍系列
+let series = ref('')
+onBeforeMount(async () => {
+  await getSeries().then(Response => {
+    series.value = Response.data
+  })
+})
+// 用来检测管理员是否变动书记系列
+let getSer=(()=>{
+  getSeries().then(Response => {
+    series.value = Response.data
+  })
+})
+// 触发书籍更新
+let selectBySeries = ((v) => {
+  emitter.emit('seriesChange',v)
+})
+let resBook=(()=>{
+  emitter.emit('tooooBookRestart',"传递成功！")
+})
+
 const isAdmin = ref(false)
 const isUser = ref(false)
 

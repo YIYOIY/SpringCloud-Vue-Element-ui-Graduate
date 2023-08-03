@@ -4,6 +4,7 @@ import com.yoi.entity.ReturnInfo;
 import com.yoi.entity.User;
 import com.yoi.feign.FeignUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
  * @create 2023-07-19 20:03
  */
 @RestController
+@RefreshScope
 public class UserFeignController {
     @Autowired
     private FeignUserService feignUserService;

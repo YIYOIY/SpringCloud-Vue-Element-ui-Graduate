@@ -1,7 +1,5 @@
 <template>
   <div class="footer">
-
-
     <!-- 抽屉式菜单-->
     <div v-if="store.state.menu===0">
       <!-- 打开抽屉-->
@@ -30,6 +28,7 @@ let drawer = ref(false)
 <style scoped>
 .footer {
   bottom: 0;
+  width: 100%;
 }
 
 h6 {

@@ -8,6 +8,7 @@ import com.yoi.service.BookService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,7 @@ import java.util.UUID;
  * @create 2023-06-08 1:33 PM
  */
 @RestController
+@RefreshScope
 public class ExcelController {
     @Autowired
     StringRedisTemplate stringRedisTemplate;

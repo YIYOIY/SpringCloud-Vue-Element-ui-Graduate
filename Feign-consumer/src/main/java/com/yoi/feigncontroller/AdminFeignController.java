@@ -4,6 +4,7 @@ import com.yoi.entity.Admin;
 import com.yoi.entity.ReturnInfo;
 import com.yoi.entity.User;
 import com.yoi.feign.FeignAdminService;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -16,6 +17,7 @@ import java.util.Map;
  */
 
 @RestController
+@RefreshScope
 public class AdminFeignController {
     @Resource
     private FeignAdminService feignAdminService;

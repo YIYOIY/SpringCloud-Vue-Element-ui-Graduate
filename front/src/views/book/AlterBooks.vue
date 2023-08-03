@@ -1,41 +1,38 @@
 <template>
-  <!-- <p v-show="false">{{ book.book.bookName }}</p> -->
   <div style="margin: 5% 2%">
-
-    <el-form size="default" label-position="left" ref="form" width="100%" :model="book" :rules="rule">
+    <el-form size="default" label-position="left" ref="form" width="100%" :model="book.book" :rules="rule">
       <div style="width: 55%;float: left">
         <el-row gutter="2" justify="space-evenly">
           <el-col span="10">
             <el-form-item label="编号">
-              <el-input v-model="book.book.bookId" :model-value="book.book.bookId" disabled></el-input>
+              <el-input v-model="book.book.bookId" disabled></el-input>
             </el-form-item>
             <el-form-item label="书名" prop="bookName">
-              <el-input v-model="book.book.bookName" :model-value="book.book.bookName"></el-input>
+              <el-input v-model="book.book.bookName"></el-input>
             </el-form-item>
             <el-form-item label="作者">
-              <el-input v-model="book.book.bookAuthor" :model-value="book.book.bookAuthor"></el-input>
+              <el-input v-model="book.book.bookAuthor"></el-input>
             </el-form-item>
             <el-form-item label="价格">
-              <el-input v-model="book.book.bookPrice" :model-value="book.book.bookPrice"></el-input>
+              <el-input v-model="book.book.bookPrice"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="系列" prop="seriesName">
-              <el-select v-model="book.book.seriesName" :model-value="book.book.seriesName" placeholder="请选择">
+              <el-select v-model="book.book.seriesName"  placeholder="请选择">
                 <el-option v-for="item in series" :key="item.seriesId" :label="item.seriesName"
                            :value="item.seriesName"></el-option>
               </el-select>
-              <!-- <el-input v-model="book.book.seriesName" :model-value="book.book.seriesName"></el-input> -->
             </el-form-item>
             <el-form-item label="出版社">
-              <el-input v-model="book.book.bookFactory" :model-value="book.book.bookFactory"></el-input>
+              <el-input v-model="book.book.bookFactory" ></el-input>
             </el-form-item>
             <el-form-item label="发售日期">
               <el-date-picker v-model="book.book.bookAddDate" type="date" placeholder="选择日期 " format="YYYY/MM/DD"
                               value-format="YYYY-MM-DD"/>
             </el-form-item>
             <el-form-item label="数量" prop="bookNum">
-              <el-input v-model.number="book.book.bookNum" :model-value="book.book.bookNum"></el-input>
+              <el-input v-model="book.book.bookNum"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -231,5 +228,14 @@ let back = (() => {
 <style scoped>
 .el-radio-group {
   margin-right: 12px;
+}
+.el-input {
+  width: 80%;
+}
+
+.el-form {
+  margin-left: 70%;
+  float: right;
+  width: 100%;
 }
 </style>

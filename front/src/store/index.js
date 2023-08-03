@@ -15,5 +15,19 @@ export default createStore({
         isUser: false,
 
         menu:1,
+    },
+    mutations:{
+        clearState(state){
+            state.adminPassword = ''
+            state.adminName = ''
+            state.adminId = ''
+            state.userPassword = ''
+            state.userName = ''
+            state.userId = ''
+            state.isAdmin = false
+            state.isUser = false
+            sessionStorage.removeItem('token')
+            sessionStorage.removeItem('store')
+        }
     }
 })

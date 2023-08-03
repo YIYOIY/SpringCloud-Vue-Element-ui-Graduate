@@ -85,16 +85,7 @@ let a = ref()
 let login = ref(true)
 
 const loginout = () => {
-  store.state.adminPassword = ''
-  store.state.adminName = ''
-  store.state.adminId=''
-  store.state.userPassword = ''
-  store.state.userName = ''
-  store.state.userId=''
-  store.state.isAdmin = false
-  store.state.isUser = false
-  sessionStorage.removeItem('token')
-  sessionStorage.removeItem('store')
+  store.commit('clearState')
   login.value = true
 }
 

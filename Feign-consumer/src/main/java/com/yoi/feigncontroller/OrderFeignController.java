@@ -3,6 +3,7 @@ package com.yoi.feigncontroller;
 import com.yoi.entity.Order;
 import com.yoi.entity.ReturnInfo;
 import com.yoi.feign.FeignOrderService;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -12,6 +13,7 @@ import javax.annotation.Resource;
  * @create 2023-07-19 20:03
  */
 @RestController
+@RefreshScope
 public class OrderFeignController {
     @Resource
     private FeignOrderService feignOrderService;

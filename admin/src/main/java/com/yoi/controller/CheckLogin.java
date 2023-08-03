@@ -13,6 +13,7 @@ import com.yoi.exception.SelfExcept;
 import com.yoi.service.AdminService;
 import com.yoi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 
 @RequestMapping("/login")
 @RestController
+@RefreshScope
 public class CheckLogin {
     @Autowired
     private UserService userService;

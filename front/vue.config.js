@@ -51,7 +51,7 @@ module.exports = defineConfig({
 					console.log(proxyOptions.target)
 				}
 			},
-			// 使用直连
+			// 使用直连,上传下载图片，获取图片地址
 			'/pict': {
 				target: 'http://localhost:88',
 				pathRewrite: {
@@ -70,7 +70,7 @@ module.exports = defineConfig({
 					console.log(proxyOptions.target)
 				}
 			},
-			// 使用网关
+			// 使用网关，根据图片地址查询图片
 			'/img': {
 				target: 'http://localhost:89',
 				changeOrigin: true,

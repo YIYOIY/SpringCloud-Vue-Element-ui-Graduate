@@ -9,6 +9,7 @@ import com.yoi.entity.ReturnInfo;
 import com.yoi.exception.SelfExcept;
 import com.yoi.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RefreshScope
 public class BookController {
     @Autowired
     private BookService bookService;

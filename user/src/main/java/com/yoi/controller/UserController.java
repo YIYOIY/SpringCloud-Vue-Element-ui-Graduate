@@ -8,6 +8,7 @@ import com.yoi.entity.User;
 import com.yoi.exception.SelfExcept;
 import com.yoi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
+@RefreshScope
 public class UserController {
     @Autowired
     private UserService userService;

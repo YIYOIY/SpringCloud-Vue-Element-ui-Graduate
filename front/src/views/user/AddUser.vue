@@ -52,7 +52,7 @@
     </div>
 
     <div style="right: 15%;top:55%;width:70%;position: absolute">
-      <el-steps :active="active" align-center finish-status="success" style="width: 70%;margin-top: 6%;margin-left:15%">
+      <el-steps :active="active" align-center finish-status="success" style="width: 100%;margin-top: 16%;margin-left:4%;padding:10px 10px;background-color: rgba(243,243,243,0.2);border-radius: 10px">
         <el-step title="Step 1" description="填写姓名"/>
         <el-step title="Step 2" description="输入密码"/>
         <el-step title="Step 3" description="根据需要填写其他信息"/>
@@ -153,8 +153,9 @@ const cancelAdd = (() => {
 
 <style scoped>
 #building {
-  margin: 0 0;
-  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
   background: url(../../assets/static/enroll.jpg);
   width: 100%;
   height: 100%;
@@ -172,7 +173,7 @@ const cancelAdd = (() => {
   color: #fff;
 }
 
-/deep/ .el-step__description, el-step__title {
+/deep/ .el-step__description {
   font-size: 15px;
   color: #fff;
 }

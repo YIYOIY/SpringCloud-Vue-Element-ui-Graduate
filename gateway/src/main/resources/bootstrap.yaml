@@ -13,25 +13,21 @@ spring:
         server-addr: localhost:8848  #Nacos作为配置中心地址
         file-extension: yaml #指定yaml格式的配置
         group: APPLICATION_GROUP  #配置组
-        extension-configs[0]:
-          data-id: db.yaml
-          group: SHARE_GROUP
-          refresh: true
-          extension-configs[1]:
-            data-id: zipkin.yaml
+        refresh-enabled: true
+        enabled: true             #控制config开启
+        extension-configs:
+          - data-id: db.yaml
             group: SHARE_GROUP
             refresh: true
-          extension-configs[2]:
-            data-id: seata.yaml
+          - data-id: zipkin.yaml
             group: SHARE_GROUP
             refresh: true
-          extension-configs[3]:
-            data-id: feign.yaml
+          - data-id: common.yaml
             group: SHARE_GROUP
             refresh: true
-        #        shared-configs[0]:
-        #          data-id: pearl-common.yml # 配置文件名-Data Id
-        #          group: PEARL_GROUP   # 默认为DEFAULT_GROUP
+          - data-id: feign.yaml
+            group: SHARE_GROUP
+            refresh: true
 
 
 
@@ -52,7 +48,7 @@ spring:
 
 
 
-#        {spring.application.name}-{cloud.spring.profiles.active}.{nacos-config-file-extension}
+    #        {spring.application.name}-{cloud.spring.profiles.active}.{nacos-config-file-extension}
     sentinel:
       transport:
         #        配置sentinel dashboard地址
@@ -61,14 +57,14 @@ spring:
         port: 8719
       #        Sentinel默认会将Controller方法做context整合，导致链路模式的流控失效，需要修改application.yml，添加配置 web-context-unify: false ，表示关闭
       web-context-unify: false # 关闭context整合
-#      datasource:
-#        flow:
-#          nacos:
-#            server-addr: localhost:8848
-#            dataId: ${spring.application.name}
-#            groupId: DEFAULT_GROUP
-#            data-type: json
-#            rule-type: flow
+    #      datasource:
+    #        flow:
+    #          nacos:
+    #            server-addr: localhost:8848
+    #            dataId: ${spring.application.name}
+    #            groupId: DEFAULT_GROUP
+    #            data-type: json
+    #            rule-type: flow
     gateway:
       discovery:
         locator:

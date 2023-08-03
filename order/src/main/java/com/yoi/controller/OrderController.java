@@ -7,12 +7,14 @@ import com.yoi.exception.SelfExcept;
 import com.yoi.service.OrderService;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RefreshScope
 public class OrderController {
     @Autowired
     private OrderService orderService;

@@ -1,7 +1,7 @@
 <template>
-  <el-menu default-active=1 class="el-menu-vertical-demo" :collapse="isCollapse" @mouseenter="enter"
+  <el-menu default-active="/book" class="el-menu-vertical-demo" :collapse="isCollapse" @mouseenter="enter"
     @mouseleave="leave">
-    <el-sub-menu index="1">
+    <el-sub-menu index="1-1">
       <template #title>
         <el-icon>
           <HomeFilled />
@@ -15,7 +15,8 @@
           <el-icon class="is-loading" size="small" style="margin: 0px 3px">
           <Guide />
         </el-icon>
-          书城首页</router-link></el-menu-item>
+          书城首页</router-link>
+        </el-menu-item>
         <!-- <el-menu-item index="1-2"><router-link to="/book" active-class="active-class" exact-active-class="exact-active">书城分类</router-link></el-menu-item> -->
       </el-menu-item-group>
     </el-sub-menu>

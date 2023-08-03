@@ -20,15 +20,17 @@
         </router-link>
       </el-menu-item>
 
-      <el-sub-menu index="9"  @mouseover="getSer()">
+      <el-sub-menu index="9" @mouseover="getSer()">
         <template #title>
           <el-icon class="is-loading" size="large" style="margin: 0 5px">
             <Football/>
           </el-icon>
           系列
         </template>
-        <el-menu-item :index="item.seriesId" v-for="item in series" :key="item.seriesId"  >
-          <el-tag type="success" effect="dark" @click="selectBySeries(item.seriesName)"  style="width: 100%">{{item.seriesName}}</el-tag>
+        <el-menu-item index="9-1" v-for="item in series" :key="item.seriesId">
+          <el-tag type="success" effect="dark" @click="selectBySeries(item.seriesName)" style="width: 100%">
+            {{ item.seriesName }}
+          </el-tag>
         </el-menu-item>
         <el-menu-item index="1000">
           <el-tag type="success" effect="plain" @click="resBook()" style="width: 100%">全部书籍</el-tag>
@@ -48,7 +50,7 @@
         </el-col>
       </el-row>
 
-<!--用来把其他的导航条往后面靠-->
+      <!--用来把其他的导航条往后面靠-->
       <div class="flex-grow"/>
 
 
@@ -174,7 +176,7 @@
         <router-link to="/book" @click="loginout">退出账号</router-link>
       </el-menu-item>
 
-<!--      头部菜单切换底部菜单-->
+      <!--      头部菜单切换底部菜单-->
       <el-menu-item index="8" v-if="store.state.menu===1">
         <el-icon class="is-loading" size="large" style="margin: 13% 3px">
           <SwitchFilled/>
@@ -183,7 +185,7 @@
           切换菜单样式
         </el-button>
       </el-menu-item>
-<!--      底部菜单切换侧边菜单-->
+      <!--      底部菜单切换侧边菜单-->
       <el-menu-item index="8" v-if="store.state.menu===0">
         <el-icon class="is-loading" size="large" style="margin: 13% 3px">
           <SwitchFilled/>
@@ -199,13 +201,16 @@
 
 <script setup>
 import {onBeforeMount, onBeforeUpdate, onMounted, onUnmounted, ref} from "vue";
-import  {useStore} from "vuex";
+import {useStore} from "vuex";
 import {Football, Refresh, Setting} from '@element-plus/icons-vue'
 import {useRoute} from "vue-router";
 import {useRouter} from "vue-router";
 import {getBooksByName, getSeries} from "@/api/BookApi";
 import {ElMessage} from "element-plus";
 import emitter from "@/utils/bus";
+const handleSelect = (key, keyPath) => {
+  console.log(key, keyPath)
+}
 const store = useStore()
 let route = useRoute()
 // const drawer = ref(true)
@@ -221,7 +226,7 @@ onBeforeMount(async () => {
   })
 })
 // 用来检测管理员是否变动书记系列
-let getSer=(()=>{
+let getSer = (() => {
   getSeries().then(Response => {
     series.value = Response.data
   })
@@ -229,24 +234,15 @@ let getSer=(()=>{
 
 // 触发书籍更新
 let selectBySeries = ((v) => {
-  emitter.emit('seriesChange',v)
+  emitter.emit('seriesChange', v)
 })
-let resBook=(()=>{
-  emitter.emit('tooooBookRestart',"传递成功！")
+let resBook = (() => {
+  emitter.emit('tooooBookRestart', "传递成功！")
 })
 
 
 const loginout = () => {
-  store.state.adminPassword = ''
-  store.state.adminName = ''
-  store.state.adminId = ''
-  store.state.userPassword = ''
-  store.state.userName = ''
-  store.state.userId = ''
-  store.state.isAdmin = false
-  store.state.isUser = false
-  sessionStorage.removeItem('token')
-  sessionStorage.removeItem('store')
+  store.commit('clearState')
   login.value = true
 }
 

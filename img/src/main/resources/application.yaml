@@ -55,7 +55,19 @@ seata:
 
 
 
-
+## 设置debug日志级别
+#logging:
+#  level:
+#    root: debug
+#  pattern:
+#    console: "%d %clr(%p) --- [%16t] %clr(%-40.40c){cyan} : %m %n"
+#  file:
+#    name: server.log	# 注意日志文件名不能省略，否则会不生成文件
+#  logback:
+#    rollingpolicy:	# 设置滚动日志
+#      max-file-size: 100KB	# 设置日志文件最大100kb，超过后生成下一个日志文件
+#      file-name-pattern: server.%d{yyyy-MM-dd}.%i.log	# 文件命名格式
+##        # %d表示日期，%i是一个递增变量，用于区分日志文件。
 
 
 

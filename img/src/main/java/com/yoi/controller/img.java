@@ -2,6 +2,7 @@ package com.yoi.controller;
 
 import com.yoi.entity.ReturnInfo;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,13 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
-
+//C:\Users\yo\Desktop\GraduateProject\back\GraduateTotal\img\src\main\resources\static\img
 /**
  * @author 游弋
  * @create 2023-06-07 3:43 PM
  */
 @RestController
+@RefreshScope
 public class img {
     private String picturePath;
 //    使用yaml配置对象的方式进行一次设置，持续引用

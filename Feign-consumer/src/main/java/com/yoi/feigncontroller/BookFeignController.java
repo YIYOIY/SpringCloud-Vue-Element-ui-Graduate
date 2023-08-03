@@ -4,6 +4,7 @@ import com.yoi.entity.Book;
 import com.yoi.entity.ReturnInfo;
 import com.yoi.feign.FeignBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
  * @create 2023-07-19 20:03
  */
 @RestController
+@RefreshScope
 public class BookFeignController {
     @Autowired
     private FeignBookService feignBookService;

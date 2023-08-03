@@ -1,6 +1,5 @@
 <template>
   <div style="margin: 5% 2%">
-
     <el-form size="default" label-position="left" ref="form" width="100%" :model="book.book" :rules="rule">
       <div style="width: 50%;float: left">
         <el-row :gutter="2" justify="space-evenly">
@@ -24,7 +23,6 @@
                 <el-option v-for="item in series" :key="item.seriesId" :label="item.seriesName"
                   :value="item.seriesName"></el-option>
               </el-select>
-              <!-- <el-input v-model="book.book.seriesName" ></el-input> -->
             </el-form-item>
             <el-form-item label="出版社">
               <el-input v-model="book.book.bookFactory"></el-input>
@@ -108,23 +106,6 @@
             </el-upload>
           </el-col>
         </el-row>
-
-
-        <!-- <el-upload class=" upload-demo" drag action="api/test/up" multiple limit="100" encytype="multipart/form-data"
-          ref="pict" name="photo" v-show="!havePicture" @keydown.y="handleBookPicture()">
-          <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-          <div class="el-upload__text">
-            <em>图片拖入</em> 或<em>点击上传</em>
-            <p> 确定后点击 Y 键可查看上传的图片</p>
-            重新上传图片请先清空列表
-          </div>
-          <template #tip>
-            <div class="el-upload__tip">
-              只能上传图片
-            </div>
-          </template>
-        </el-upload> -->
-
       </div>
     </el-form>
 
@@ -235,7 +216,6 @@ let add = (() => {
       return false
     }
     let Book = JSON.stringify(book.book)
-    console.log(Book)
     addBook(Book).then(Response => {
       ElNotification.success(Response.message)
         router.push({

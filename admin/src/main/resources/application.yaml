@@ -31,7 +31,7 @@ seata:
       server-addr: 127.0.0.1:8848
       namespace: 8de7b4d0-c8cb-42ac-984e-2c9949ef0e47
       group: SEATA_GROUP
-      application: seata-server  #从配置文件中的alication copy获得
+      application: seata-server  #从seata配置文件中的alication copy获得
       username: nacos
       password: nacos
   #      事务组

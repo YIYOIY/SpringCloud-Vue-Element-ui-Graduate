@@ -6,12 +6,15 @@ import com.yoi.entity.ReturnInfo;
 import com.yoi.exception.SelfExcept;
 import com.yoi.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
+@RefreshScope
 public class AdminController {
 
     @Autowired

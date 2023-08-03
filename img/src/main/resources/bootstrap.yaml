@@ -1,0 +1,81 @@
+server:
+  port: 88
+spring:
+  application:
+    name: img
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848  #Nacos服务注册中心地址
+        namespace: 8de7b4d0-c8cb-42ac-984e-2c9949ef0e47
+        group: SEATA_GROUP
+      config:
+        server-addr: localhost:8848  #Nacos作为配置中心地址
+        file-extension: yaml #指定yaml格式的配置
+        group: APPLICATION_GROUP  #配置组
+        refresh-enabled: true
+        enabled: true             #控制config开启
+        extension-configs:
+          - data-id: db.yaml
+            group: SHARE_GROUP
+            refresh: true
+          - data-id: zipkin.yaml
+            group: SHARE_GROUP
+            refresh: true
+          - data-id: common.yaml
+            group: SHARE_GROUP
+            refresh: true
+          - data-id: feign.yaml
+            group: SHARE_GROUP
+            refresh: true
+
+
+
+#        shared-configs[0]:
+#          data-id: pearl-common.yml # 配置文件名-Data Id
+#          group: PEARL_GROUP   # 默认为DEFAULT_GROUP
+#          refresh: true         #控制刷新
+
+#  这里主要是说明application和bootstrap的加载顺序。
+#  bootstrap.yml（bootstrap.properties）先加载
+#  application.yml（application.properties）后加载
+#  bootstrap.yml 和application.yml 都可以用来配置参数。
+#  bootstrap.yml 可以理解成系统级别的一些参数配置，这些参数一般是不会变动的。
+#  application.yml 可以用来定义应用级别的。
+
+
+#  A通过 spring.cloud.nacos.config.shared-configs 配置项，支持多个共享 Nacos 配置集。
+#  B通过 spring.cloud.nacos.config.extension-configs 配置项，支持多个拓展 Nacos 配置集。
+#  C通过 spring.cloud.nacos.config.name 配置项，支持一个 Nacos 配置集。
+#  当三种方式共同使用时，它们的优先级关系是：A < B < C。另外，A 和 B 的命名带有“共享”或是“拓展”，没有任何含义，只是优先级不同
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#        {spring.application.name}-{cloud.spring.profiles.active}.{nacos-config-file-extension}
+#    sentinel:
+#      transport:
+#        #        配置sentinel dashboard地址
+#        dashboard: localhost:8080
+#        #        默认8719端口，如果被占用，8719开始+1进行扫描直至找到未被占用的端口
+#        port: 8719
+#      #        Sentinel默认会将Controller方法做context整合，导致链路模式的流控失效，需要修改application.yml，添加配置 web-context-unify: false ，表示关闭
+#      web-context-unify: false # 关闭context整合
+##      datasource:
+##        flow:
+##          nacos:
+##            server-addr: localhost:8848
+##            dataId: ${spring.application.name}
+##            groupId: DEFAULT_GROUP
+##            data-type: json
+##            rule-type: flow

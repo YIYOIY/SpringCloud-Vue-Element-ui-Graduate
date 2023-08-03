@@ -1,0 +1,67 @@
+server:
+  port: 87
+spring:
+  application:
+    name: feign
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848  #Nacos服务注册中心地址
+        namespace: 8de7b4d0-c8cb-42ac-984e-2c9949ef0e47
+        group: SEATA_GROUP
+      config:
+        server-addr: localhost:8848  #Nacos作为配置中心地址
+        file-extension: yaml #指定yaml格式的配置
+        group: APPLICATION_GROUP  #配置组
+        refresh-enabled: true
+        enabled: true             #控制config开启
+        extension-configs:
+          - data-id: db.yaml
+            group: SHARE_GROUP
+            refresh: true
+          - data-id: zipkin.yaml
+            group: SHARE_GROUP
+            refresh: true
+          - data-id: common.yaml
+            group: SHARE_GROUP
+            refresh: true
+          - data-id: feign.yaml
+            group: SHARE_GROUP
+            refresh: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#        {spring.application.name}-{cloud.spring.profiles.active}.{nacos-config-file-extension}
+#    sentinel:
+#      transport:
+#        #        配置sentinel dashboard地址
+#        dashboard: localhost:8080
+#        #        默认8719端口，如果被占用，8719开始+1进行扫描直至找到未被占用的端口
+#        port: 8719
+#      #        Sentinel默认会将Controller方法做context整合，导致链路模式的流控失效，需要修改application.yml，添加配置 web-context-unify: false ，表示关闭
+#      web-context-unify: false # 关闭context整合
+##      datasource:
+##        flow:
+##          nacos:
+##            server-addr: localhost:8848
+##            dataId: ${spring.application.name}
+##            groupId: DEFAULT_GROUP
+##            data-type: json
+##            rule-type: flow

@@ -1,0 +1,168 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    sentinel:
+      transport:
+        #        配置sentinel dashboard地址
+        dashboard: localhost:8080
+        #        默认8719端口，如果被占用，8719开始+1进行扫描直至找到未被占用的端口
+        port: 8719
+      #        Sentinel默认会将Controller方法做context整合，导致链路模式的流控失效，需要修改application.yml，添加配置 web-context-unify: false ，表示关闭
+      web-context-unify: false # 关闭context整合
+#      datasource:
+#        flow:
+#          nacos:
+#            server-addr: localhost:8848
+#            dataId: ${spring.application.name}
+#            groupId: DEFAULT_GROUP
+#            data-type: json
+#            rule-type: flow
+seata:
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      namespace: 8de7b4d0-c8cb-42ac-984e-2c9949ef0e47
+      group: SEATA_GROUP
+      application: seata-server  #从配置文件中的alication copy获得
+      username: nacos
+      password: nacos
+  #      事务组
+  tx-service-group: seata-demo   #根据这个获取tc服务的cluster名称，也就是在下面映射出配置文件的cluster名称，这里的service-group是可以自己定义的
+  service:
+    vgroup-mapping:
+      seata-demo: default        #从这里进行映射cluster
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#  zipkin:
+#    base-url: http://localhost:9411
+#  sleuth:
+#    sampler:
+#      #      采样率，介于0-1之间，1则表示全部采集
+#      probability: 1
+#  # 配置数据源信息
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/yoi?serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: root
+#    password: 123456
+#    type: com.alibaba.druid.pool.DruidDataSource
+#  mvc:
+#    static-path-pattern: /**
+#    hidden-method:
+#      filter:
+#        enabled: true
+#  servlet:
+#    multipart:
+#      max-file-size: 40MB        # 设置单个文件最大大小为10MB
+#      max-request-size: 100MB
+#      enabled: true
+##修改此处file路径为当前项目的static/img路径就能看见图片添加后的回显，否则回显不显示但是运行正常
+#  #例如C:\Users\yo\Desktop\note\vuespringbootTotalProject\WebDevelopment\back\demo\src\main\resources\static\img
+#  web:
+#    resources:
+##      使用开发模式的暴露静态资源路径，获取图片方式一
+##      static-locations: file:C:\Users\yo\Desktop\note\vuespringbootTotalProject\WebDevelopment\back\demo\src\main\resources\static\img,classpath:/static/img/,classpath:/public,classpath:/resources,classpath:/META-INF/resource
+##      使用开发模式下，绑定静态资源路径，获取图片方式三，注意引用了下方的配置user。lo
+#      static-locations: file:${user.lo},classpath:/static/img/,classpath:/public,classpath:/resources,classpath:/META-INF/resource
+##      使用运行时的文件保存方法不用开放静态资源路径，获取图片方式二
+##      static-locations: classpath:/static/img/,classpath:/public,classpath:/resources,classpath:/META-INF/resource
+#
+#  redis:
+## host: 192.168.1.104
+## database: 0
+## port: 6383
+#    password: 111111
+#    lettuce:
+#      pool:
+#        enabled: true
+#        max-active: 8
+#        max-idle: 8
+#        max-wait: -1ms
+#        min-idle: 0
+#    cluster:
+#      nodes: 192.168.1.100:6379,192.168.1.101:6380,192.168.1.102:6381,192.168.1.103:6382,192.168.1.104:6383,192.168.1.105:6384
+#
+#mybatis:
+#  configuration:
+#    map-underscore-to-camel-case: true
+#
+#
+## 配置MyBatis日志
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    map-underscore-to-camel-case: true
+#    #开启驼峰命名匹配映射
+#  global-config:
+#    db-config:
+#      # 配置MyBatis-Plus操作表的默认前缀
+#      table-prefix: t_
+#      # 配置MyBatis-Plus的主键策略
+#      id-type: auto
+#  type-aliases-package: com.yoi.entity
+#  #如果mapper接口与映射文件所在包地址不一致，可用这个指名xml映射文件所在地址
+#  mapper-locations: classpath*:com/mapper/*.xml
+#
+#
+##通过设置fileLocation来进行静态资源的映射
+#user:
+##  lo: "C:/Users/yo/Desktop/note/vuespringbootTotalProject/WebDevelopment/back/demo/src/main/resources/static/img"
+#  lo: C:\Users\yo\Desktop\note\vuespringbootTotalProject\WebDevelopment\back\demo\src\main\resources\static\img
+#
+#
+#seata:
+#  registry:
+#    type: nacos
+#    nacos:
+#      server-addr: 127.0.0.1:8848
+#      namespace: 8de7b4d0-c8cb-42ac-984e-2c9949ef0e47
+#      group: SEATA_GROUP
+#      application: seata-server  #从配置文件中的alication copy获得
+#      username: nacos
+#      password: nacos
+#  #      事务组
+#  tx-service-group: seata-demo   #根据这个获取tc服务的cluster名称，也就是在下面映射出配置文件的cluster名称，这里的service-group是可以自己定义的
+#  service:
+#    vgroup-mapping:
+#      seata-demo: default        #从这里进行映射cluster
+#
+##配合睡眠来实现feign抛出读取超时异常
+#feign:
+#  circuitbreaker:
+#    enabled: true
+#  client:
+#    config:
+#      default:
+#        read-timeout: 100000
+#        connect-timeout: 5000
+#logging:
+#  level:
+#    io:
+#      seata: info
+
+
+
+
+

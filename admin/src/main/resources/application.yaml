@@ -1,4 +1,17 @@
 spring:
+  redis:
+      host: 192.168.1.100
+      database: 0
+      port: 6379
+      password: 111111
+      lettuce:
+        pool:
+          enabled: true
+          max-active: 8
+          max-idle: 8
+          max-wait: -1ms
+          min-idle: 0
+
   profiles:
       active: dev
   cloud:

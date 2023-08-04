@@ -155,6 +155,7 @@ let back = (() => {
 
 <style scoped>
 #building {
+  margin: 0 0;
   left: 0;
   background: url(../../assets/static/alterUser.jpg);
   width: 100%;

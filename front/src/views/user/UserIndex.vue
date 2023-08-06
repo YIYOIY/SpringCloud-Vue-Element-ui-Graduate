@@ -1,34 +1,40 @@
 <template>
   <div id="building">
-    <el-form  label-position="top" ref="form" label-width="100" :model="user.user" :rules="rule" style="width: 100%">
+    <el-form label-position="top" ref="form" label-width="100" :model="user.user" :rules="rule" style="width: 100%">
       <div style="left: 10%;max-width: 15%;position: absolute">
 
-      <el-form-item label="姓名" prop="userName">
-        <el-input v-model="user.user.userName" disabled clearable placeholder="在此输入账户名称"></el-input>
-      </el-form-item>
+        <el-form-item label="姓名" prop="userName">
+          <el-input v-model="user.user.userName" disabled clearable placeholder="在此输入账户名称"></el-input>
+        </el-form-item>
+        <el-form-item label="昵称" prop="userNickName">
+          <el-input type="text" v-model="user.user.userNickName" clearable @change="next"
+                    placeholder="在此输入账户昵称"></el-input>
+        </el-form-item>
 
-      <el-form-item label="性别">
-        <el-select v-model="user.user.userSex" filterable clearable placeholder="选择性别" style="border-radius: 18px">
-          <el-option label="男" value="男" />
-          <el-option label="女" value="女" />
-          <el-option label="保密" value="保密" />
-        </el-select>
-      </el-form-item>
+        <el-form-item label="性别">
+          <el-select v-model="user.user.userSex" filterable clearable placeholder="选择性别"
+                     style="border-radius: 18px">
+            <el-option label="男" value="男"/>
+            <el-option label="女" value="女"/>
+            <el-option label="保密" value="保密"/>
+          </el-select>
+        </el-form-item>
 
-      <el-form-item label="出生日期">
-        <el-date-picker clearable v-model="user.user.userBirth"
-          type="date" format="YYYY 年 MM 月 DD 日" placeholder="在此选择出生日期">
-        </el-date-picker>
-      </el-form-item>
+        <el-form-item label="出生日期">
+          <el-date-picker clearable v-model="user.user.userBirth"
+                          type="date" format="YYYY 年 MM 月 DD 日" placeholder="在此选择出生日期">
+          </el-date-picker>
+        </el-form-item>
       </div>
 
       <div style="right: 50%;max-width: 25%;position: absolute">
         <el-form-item label="账户密码" prop="userPassword">
-          <el-input type="password" show-password v-model="user.user.userPassword" clearable  placeholder="在此输入账户密码"></el-input>
+          <el-input type="password" show-password v-model="user.user.userPassword" clearable
+                    placeholder="在此输入账户密码"></el-input>
         </el-form-item>
 
         <el-form-item label="联系方式">
-          <el-input v-model="user.user.userPhone"  clearable  placeholder="在此输入联系方式"></el-input>
+          <el-input v-model="user.user.userPhone" clearable placeholder="在此输入联系方式"></el-input>
         </el-form-item>
       </div>
 
@@ -40,36 +46,41 @@
       </div>
     </el-form>
 
-      <div style="right: 30%;top:75%;width:50%;position: absolute">
-        <el-row class="control" gutter="40">
-          <el-col :span="12">
-            <el-button type="success"  @click="alter()" plain round>修改</el-button>
-          </el-col>
-          <el-col :span="12">
-            <el-button type="danger"  @click="back()" plain round>注销</el-button>
-          </el-col>
-        </el-row>
-      </div>
+    <div style="right: 30%;top:75%;width:50%;position: absolute">
+      <el-row class="control" gutter="40">
+        <el-col :span="12">
+          <el-button type="success" @click="alter()" plain round>修改</el-button>
+        </el-col>
+        <el-col :span="12">
+          <el-button type="danger" @click="back()" plain round>注销</el-button>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ElMessage, ElNotification } from "element-plus";
-import { useRouter } from "vue-router";
-import { ref, reactive, onMounted } from "vue";
-import { useStore } from "vuex";
+import {ElMessage, ElNotification} from "element-plus";
+import {useRouter} from "vue-router";
+import {ref, reactive, onMounted} from "vue";
+import {useStore} from "vuex";
 import {alterUser, alterUserGet, deleteUser} from "@/api/UserApi";
+
 let router = useRouter()
 let store = useStore();
 
 const user = reactive({
   user: {
     userName: '',
+    userNickName: '',
     userSex: '',
     userPassword: '',
     userBirth: '',
     userPhone: '',
     userAddress: '',
+    image:{
+      picture:''
+    }
   }
 })
 
@@ -118,11 +129,11 @@ let rule = reactive({
       message: "Please select Activity zone",
       trigger: "blur",
     },
-    { min: 1, max: 100, message: "长度在 1 到 100 个字符", trigger: "blur" },
+    {min: 1, max: 100, message: "长度在 1 到 100 个字符", trigger: "blur"},
   ],
   userPassword: [
-    { required: false, message: "请输入密码", trigger: "blur" },
-    { min: 6, max: 25, message: "长度在 6 到 25 个字符", trigger: "blur" },
+    {required: false, message: "请输入密码", trigger: "blur"},
+    {min: 6, max: 25, message: "长度在 6 到 25 个字符", trigger: "blur"},
   ],
 });
 
@@ -169,7 +180,7 @@ let back = (() => {
   z-index: -1;
 }
 
-.el-button{
+.el-button {
   width: 100%;
   height: 100%;
 }

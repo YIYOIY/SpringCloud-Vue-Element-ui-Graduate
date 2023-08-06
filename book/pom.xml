@@ -20,26 +20,21 @@
 
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.yoi</groupId>
-            <artifactId>mapper</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.yoi</groupId>
             <artifactId>Common</artifactId>
-            <version>1.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
+
         <!--        引入sentinel-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -51,6 +46,7 @@
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-datasource-nacos</artifactId>
         </dependency>
+
         <!--        引入nacos-discovery-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -92,6 +88,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${baomidou.version}</version>
         </dependency>
 
         <dependency>
@@ -116,16 +113,11 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.version}</version>
         </dependency>
 
         <dependency>
@@ -137,6 +129,11 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
 
     </dependencies>

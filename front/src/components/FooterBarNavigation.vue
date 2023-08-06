@@ -88,7 +88,7 @@
             </router-link>
           </el-menu-item>
           <el-menu-item index="2-3">
-            <router-link to="/category">
+            <router-link to="/series">
               <el-icon>
                 <Ship/>
               </el-icon>

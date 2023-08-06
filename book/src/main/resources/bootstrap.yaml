@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 84
 spring:
   application:
     name: book

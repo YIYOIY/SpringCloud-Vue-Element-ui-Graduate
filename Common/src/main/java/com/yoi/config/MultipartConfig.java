@@ -1,9 +1,14 @@
-package com.yoi.config;
-
-/**
- * @author 游弋
- * @create 2023-06-07 10:35 PM
- */
+//package com.yoi.config;
+//
+////**
+//// * @author 游弋
+//// * @create 2023-06-07 10:35 PM
+//// */
+//
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+//
 //@Configuration
 //public class MultipartConfig {
 //    @Bean(name = "multipartResolver")
@@ -14,4 +19,4 @@ package com.yoi.config;
 //        return multipartResolver;
 //    }
 //}
-
+//

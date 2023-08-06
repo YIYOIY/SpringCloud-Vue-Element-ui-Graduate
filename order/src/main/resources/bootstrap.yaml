@@ -2,7 +2,7 @@ server:
   port: 86
 spring:
   application:
-    name: orderMirco
+    name: order
   cloud:
     nacos:
       discovery:

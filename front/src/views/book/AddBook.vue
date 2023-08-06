@@ -72,20 +72,10 @@
           <el-col :span="9">
             <el-button plain round type="success" v-show="havePicture"><a href="pict/test/download">下载图片</a></el-button>
             <el-button plain round @click="havePicture = !havePicture" type="danger" v-show="havePicture">清空图片</el-button>
-            <el-button plain round @click="havePicture = !havePicture" type="primary" v-show="havePicture">从excel中导入书籍</el-button>
           </el-col>
         </el-row>
 
         <el-row v-show="!havePicture">
-          <el-col>
-            <el-upload class=" upload-demo" drag action="excel/importExcel" multiple :limit="1" encytype="multipart/form-data" name="photo" v-show="!havePicture">
-              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-              <div class="el-upload__text">
-                从一张excel表中导入书籍
-              </div>
-            </el-upload>
-            <el-divider></el-divider>
-          </el-col>
           <el-col>
             <el-upload ref="pict" class="upload-demo" action="pict/test/up" multiple :limit="1" encytype="multipart/form-data" name="photo" v-show="!havePicture" :auto-upload="false">
               <template #trigger>
@@ -106,6 +96,7 @@
             </el-upload>
           </el-col>
         </el-row>
+
       </div>
     </el-form>
 

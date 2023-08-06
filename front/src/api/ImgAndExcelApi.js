@@ -1,7 +1,7 @@
 import http from "@/utils/http";
 
-export function getPicture() {
+export function getPicture(id) {
     return http.get(
-        'pict/getPicture'
+        `picture/getPicture/${id}`
     )
 }

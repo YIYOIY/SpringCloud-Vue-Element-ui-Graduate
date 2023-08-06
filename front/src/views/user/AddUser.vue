@@ -1,9 +1,26 @@
 <template>
   <div id="building">
-    <el-form label-position="top" ref="form" label-width="100" :model="user.user" :rules="rule" style="width: 100%">
-      <div style="left: 10%;max-width: 15%;position: absolute">
-        <el-form-item label="账户名称"  prop="userName">
-          <el-input v-model="user.user.userName" @change="next" clearable placeholder="在此输入账户名称"></el-input>
+    <el-form label-position="top" ref="form" :model="user.user" :rules="rule">
+
+      <div style="left: 2%;width:35%;height:20%;position: relative">
+        <el-form-item label="账户名称" prop="userName">
+          <el-input v-model="user.user.userName" @change="next" clearable placeholder="账户名称作为登录凭证"></el-input>
+        </el-form-item>
+        <el-form-item label="昵称" prop="userNickName">
+          <el-input type="text"  v-model="user.user.userNickName" clearable @change="next" placeholder="在此输入账户昵称"></el-input>
+        </el-form-item>
+
+        <el-form-item label="账户密码" prop="userPassword">
+          <el-input type="password" show-password v-model="user.user.userPassword" clearable @change="next"
+                    placeholder="在此输入账户密码"></el-input>
+        </el-form-item>
+      </div>
+
+      <div style="left: 30%;top:20%;width: 15%;position: absolute">
+        <el-form-item label="出生日期">
+          <el-date-picker clearable v-model="user.user.userBirth"
+                          type="date" format="YYYY 年 MM 月 DD 日" @change="next" placeholder="在此选择出生日期">
+          </el-date-picker>
         </el-form-item>
 
         <el-form-item label="性别">
@@ -14,45 +31,80 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="出生日期">
-          <el-date-picker clearable v-model="user.user.userBirth"
-                          type="date" format="YYYY 年 MM 月 DD 日" @change="next" placeholder="在此选择出生日期">
-          </el-date-picker>
-        </el-form-item>
-      </div>
-
-      <div style="right: 50%;max-width: 25%;position: absolute">
-
-        <el-form-item label="账户密码" prop="userPassword">
-          <el-input type="password" show-password v-model="user.user.userPassword" clearable @change="next" placeholder="在此输入账户密码"></el-input>
-        </el-form-item>
-
         <el-form-item label="联系方式">
-          <el-input v-model="user.user.userPhone"  clearable @change="next" placeholder="在此输入联系方式"></el-input>
+          <el-input v-model="user.user.userPhone" clearable @change="next" placeholder="在此输入联系方式"></el-input>
         </el-form-item>
       </div>
 
-      <div style="right: 10%;width: 25%;position: absolute">
+      <div style="left: 12%;top:55%;width: 30%;position: absolute">
         <el-form-item label="地址" prop="userAddress" @change="next">
-          <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10 }" v-model="user.user.userAddress"
-                    clearable placeholder="在此输入收货地址"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10 }" v-model="user.user.userAddress" clearable
+                    placeholder="在此输入收货地址"></el-input>
         </el-form-item>
       </div>
+
     </el-form>
 
-    <div style="right: 25%;top:50%;width:50%;position: absolute">
-      <el-row :gutter="40" class="control">
-        <el-col :span="12">
-          <el-button type="success" size="large" @click="add()" plain round>注册</el-button>
+    <div style="float:right;right: 2%;width: 50%;top:15%;position: absolute">
+      <el-row>
+
+        <el-row v-show="havePicture">
+          <el-col :span="15">
+            <img :src='PICTURE' style="width: 80%;height: 80%" v-show="havePicture"
+                 alt="当前后端未设置项目的图片文件路径在配置文件中，所以无法看到回显，但数据保存成功,重新启动项目即可看到书籍图片在书籍列表中"/>
+          </el-col>
+
+          <el-col :span="8">
+            <el-row :gutter="15" justify="space-around">
+              <el-col :span="12">
+                <el-button plain round type="success" v-show="havePicture"><a href="picture/test/download">下载图片</a></el-button>
+              </el-col>
+              <el-col :span="12">
+                <el-button plain round @click="havePicture = !havePicture" type="danger" v-show="havePicture">清空图片</el-button>
+              </el-col>
+            </el-row>
+          </el-col>
+
+        </el-row>
+
+        <el-row  justify="space-around" v-show="!havePicture">
+          <el-upload ref="pict" class="upload-demo" :action="`picture/test/up/${id}`" multiple :limit="1"
+                     encytype="multipart/form-data" name="photo" v-show="!havePicture" :auto-upload="false"
+                     :show-file-list="true" :on-success="handleBookPicture"
+          >
+            <template #trigger>
+              <el-col :span="2"><el-button dark round type="primary">上传头像，限制一张</el-button></el-col>
+            </template>
+            <el-col :span="12"><el-button plain round type="success" @click="handleBookPicture">点击即可上传服务器</el-button></el-col>
+<!--            <el-col :span="4"><el-button plain round type="success">点击即可上传服务器</el-button></el-col>-->
+            <template #tip>
+              <div class="el-upload__tip" STYLE="float:right;right:5%;color: #efe8e8;font-size: 20px">
+                jpg/png files with a size less than 500kb
+              </div>
+            </template>
+          </el-upload>
+        </el-row>
+
+      </el-row>
+    </div>
+
+    <div style="float:right;left: 15%;top:2%;width:60%;position: relative">
+      <el-row justify="center" :gutter="20" class="control">
+        <el-col :span="4">
+          <el-button style="width: 80%;font-size: 20px;color: #f5f1f1" type="primary" size="large" @click="add()" round>
+            注册
+          </el-button>
         </el-col>
-        <el-col :span="12">
-          <el-button type="primary" size="large" @click="cancelAdd()" plain round>取消</el-button>
+        <el-col :span="4">
+          <el-button style="width: 80%;font-size: 20px;color: #151515" size="large" @click="cancelAdd()" round>取消
+          </el-button>
         </el-col>
       </el-row>
     </div>
 
-    <div style="right: 15%;top:55%;width:70%;position: absolute">
-      <el-steps :active="active" align-center finish-status="success" style="width: 100%;margin-top: 16%;margin-left:4%;padding:10px 10px;background-color: rgba(243,243,243,0.2);border-radius: 10px">
+    <div style="left: 15%;bottom:0%;width:70%;position: relative">
+      <el-steps :active="active" align-center finish-status="success"
+                style="width: 100%;margin-top: 26%;margin-left:4%;padding:10px 10px;background-color: rgba(243,243,243,0.2);border-radius: 10px">
         <el-step title="Step 1" description="填写姓名"/>
         <el-step title="Step 2" description="输入密码"/>
         <el-step title="Step 3" description="根据需要填写其他信息"/>
@@ -66,8 +118,9 @@
 import {ref, reactive} from "vue";
 import {useRouter} from "vue-router";
 import {useRoute} from "vue-router";
-import {ElMessage, ElNotification} from "element-plus";
+import {ElButton, ElMessage, ElNotification, ElUpload} from "element-plus";
 import {addUser} from "@/api/UserApi";
+import {getPicture} from "@/api/ImgAndExcelApi";
 
 let active = ref(0)
 let next = (() => {
@@ -82,20 +135,59 @@ if (route.query.enroll) {
 }
 console.log(isEnroll.value)
 
+
+let PICTURE = ref('');
+let id =Math.ceil(Math.random()*1000)
+console.log(id)
+let havePicture = ref(false);
+
+let pict = ref('')
+let handleBookPicture = (() => {
+  pict.value.submit()
+  pict.value.clearFiles()
+  setTimeout(() => {
+    getPicture(id).then(Response => {
+      console.log(Response.data + "后端返回的值")
+      if (Response.data != null && Response.data != "") {
+        //对后端返回值验证后进行赋值
+        PICTURE.value = Response.data
+        user.user.image.picture = Response.data
+        // 显示图片页面
+        console.log(PICTURE.value + "用于页面回显的地址")
+        console.log(user.user.image.picture + "数据库保存的图片地址")
+        havePicture.value = true
+      }
+    }).catch(Error => {
+      ElNotification.error(Error.data.message)
+      console(Error)
+    })
+  }, 100);
+})
+
+
+
 const user = reactive({
   user: {
     userName: '',
+    userNickName: '',
     userSex: '保密',
     userPassword: '',
     userBirth: '',
     userPhone: '',
     userAddress: '',
+    image:{
+      picture:''
+    }
   }
 })
 
 let rule = reactive({
   userName: [
-    {required: true, message: "请输入姓名", trigger: "blur"},
+    {required: true, message: "请输入账户名称", trigger: "blur"},
+    {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"},
+  ],
+  userNickName: [
+    {required: true, message: "请输入昵称", trigger: "blur"},
     {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"},
   ],
   userAddress: [
@@ -132,7 +224,7 @@ const add = (() => {
         });
         router.push('/login')
       } else {
-          router.push('/adminUsers')
+        router.push('/adminUsers')
       }
     }).catch(Error => {
       ElNotification({
@@ -146,7 +238,11 @@ const add = (() => {
 })
 
 const cancelAdd = (() => {
-  router.push('/adminUsers')
+  if (isEnroll.value) {
+    router.push('/login')
+  } else {
+    router.push('/adminUsers')
+  }
 })
 
 </script>
@@ -183,19 +279,13 @@ const cancelAdd = (() => {
   margin: 6% 10%;
   width: 40%;
 }
-.el-input{
+
+.el-input {
   --el-input-border-radius: 18px;
 }
 
-/deep/.el-input__inner{
+/deep/ .el-input__inner {
   border-radius: 18px;
   width: 100%;
 }
-
-.control {
-  top: 5%;
-  left: 35%;
-  width: 50%;
-}
-
 </style>

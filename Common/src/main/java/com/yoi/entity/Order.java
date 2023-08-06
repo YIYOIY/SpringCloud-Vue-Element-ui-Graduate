@@ -2,111 +2,70 @@ package com.yoi.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import org.springframework.stereotype.Component;
-import java.sql.Timestamp;
-@Component
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.Version;
+import com.yoi.enumvalue.CommentEnum;
+import com.yoi.enumvalue.OrderEnum;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+@Validated
+@ToString
+@Data
+@NoArgsConstructor
 public class Order {
-    @TableId("order_id")
-    private Integer orderId;
-    private Integer bookNum;
-    private Integer userId;
-    private Integer bookId;
-    private Timestamp orderTime;
-    private String orderStatus;
-    @TableField(select = false)
-    private User user;
-    @TableField(select = false)
+    @NotNull(message = "id不能为空")
+    @TableId
+    private Long id;
+    private Long bookId;
+    private Long userId;
+    private Long wordId;
+
+    private CommentEnum commentStatus;
+    private Double bookPrice;
+    private Double discount;
+    private Double expressFare;
+    private Double kickback;
+
+    private LocalDateTime orderSignTime;
+    private LocalDateTime buyTime;
+    private LocalDateTime backTime;
+    private LocalDateTime confirmTime;
+
+    private OrderEnum orderStatus;
+    private Integer buyNumber;
+    @Version
+    private LocalDateTime version;
+    @TableLogic(value = "null",delval = "now()")
+    private LocalDateTime flag;
+
+    @TableField(exist = false)
     private Book book;
+    @TableField(exist = false)
+    private User user;
+    @TableField(exist = false)
+    private Word word;
 
-    public Order() {
-    }
-
-    public Integer getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
-    }
-
-    public Integer getBookNum() {
-        return bookNum;
-    }
-
-    public void setBookNum(Integer bookNum) {
-        this.bookNum = bookNum;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(Integer bookId) {
+    public Order(Long id, Long bookId, Long userId, Long wordId, CommentEnum commentStatus, Double bookPrice, Double discount, Double expressFare, Double kickback, LocalDateTime orderSignTime, LocalDateTime buyTime, LocalDateTime backTime, LocalDateTime confirmTime, OrderEnum orderStatus,
+                 Integer buyNumber) {
+        this.id = id;
         this.bookId = bookId;
-    }
-
-    public Timestamp getOrderTime() {
-        return orderTime;
-    }
-
-    public void setOrderTime(Timestamp orderTime) {
-        this.orderTime = orderTime;
-    }
-
-    public String getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(String orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public Order(Integer orderId, Integer bookNum, Integer userId, Integer bookId, Timestamp orderTime, String orderStatus, User user, Book book) {
-        this.orderId = orderId;
-        this.bookNum = bookNum;
         this.userId = userId;
-        this.bookId = bookId;
-        this.orderTime = orderTime;
+        this.wordId = wordId;
+        this.commentStatus = commentStatus;
+        this.bookPrice = bookPrice;
+        this.discount = discount;
+        this.expressFare = expressFare;
+        this.kickback = kickback;
+        this.orderSignTime = orderSignTime;
+        this.buyTime = buyTime;
+        this.backTime = backTime;
+        this.confirmTime = confirmTime;
         this.orderStatus = orderStatus;
-        this.user = user;
-        this.book = book;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "orderId=" + orderId +
-                ", bookNum=" + bookNum +
-                ", userId=" + userId +
-                ", bookId=" + bookId +
-                ", orderTime=" + orderTime +
-                ", orderStatus='" + orderStatus + '\'' +
-                ", user=" + user +
-                ", book=" + book +
-                '}';
+        this.buyNumber = buyNumber;
     }
 }

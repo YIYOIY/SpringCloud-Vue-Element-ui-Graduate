@@ -1,44 +1,56 @@
 package com.yoi.feigncontroller;
 
 import com.yoi.entity.Book;
+import com.yoi.entity.PagePackage;
 import com.yoi.entity.ReturnInfo;
-import com.yoi.feign.FeignBookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.yoi.feign.service.FeignBookService;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author 游弋
  * @create 2023-07-19 20:03
  */
+@Validated
 @RestController
 @RefreshScope
 public class BookFeignController {
-    @Autowired
+    @Resource
     private FeignBookService feignBookService;
-    @GetMapping("/book")
-    public ReturnInfo index(@RequestParam(value = "searchName",required = false)String searchName, @RequestParam(value = "bookId",required = false) Integer BookpageNo){
-        return feignBookService.index(searchName, BookpageNo);
+    @CrossOrigin
+    @GetMapping("/book/{searchName}/{pageNo}/{pageSize}")
+    public ReturnInfo<PagePackage<Book>> index(@PathVariable("searchName") String searchName,
+                                               @Min(1) @PathVariable("pageNo") Integer pageNo,
+                                               @Min(1) @PathVariable("pageSize") Integer pageSize) {
+        return feignBookService.index(searchName, pageNo,pageSize);
     }
-    @GetMapping("/lookup")
-    public ReturnInfo lookUp(@RequestParam(value = "bookId",required = false)Integer bookId){
+    @GetMapping("/select_by_series/{seriesName}/{pageNo}/{pageSize}")
+    public ReturnInfo<PagePackage<Book>> selectBySeries(@NotNull @PathVariable("seriesName") String seriesName,
+                                                        @Min(1) @PathVariable("pageNo") Integer pageNo,
+                                                        @Min(1) @PathVariable("pageSize") Integer pageSize) {
+        System.out.println(seriesName);
+        return feignBookService.selectBySeries(seriesName,pageNo,pageSize);
+    }
+    @GetMapping("/lookup/{bookId}")
+    public ReturnInfo<Book> lookUp(@NotNull @PathVariable("bookId") Long bookId) {
         return feignBookService.lookUp(bookId);
     }
-    @GetMapping("/selectBySeries")
-    public ReturnInfo selectBySeries(@RequestParam("seriesName") String seriesName){
-        System.out.println(seriesName);
-        return feignBookService.selectBySeries(seriesName);
-    }
     @PostMapping("/book")
-    public ReturnInfo addBook(@RequestBody Book book){
+    public ReturnInfo<String> addBook(@RequestBody Book book) {
         return feignBookService.addBook(book);
     }
     @DeleteMapping("/book")
-    public ReturnInfo deleteBook(@RequestParam(value = "bookId",required = false)Integer bookId){
-        return feignBookService.deleteBook(bookId);
+    public ReturnInfo<String> deleteBook(@Valid @RequestBody Book book) {
+        return feignBookService.deleteBook(book);
     }
     @PutMapping("/book")
-    public ReturnInfo updateBook(@RequestBody Book book){
+    public ReturnInfo<String> updateBook(@Valid @RequestBody Book book) {
         return feignBookService.updateBook(book);
     }
 }

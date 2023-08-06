@@ -41,7 +41,7 @@
       <el-menu-item-group title="书籍管理">
         <el-menu-item index="2-3"><router-link to="/adminBooks" active-class="active-class"
             exact-active-class="exact-active"><el-icon><Sunrise /></el-icon>书籍信息管理</router-link></el-menu-item>
-        <el-menu-item index="2-3"><router-link to="/category" active-class="active-class"
+        <el-menu-item index="2-3"><router-link to="/series" active-class="active-class"
             exact-active-class="exact-active"><el-icon><Ship /></el-icon>书籍系列管理</router-link></el-menu-item>
       </el-menu-item-group>
 

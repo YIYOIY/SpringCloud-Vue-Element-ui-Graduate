@@ -17,49 +17,85 @@
         <module>admin</module>
         <module>user</module>
         <module>book</module>
-        <module>category</module>
+        <module>series</module>
         <module>order</module>
-        <module>mapper</module>
         <module>img</module>
         <module>Feign-consumer</module>
         <module>gateway</module>
+        <module>shopkeeper</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <lombok.version>1.18.24</lombok.version>
-
         <fileUpload.version>1.4</fileUpload.version>
-
-        <mysql.version>8.0.32</mysql.version>
-        <baomidou.version>3.5.1</baomidou.version>
+        <org.yaml>2.1</org.yaml>
+        <mysql.version>8.0.33</mysql.version>
+        <baomidou.version>3.5.3.1</baomidou.version>
         <mybatis.spring.boot.version>2.3.0</mybatis.spring.boot.version>
         <alibaba.fastjson.version>2.0.32</alibaba.fastjson.version>
         <jackson.version>2.15.2</jackson.version>
         <java.jwt.version>3.10.0</java.jwt.version>
-        <poi.version>4.0.1</poi.version>
-        <poi.ooxml.version>4.0.1</poi.ooxml.version>
-        <druid.version>1.1.17</druid.version>
+        <druid.version>1.1.21</druid.version>
         <zipkin.version>2.2.8.RELEASE</zipkin.version>
         <commons.pool>2.11.1</commons.pool>
-
-        <spring.boot.version>2.6.11</spring.boot.version>
+        <spring.boot.validation>3.1.2</spring.boot.validation>
+        <spring.boot.version>2.7.11</spring.boot.version>
         <spring.cloud.version>2021.0.4</spring.cloud.version>
         <spring.cloud.alibaba.version>2021.0.4.0</spring.cloud.alibaba.version>
+        <spring.boot.starter.web>3.1.2</spring.boot.starter.web>
+        <spring.boot.starter.test>3.1.2</spring.boot.starter.test>
+        <spring.boot.starter>2.7.14</spring.boot.starter>
+        <spring.boot.starter.data.redis>3.1.2</spring.boot.starter.data.redis>
+        <common.version>1.0</common.version>
+        <loadbalancer>3.0.3</loadbalancer>
     </properties>
     <dependencyManagement>
-
         <dependencies>
+            <!-- 负载均衡-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+                <version>${loadbalancer}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.yoi</groupId>
-                <artifactId>mapper</artifactId>
-                <version>${project.version}</version>
+                <artifactId>Common</artifactId>
+                <version>${common.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring.boot.starter.data.redis}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring.boot.starter}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.starter.web}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-validation</artifactId>
+                <version>${spring.boot.validation}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -67,6 +103,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
 
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -84,11 +121,7 @@
                 <scope>import</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-zipkin</artifactId>
-                <version>${zipkin.version}</version>
-            </dependency>
+
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -102,15 +135,10 @@
                 <version>${baomidou.version}</version>
             </dependency>
 
+            <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis.spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
 
@@ -135,20 +163,6 @@
                 <version>${fileUpload.version}</version>
             </dependency>
 
-            <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi</artifactId>
-                <version>${poi.version}</version>
-            </dependency>
-
-            <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi-ooxml</artifactId>
-                <version>${poi.ooxml.version}</version>
-            </dependency>
-
             <!--引入JWT-->
             <dependency>
                 <groupId>com.auth0</groupId>
@@ -156,12 +170,7 @@
                 <version>${java.jwt.version}</version>
             </dependency>
 
-            <!--stringRedisTemplate序列化和反序列化时使用-->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-            </dependency>
-            <!--alibaba的json依赖用于处理requestbody的json string，map格式转化问题-->
+            <!--alibaba的json依赖用于处理request-body的json string，map格式转化问题-->
             <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -169,6 +178,18 @@
                 <version>${alibaba.fastjson.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.starter.test}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${org.yaml}</version>
+            </dependency>
 
 
             <!-- jackson -->
@@ -188,21 +209,15 @@
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-zipkin -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-zipkin</artifactId>
+                <version>${zipkin.version}</version>
+            </dependency>
 
         </dependencies>
 
     </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <addResources>true</addResources>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

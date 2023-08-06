@@ -7,17 +7,23 @@ export default createStore({
         userName: '',
         userPassword: '',
 
-        adminId:'',
+        adminId: '',
         adminName: '',
         adminPassword: '',
 
+
+        shopkeeperId: '',
+        shopkeeperName: '',
+        shopkeeperPassword: '',
+
         isAdmin: false,
         isUser: false,
+        isShopkeeper: false,
 
-        menu:1,
+        menu: 1,
     },
-    mutations:{
-        clearState(state){
+    mutations: {
+        clearState(state) {
             state.adminPassword = ''
             state.adminName = ''
             state.adminId = ''

@@ -2,7 +2,7 @@ import http from "@/utils/http";
 
 export function addUser(data) {
     return http.post(
-        'api/addUser',
+        'api/add_user',
         data
     )
 }

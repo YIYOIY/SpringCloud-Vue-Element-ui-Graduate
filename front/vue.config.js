@@ -7,10 +7,6 @@ const {
 	ElementPlusResolver
 } = require('unplugin-vue-components/resolvers')
 
-const {
-	resolve
-} = require("@babel/core/lib/vendor/import-meta-resolve");
-
 module.exports = defineConfig({
 	pwa: {
 		iconPaths: {
@@ -26,36 +22,25 @@ module.exports = defineConfig({
 	publicPath: '/',
 	devServer: {
 		host: 'localhost',
-		port: 9090,
+		port: 80,
 		open: true,
 		proxy: {
-			// 使用本地
-			// '/api': {
-			// 	target: 'http://localhost:87',
+			// 使用直连
+			// '/excel': {
+			// 	target: 'http://localhost:88',
 			// 	changeOrigin: true,
 			// 	pathRewrite: {
-			// 		'^/api': ''
+			// 		'^/excel': ''
 			// 	},
 			// 	bypass: function(req, res, proxyOptions) {
 			// 		console.log(proxyOptions.target)
 			// 	}
 			// },
-			// 使用直连
-			'/excel': {
-				target: 'http://localhost:88',
-				changeOrigin: true,
-				pathRewrite: {
-					'^/excel': ''
-				},
-				bypass: function(req, res, proxyOptions) {
-					console.log(proxyOptions.target)
-				}
-			},
 			// 使用直连,上传下载图片，获取图片地址
-			'/pict': {
+			'/picture': {
 				target: 'http://localhost:88',
 				pathRewrite: {
-					'^/pict': ''
+					'^/picture': ''
 				},
 				changeOrigin: true,
 				bypass: function(req, res, proxyOptions) {
@@ -73,6 +58,10 @@ module.exports = defineConfig({
 			// 使用网关，根据图片地址查询图片
 			'/img': {
 				target: 'http://localhost:89',
+				// 出现问题就用下面的直连
+				// pathRewrite: {
+				// 	'^/img': ''
+				// },
 				changeOrigin: true,
 				bypass: function(req, res, proxyOptions) {
 					console.log(proxyOptions.target)

@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -30,7 +29,7 @@ public class JwtUtils {
      * @param map //传入payload
      * @return 返回token
      *  它的含义就像是编程语言的保留字一样，属于JWT标准里面规定的一些claim。JWT标准里面定义好的claim有：
-     *               iss(Issuser)：代表这个JWT的签发主体；
+     *               iss(Issuer)：代表这个JWT的签发主体；
      *               sub(Subject)：代表这个JWT的主体，即它的所有人；
      *               aud(Audience)：代表这个JWT的接收对象；
      *               exp(Expiration time)：是一个时间戳，代表这个JWT的过期时间；
@@ -40,7 +39,7 @@ public class JwtUtils {
      * //        JWT的唯一标识,避免重放攻击
      * //        String jwi = UUID.randomUUID().toString();
      * //        builder.withJWTId(jwi);
-     *
+
      *jwt的签名算法有三种：
      * HMAC【哈希消息验证码(对称)】：HS256/HS384/HS512
      * RSASSA【RSA签名算法(非对称)】（RS256/RS384/RS512）
@@ -53,11 +52,11 @@ public class JwtUtils {
      * //        headerMap.put("alg", "HS256");
      * //        headerMap.put("typ", "JWT");
      * //        builder.withHeader(headerMap);
-     *
+
      * jwt的第三部分是一个签证信息，这个签证信息算法如下：
      * base64UrlEncode(header) + "." + base64UrlEncode(payload)+your-256-bit-secret
      * 这个部分需要base64加密后的header和base64加密后的payload使用.连接组成的字符串，然后通过header中声明的加密方式进行加盐secret组合加密，然后就构成了jwt的第三部分。
-     *
+
      * //有10天有效期
      * Calendar nowTime = Calendar.getInstance();
      * nowTime.add(Calendar.DATE, 10);
@@ -66,9 +65,7 @@ public class JwtUtils {
     public static String getToken(Map<String,String> map){
         JWTCreator.Builder builder = JWT.create();
 //        私有声明存放数据  payload，如果有私有声明，一定要先设置这个自己创建的私有的声明，这个是给builder的claim赋值，一旦写在标准的声明赋值之后，就是覆盖了那些标准的声明的
-        map.forEach((k,v)->{
-            builder.withClaim(k,v);
-        });
+        map.forEach(builder::withClaim);
 //        发行人
         builder.withIssuer("yoi");
 //        签发时间
@@ -81,15 +78,14 @@ public class JwtUtils {
         Date expiresDate = nowTime.getTime();
         builder.withExpiresAt(expiresDate);
         System.out.println("\n过期时间：" + expiresDate);
-        return builder.sign(Algorithm.HMAC256(SIGNATURE)).toString();
+        return builder.sign(Algorithm.HMAC256(SIGNATURE));
     }
 
     /**
      * 验证token
-     * @param token
+     * @param token 请求传递的token
      */
     public static void verify(String token){
-        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
         DecodedJWT verify = JWT.require(Algorithm.HMAC256(SIGNATURE)).build().verify(token);
         System.out.println("认证通过：");
         System.out.println("id: " + verify.getClaim("id").asString());
@@ -99,8 +95,8 @@ public class JwtUtils {
 
     /**
      * 获取token中payload
-     * @param token
-     * @return
+     * @param token 前端传递的token
+     * @return 返回jwt验证对象
      */
     public static DecodedJWT getToken(String token){
         return JWT.require(Algorithm.HMAC256(SIGNATURE)).build().verify(token);

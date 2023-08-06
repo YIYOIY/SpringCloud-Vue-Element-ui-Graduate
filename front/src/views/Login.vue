@@ -65,12 +65,19 @@
             </el-form-item>
           </el-form>
           <el-row justify="space-evenly" style="width: 100%;margin: 5% 5% 0 5%;">
+
             <el-col :span="10">
-              <el-button style="width: 70%;font-size: 20px;color: #26850c" size="large" type="success" @click="submitForm" plain round>登录</el-button>
+              <el-button style="width: 70%;font-size: 20px;color: #151515" size="large" @click="enroll" round>注册
+              </el-button>
             </el-col>
+
             <el-col :span="10">
-              <el-button style="width: 70%;font-size: 20px;color: #8d1417" size="large" type="danger" @click="enroll" plain round>注册</el-button>
+              <el-button style="width: 70%;font-size: 20px;color: #f5f1f1" size="large" type="primary"
+                         @click="submitForm"  dark round>登录
+              </el-button>
+
             </el-col>
+
           </el-row>
 
           <el-row>
@@ -272,7 +279,7 @@ function enroll() {
   padding: 2% 5%;
   background-color: rgb(255, 255, 255);
   border-radius: 40px;
-  box-shadow: inset 0 -3em 3em #d3d9de,0 0 10px rgb(255, 255, 255),1em 1em 3em 1em #1d5f98;
+  box-shadow: inset 0 -3em 3em #d3d9de, 0 0 10px rgb(255, 255, 255), 1em 1em 3em 1em #1d5f98;
 }
 
 /deep/ .el-form-item {
@@ -320,12 +327,12 @@ function enroll() {
   justify-content: space-around;
   align-items: center;
   border-radius: 5px;
-  box-shadow: inset 0 0 1px rgb(54, 102, 170),0.2em 0.2em 0.8em 0.7em rgb(217, 217, 221);
+  box-shadow: inset 0 0 1px rgb(54, 102, 170), 0.2em 0.2em 0.8em 0.7em rgb(217, 217, 221);
   width: 60%;
 }
 
 /deep/ .el-card__body {
-  box-shadow: 1em 1em 4em rgba(0,0,0,0.3);
+  box-shadow: 1em 1em 4em rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   background-color: rgba(96, 138, 183, 0.12);
 }

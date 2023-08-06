@@ -1,9 +1,17 @@
 package com.yoi.entity;
 
+import com.yoi.enumvalue.ReturnEnum;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 /**
  * @author 游弋
  * @create 2023-07-27 15:09
  */
+@Data
+@NoArgsConstructor
+@ToString
 public class ReturnInfo<T> {
     private Integer code;
     private String message;
@@ -28,46 +36,11 @@ public class ReturnInfo<T> {
         this.token = token;
     }
 
-    public ReturnInfo() {
-    }
-
     public static <T> ReturnInfo<T> withEnumData(ReturnEnum returnEnum, T data){
-        return new ReturnInfo(returnEnum.getCode(),returnEnum.getMessage(),data);
+        return new ReturnInfo<T>(returnEnum.getCode(),returnEnum.getMessage(),data);
     }
 
-    public static ReturnInfo withEnumNoData(ReturnEnum returnEnum){
-        return new ReturnInfo(returnEnum.getCode(),returnEnum.getMessage());
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
+    public static <T> ReturnInfo<T> withEnumNoData(ReturnEnum returnEnum){
+        return new ReturnInfo<T>(returnEnum.getCode(),returnEnum.getMessage());
     }
 }

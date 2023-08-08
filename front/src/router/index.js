@@ -18,17 +18,21 @@ import AddAdmin from "@/views/admin/AddAdmin.vue";
 
 import Login from "@/views/Login.vue";
 import store from "@/store";
+import {ElLoading, ElMessage} from "element-plus";
 
-
-import AddCategory from "@/views/category/AddCategory.vue";
-import AlterCategory from "@/views/category/AlterCategory.vue";
-import Category from "@/views/category/Category.vue";
+import AddCategory from "@/views/series/AddSeries.vue";
+import AlterCategory from "@/views/series/AlterSeries.vue";
+import Category from "@/views/series/Series.vue";
 
 import AdminOrder from "@/views/order/AdminOrder.vue";
 import UserOrder from "@/views/order/UserOrder.vue";
 import OrderConfirm from "@/views/order/OrderConfirm.vue";
-import {ElLoading, ElMessage} from "element-plus";
 
+import ShopkeeperIndex from "@/views/shopkeeper/ShopkeeperIndex.vue";
+import AlterShopkeeper from "@/views/shopkeeper/AlterShopkeeper.vue";
+import AdminShopkeepers from "@/views/shopkeeper/AdminShopkeepers.vue";
+import AddShopkeeper from "@/views/shopkeeper/AddShopkeeper.vue";
+import Admins from "@/views/admin/Admins.vue";
 
 let router = createRouter({
     history: createWebHistory(),
@@ -68,6 +72,20 @@ let router = createRouter({
             },
         },
         {
+            name: "shopkeeper",
+            path: "/shopkeeper",
+            component: ShopkeeperIndex,
+            beforeEnter: (to, from, next) => {
+                if (to.name === "shopkeeper") {
+                    if (store.state.isShopkeeper) {
+                        next();
+                    } else {
+                        next(false);
+                    }
+                } else next({path: "/login"});
+            },
+        },
+        {
             name: "login",
             path: "/login",
             component: Login,
@@ -83,6 +101,20 @@ let router = createRouter({
                 return {
                     id: query.id,
                 };
+            },
+        },
+        {
+            name: "admins",
+            path: '/admins',
+            component: Admins,
+            beforeEnter: (to, from, next) => {
+                if (to.name === "admins") {
+                    if (store.state.isAdmin) {
+                        next();
+                    } else {
+                        next(false);
+                    }
+                }
             },
         },
         {
@@ -143,7 +175,7 @@ let router = createRouter({
             },
             beforeEnter: (to, from, next) => {
                 if (to.name === "alterUser") {
-                    if (store.state.isAdmin || store.state.isUser) {
+                    if (store.state.isAdmin) {
                         next();
                     } else {
                         next(false);
@@ -157,12 +189,59 @@ let router = createRouter({
             component: AddUser,
         },
         {
+            name: "adminShopkeepers",
+            path: "/adminShopkeepers",
+            component: AdminShopkeepers,
+            beforeEnter: (to, from, next) => {
+                if (to.name === "adminShopkeepers") {
+                    if (store.state.isAdmin) {
+                        next();
+                    } else {
+                        next(false);
+                    }
+                }
+            },
+        },
+        {
+            name: "alterShopkeeper",
+            path: "/alterShopkeeper",
+            component: AlterShopkeeper,
+            props({query}) {
+                return {
+                    shopkeeperId: query.shopkeeperId,
+                };
+            },
+            beforeEnter: (to, from, next) => {
+                if (to.name === "alterShopkeeper") {
+                    if (store.state.isAdmin) {
+                        next();
+                    } else {
+                        next(false);
+                    }
+                }
+            },
+        },
+        {
+            name: "addShopkeeper",
+            path: "/addShopkeeper",
+            component: AddShopkeeper,
+            beforeEnter: (to, from, next) => {
+                if (to.name === "addShopkeeper") {
+                    if (store.state.isAdmin || store.state.isUser) {
+                        next();
+                    } else {
+                        next(false);
+                    }
+                }
+            },
+        },
+        {
             name: "adminBooks",
             path: "/adminBooks",
             component: AdminBooks,
             beforeEnter: (to, from, next) => {
                 if (to.name === "adminBooks") {
-                    if (store.state.isAdmin) {
+                    if (store.state.isAdmin || store.state.isShopkeeper) {
                         next();
                     } else {
                         next(false);
@@ -181,7 +260,7 @@ let router = createRouter({
             },
             beforeEnter: (to, from, next) => {
                 if (to.name === "alterBooks") {
-                    if (store.state.isAdmin) {
+                    if (store.state.isAdmin || store.state.isShopkeeper) {
                         next();
                     } else {
                         next(false);
@@ -195,7 +274,7 @@ let router = createRouter({
             component: AddBook,
             beforeEnter: (to, from, next) => {
                 if (to.name === "addBook") {
-                    if (store.state.isAdmin) {
+                    if (store.state.isAdmin || store.state.isShopkeeper) {
                         next();
                     } else {
                         next(false);
@@ -205,11 +284,11 @@ let router = createRouter({
         },
         {
             name: "category",
-            path: "/category",
+            path: "/series",
             component: Category,
             beforeEnter: (to, from, next) => {
                 if (to.name === "category") {
-                    if (store.state.isAdmin) {
+                    if (store.state.isAdmin || store.state.isShopkeeper) {
                         next();
                     } else {
                         next(false);
@@ -228,7 +307,7 @@ let router = createRouter({
             },
             beforeEnter: (to, from, next) => {
                 if (to.name === "alterCategory") {
-                    if (store.state.isAdmin) {
+                    if (store.state.isAdmin || store.state.isShopkeeper) {
                         next();
                     } else {
                         next(false);
@@ -242,7 +321,7 @@ let router = createRouter({
             component: AddCategory,
             beforeEnter: (to, from, next) => {
                 if (to.name === "addCategory") {
-                    if (store.state.isAdmin) {
+                    if (store.state.isAdmin || store.state.isShopkeeper) {
                         next();
                     } else {
                         next(false);
@@ -303,12 +382,12 @@ router.beforeEach((to, from, next) => {
     const loadingInstance = ElLoading.service({
         fullscreen: true,
         lock: true,
-        text: '游弋专用加载，其实数据早就好了，就为了让你等！',
-        background: 'rgb(255,176,17)'
+        text: '游弋，一次实践',
+        background: 'rgb(40,39,37)',
     })
     setTimeout(() => {
         loadingInstance.close()
-    }, 2000)
+    }, 1000)
 
     // 页面加载效果，这个是黑色的
     // const loading = ElLoading.service({
@@ -351,3 +430,5 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
+
+

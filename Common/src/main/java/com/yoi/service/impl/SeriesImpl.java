@@ -18,11 +18,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SeriesImpl extends ServiceImpl<SeriesMapper, Series> implements SeriesService {
     private final SeriesMapper seriesMapper;
-
     @Override
     public Page<Series> getAll(String keyword, Integer pageNo, Integer pageSize) {
         Page<Series> seriesPage = new Page<>(pageNo, pageSize);
-        return seriesMapper.selectPage(seriesPage, new QueryWrapper<Series>().like("series_id", keyword));
+        return seriesMapper.selectPage(seriesPage, new QueryWrapper<Series>().like("series_name", keyword));
     }
 
     @Override
@@ -36,8 +35,8 @@ public class SeriesImpl extends ServiceImpl<SeriesMapper, Series> implements Ser
     }
 
     @Override
-    public boolean deleteSeries(Long seriesId) {
-        return seriesMapper.deleteById(seriesId) > 0;
+    public boolean deleteSeries(Series series) {
+        return seriesMapper.deleteById(series.getId()) > 0;
     }
 
     @Override

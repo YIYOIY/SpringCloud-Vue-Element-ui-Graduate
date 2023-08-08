@@ -1,8 +1,20 @@
 // axios封装
-
 import axios from "axios";
 // 控制是否使用token和baseUrl设置，在另一个文件里
 import serverConfig from "@/utils/serviceConfig";
+import JSONBIG from 'json-bigint'
+
+// 解决id使用uuid精度丢失问题
+axios.defaults.transformResponse = [
+    function (data) {
+        const json = JSONBIG({
+            storeAsString: true
+        })
+        const res = json.parse(data)
+        return res
+    }
+]
+
 
 //创建axios实例
 const serviceAxios = axios.create({

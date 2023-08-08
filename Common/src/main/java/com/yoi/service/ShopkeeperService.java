@@ -17,7 +17,7 @@ public interface ShopkeeperService extends IService<Shopkeeper> {
 
     boolean addShopkeeper(Shopkeeper shopkeeper);
 
-    boolean deleteShopkeeper(Long shopkeeperId);
+    boolean deleteShopkeeper(Shopkeeper shopkeeper);
 
     boolean updateShopkeeper(Shopkeeper shopkeeper);
 }

@@ -1,5 +1,18 @@
 import http from "@/utils/http";
 
+
+export function adminGetUsers(adminId,pageNo,pageSize,searchName) {
+    return http.get(
+        `api/user/${adminId}/${pageNo}/${pageSize}/${searchName}`
+    )
+}
+
+export function getUser(params) {
+    return http.get(
+        `api/user/${params}`
+    )
+}
+
 export function addUser(data) {
     return http.post(
         'api/add_user',
@@ -7,27 +20,16 @@ export function addUser(data) {
     )
 }
 
-export function deleteUser(params) {
+export function deleteUser(data) {
     return http.delete(
-        `api/user?userId=${params}`
+        'api/user',
+        data
     )
 }
 
-export function getUsers() {
-    return http.get(
-        'api/users'
-    )
-}
-
-export function alterUserGet(params) {
-    return http.get(
-        `api/user?userId=${params}`
-    )
-}
-
-export function alterUser(params) {
+export function alterUser(data) {
     return http.put(
         "api/user",
-        params
+        data
     )
 }

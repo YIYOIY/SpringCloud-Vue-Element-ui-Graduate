@@ -173,36 +173,29 @@ const submitForm = () => {
       shopkeeperPassword: people.password
     }
     let shopkeeper = JSON.stringify(shopkeeperdata)
+
     if (people.type === 'admin') {
       adminLogin(admin).then(Response => {
         // 在axios 的封装中已经剥开一次res.data了所以在这里已经是returninfo的返回值，在这里还要拿到data就是具体的data封装的对象了
-        console.log(Response)
-        let resp = Response.data
-        let mes = Response.message
         window.sessionStorage.setItem("token", Response.token);
-        insert(resp, mes)
+        insert(Response.data, Response.message)
       }).catch(error => {
         console.log(error)
         ElMessage.error(error.data.message)
       })
     } else if (people.type === 'user') {
       userLogin(user).then(Response => {
-        console.log(Response)
-        let resp = Response.data
-        let mes = Response.message
         window.sessionStorage.setItem("token", Response.token);
-        insert(resp, mes)
+        insert(Response.data, Response.message)
       }).catch(error => {
         console.log(error)
         ElMessage.error(error.data.message)
       })
     } else {
       shopkeeperLogin(shopkeeper).then(Response => {
-        console.log(Response)
-        let resp = Response.data
-        let mes = Response.message
+        console.log(Response.data)
         window.sessionStorage.setItem("token", Response.token);
-        insert(resp, mes)
+        insert(Response.data, Response.message)
       }).catch(error => {
         console.log(error)
         ElMessage.error(error.data.message)
@@ -225,8 +218,7 @@ const submitForm = () => {
           type: 'success'
         })
         store.state.adminName = resp.adminName
-        store.state.adminId = resp.adminId
-        store.state.adminPassword = resp.adminPassword
+        store.state.adminId = resp.id
         store.state.isAdmin = true
         router.push({
           path: '/book'
@@ -237,9 +229,9 @@ const submitForm = () => {
           message: mes,
           type: 'success'
         })
+        console.log(resp.id)
         store.state.userName = resp.userName
-        store.state.userPassword = resp.userPassword
-        store.state.userId = resp.userId
+        store.state.userId = resp.id
         store.state.isUser = true
         router.push({
           path: '/book',
@@ -250,12 +242,11 @@ const submitForm = () => {
           message: mes,
           type: 'success'
         })
-        store.state.userName = resp.userName
-        store.state.userPassword = resp.userPassword
-        store.state.userId = resp.userId
-        store.state.isUser = true
+        store.state.shopkeeperName = resp.shopkeeperName
+        store.state.shopkeeperId = resp.id
+        store.state.isShopkeeper = true
         router.push({
-          path: '/book',
+          path: '/shopkeeper',
         })
       }
     }

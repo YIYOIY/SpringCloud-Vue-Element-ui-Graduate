@@ -25,13 +25,12 @@ public class ShopkeeperFeignController {
     private FeignShopkeeperService feignShopkeeperService;
 
     @CrossOrigin
-    @GetMapping("/Shopkeeper/{adminId}/{pageNo}/{pageSize}/{searchName}/{operate}")
+    @GetMapping("/shopkeeper/{adminId}/{pageNo}/{pageSize}/{searchName}")
     public ReturnInfo<PagePackage<Shopkeeper>> index(@NotNull @PathVariable(value = "adminId") Long adminId,
                                                      @NotNull @PathVariable(value = "pageNo") Integer pageNo,
                                                      @NotNull @PathVariable(value = "pageSize") Integer pageSize,
-                                                     @Length(max = 100) @PathVariable(value = "searchName", required = false) String searchName,
-                                                     @Length(max = 100) @PathVariable(value = "operate", required = false) String operate) {
-        return feignShopkeeperService.index(adminId, pageNo, pageSize, searchName, operate);
+                                                     @Length(max = 100) @PathVariable(value = "searchName", required = false) String searchName) {
+        return feignShopkeeperService.index(adminId, pageNo, pageSize, searchName);
     }
 
     @GetMapping("/shopkeeper/{shopkeeperId}")

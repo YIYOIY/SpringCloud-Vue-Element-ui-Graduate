@@ -5,16 +5,12 @@ export default createStore({
         // userId和adminId用于删除时验证是否是自身
         userId: '',
         userName: '',
-        userPassword: '',
 
         adminId: '',
         adminName: '',
-        adminPassword: '',
-
 
         shopkeeperId: '',
         shopkeeperName: '',
-        shopkeeperPassword: '',
 
         isAdmin: false,
         isUser: false,
@@ -24,14 +20,18 @@ export default createStore({
     },
     mutations: {
         clearState(state) {
-            state.adminPassword = ''
             state.adminName = ''
             state.adminId = ''
-            state.userPassword = ''
+
             state.userName = ''
             state.userId = ''
+
+            state.shopkeeperId=''
+            state.shopkeeperName=''
+
             state.isAdmin = false
             state.isUser = false
+            state.isShopkeeper=false
             sessionStorage.removeItem('token')
             sessionStorage.removeItem('store')
         }

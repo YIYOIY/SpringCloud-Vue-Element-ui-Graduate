@@ -2,6 +2,7 @@ package com.yoi.exception;
 
 import com.yoi.entity.ReturnInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -14,6 +15,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author 游弋
@@ -21,7 +23,6 @@ import java.io.IOException;
  */
 @RestControllerAdvice
 @Slf4j
-
 public class GlobalException {
     /**
      * 参数校验异常
@@ -36,8 +37,12 @@ public class GlobalException {
      * 参数格式有误
      */
     @ExceptionHandler({MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
-    protected ReturnInfo<Exception> typeMismatch(Exception exception) {
-        log.warn(exception.getMessage());
+    protected ReturnInfo<Exception> typeMismatch(MethodArgumentTypeMismatchException e) {
+        String msg = "参数转换失败，方法："+ Objects.requireNonNull(e.getParameter().getMethod()).getName()
+                +",期望参数类型："+e.getParameter().getParameterType()
+                +",参数："+e.getName()
+                +",信息："+e.getMessage();
+        log.error(msg);
         return new ReturnInfo<>(400, "参数格式有误");
     }
 
@@ -81,13 +86,24 @@ public class GlobalException {
         return new ReturnInfo<>(400, "空指针异常");
     }
 
+
+    /**
+     *唯一键键列
+     */
+    @ExceptionHandler(DataAccessException.class)
+    protected ReturnInfo<Exception> SQLIntegrityConstraintViolationException(Exception exception) {
+        log.error("GlobalExceptionHandler.exceptionHandler , 异常信息", exception);
+        return new ReturnInfo<>(403, "啊！账户已经被占用了");
+    }
+
+
     /**
      * 其他异常
      */
     @ExceptionHandler({HttpClientErrorException.class, IOException.class, Exception.class})
     protected ReturnInfo<Exception> commonException(Exception exception) {
         log.error("GlobalExceptionHandler.exceptionHandler , 异常信息", exception);
-        return new ReturnInfo<>(400, "请求参数异常，稍后重试！");
+        return new ReturnInfo<>(400, "参数异常");
     }
 
 }

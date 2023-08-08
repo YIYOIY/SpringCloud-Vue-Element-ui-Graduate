@@ -23,14 +23,13 @@ import javax.validation.constraints.NotNull;
 public class UserFeignController {
     @Resource
     private FeignUserService feignUserService;
-    @CrossOrigin
-    @GetMapping("/user/{adminId}/{pageNo}/{pageSize}/{searchName}/{operate}")
+
+    @GetMapping("/user/{adminId}/{pageNo}/{pageSize}/{searchName}")
     public ReturnInfo<PagePackage<User>> index(@NotNull @PathVariable(value = "adminId") Long adminId,
                                                @NotNull @PathVariable(value = "pageNo") Integer pageNo,
                                                @NotNull @PathVariable(value = "pageSize") Integer pageSize,
-                                               @Length(max = 100) @PathVariable(value = "searchName", required = false) String searchName,
-                                               @Length(max = 100) @PathVariable(value = "operate", required = false) String operate) {
-        return feignUserService.index(adminId, pageNo,pageSize,searchName, operate);
+                                               @Length(max = 100) @PathVariable(value = "searchName", required = false) String searchName) {
+        return feignUserService.index(adminId, pageNo,pageSize,searchName);
     }
     @GetMapping("/user/{userId}")
     public ReturnInfo<User> userSelf(@NotNull @PathVariable("userId") Long userId) {

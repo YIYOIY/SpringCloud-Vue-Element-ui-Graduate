@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class FeignUserServiceImpl implements FeignUserService {
     @Override
     public ReturnInfo<PagePackage<User>> index(Long adminId, Integer pageNo, Integer pageSize,
-                                               String searchName, String operate) {
+                                               String searchName) {
         return ReturnInfo.withEnumNoData(ReturnEnum.WAIT);
     }
 

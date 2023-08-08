@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * @author 游弋
@@ -22,7 +23,7 @@ public class JwtUtils {
 //    System.out.println("\n过期时间：" + invalidateDate);
 
     //密钥 (随机生成,可以从网上找到随机密钥生成器)
-    private static final String SIGNATURE="MD9**+4MG^EG79RV+T?J87AI4NWQVT^&";
+    private static final String SIGNATURE="MD9youyiqunxun+chunhelixhzneMG^EG79RV+T?J87AI4NWQVT^&";
 
     /**
      * 生成token
@@ -64,20 +65,31 @@ public class JwtUtils {
      */
     public static String getToken(Map<String,String> map){
         JWTCreator.Builder builder = JWT.create();
-//        私有声明存放数据  payload，如果有私有声明，一定要先设置这个自己创建的私有的声明，这个是给builder的claim赋值，一旦写在标准的声明赋值之后，就是覆盖了那些标准的声明的
-        map.forEach(builder::withClaim);
+//        私有声明存放数据  payload，如果有私有声明，一定要先设置这个自己创建的私有的声明，
+//        这个是给builder的claim赋值，一旦写在标准的声明赋值之后，就是覆盖了那些标准的声明的
+          map.forEach(builder::withClaim);//这是lambda的优化，相当于下方
+//        map.forEach((k,v)->{
+//            builder.withClaim(k,v);
+//        });
+
 //        发行人
         builder.withIssuer("yoi");
+
 //        签发时间
         Date signDate = new Date(System.currentTimeMillis());
         builder.withIssuedAt(signDate);
         System.out.println("\n签发时间：" + signDate);
+
 //        过期时间
+
         Calendar nowTime = Calendar.getInstance();
+        nowTime.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         nowTime.add(Calendar.MINUTE, 30);
         Date expiresDate = nowTime.getTime();
         builder.withExpiresAt(expiresDate);
         System.out.println("\n过期时间：" + expiresDate);
+
+
         return builder.sign(Algorithm.HMAC256(SIGNATURE));
     }
 

@@ -28,15 +28,15 @@ public class SeriesController {
     public ReturnInfo<PagePackage<Series>> index(@PathVariable("searchName") String searchName,
                                                  @Min(1) @PathVariable("pageNo") Integer pageNo,
                                                  @Min(1) @PathVariable("pageSize") Integer pageSize) {
-        if (StringUtils.isEmpty(searchName)) {
+        if (searchName.equals("null") || StringUtils.isEmpty(searchName)) {
             searchName = "";
         }
         Page<Series> all = seriesService.getAll(searchName, pageNo, pageSize);
-        if (all.getRecords() != null) {
+        if (!all.getRecords().isEmpty()) {
             PagePackage<Series> seriesPagePackage = new PagePackage<>(all.getRecords(), all.getCurrent(), all.getPages(), all.getSize(), all.getTotal(), all.hasNext(), all.hasPrevious());
             return new ReturnInfo<>(200, "查询成功！", seriesPagePackage);
         } else {
-            return new ReturnInfo<>(200, "查询失败，无此数据！");
+            return new ReturnInfo<>(404, "查询失败，无此数据！");
         }
     }
 
@@ -57,7 +57,7 @@ public class SeriesController {
 
     @DeleteMapping("/series")
     public ReturnInfo<Series> deleteSeries(@Valid @RequestBody Series Series) {
-        if (seriesService.deleteSeries(Series.getId())) {
+        if (seriesService.deleteSeries(Series)) {
             return ReturnInfo.withEnumNoData(ReturnEnum.DELETE_SUCCESS);
         } else {
             return ReturnInfo.withEnumNoData(ReturnEnum.DELETE_FAILED);

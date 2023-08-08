@@ -4,7 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.Version;
-import com.yoi.enumvalue.SexEnum;
+import com.yoi.enumvalue.ShopkeeperEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -22,15 +23,15 @@ import java.time.LocalDateTime;
 @ToString
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Shopkeeper {
-        @NotNull(message = "id不能为空")
         @TableId
+        @NotNull(message = "id不能为空")
         private Long id;
         private Long imageId;
         private String shopkeeperName;
-        private String shopkeeperNickname;
         private String shopkeeperPassword;
-        private SexEnum shopkeeperSex;
+        private ShopkeeperEnum shopkeeperQuality;
         private LocalDate shopkeeperBirth;
         private LocalDateTime shopkeeperSignTime;
         private String shopkeeperAddress;
@@ -42,19 +43,4 @@ public class Shopkeeper {
         private Integer flag;
         @TableField(exist = false)
         private Image image;
-
-        public Shopkeeper(Long id, Long imageId, String shopkeeperName, String shopkeeperNickname, String shopkeeperPassword, SexEnum shopkeeperSex, LocalDate shopkeeperBirth, LocalDateTime shopkeeperSignTime, String shopkeeperAddress, String shopkeeperPhone,
-                          Double shopkeeperMoney) {
-                this.id = id;
-                this.imageId = imageId;
-                this.shopkeeperName = shopkeeperName;
-                this.shopkeeperNickname = shopkeeperNickname;
-                this.shopkeeperPassword = shopkeeperPassword;
-                this.shopkeeperSex = shopkeeperSex;
-                this.shopkeeperBirth = shopkeeperBirth;
-                this.shopkeeperSignTime = shopkeeperSignTime;
-                this.shopkeeperAddress = shopkeeperAddress;
-                this.shopkeeperPhone = shopkeeperPhone;
-                this.shopkeeperMoney = shopkeeperMoney;
-        }
 }

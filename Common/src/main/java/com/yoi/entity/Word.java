@@ -3,6 +3,7 @@ package com.yoi.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.Version;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @ToString
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Word {
     @NotNull(message = "id不能为空")
     @TableId
@@ -26,18 +28,11 @@ public class Word {
     private String bookDescribe;
     private String bookDetail;
     private String comments;
+
+
     private LocalDateTime wordSignTime;
     @Version
     private LocalDateTime version;
     @TableLogic(value = "null",delval = "now()")
     private LocalDateTime flag;
-
-    public Word(Long id, String bookDescribe, String bookDetail,
-                String comments, LocalDateTime wordSignTime) {
-        this.id = id;
-        this.bookDescribe = bookDescribe;
-        this.bookDetail = bookDetail;
-        this.comments = comments;
-        this.wordSignTime = wordSignTime;
-    }
 }

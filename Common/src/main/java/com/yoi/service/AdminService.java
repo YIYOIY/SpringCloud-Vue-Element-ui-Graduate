@@ -13,7 +13,7 @@ public interface AdminService extends IService<Admin> {
     Page<Admin> getAll(String keyword, Integer pageNo, Integer pageSize);
 
     Boolean addAdmin(Admin admin);
-    Boolean deleteAdmin(Long adminId);
+    Boolean deleteAdmin(Admin admin);
     Admin getByAdminId(Long adminId);
     Boolean updateAdmin(Admin admin);
 

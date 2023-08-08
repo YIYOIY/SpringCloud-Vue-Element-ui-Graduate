@@ -14,8 +14,7 @@ public class FeignAdminServiceImpl implements FeignAdminService {
     public ReturnInfo<PagePackage<Admin>> index(Long adminId,
                                                 Integer pageNo,
                                                 Integer pageSize,
-                                                String searchName,
-                                                String operate) {
+                                                String searchName) {
         return new ReturnInfo<>(404, "后台服务宕机，稍后再试！");
     }
 

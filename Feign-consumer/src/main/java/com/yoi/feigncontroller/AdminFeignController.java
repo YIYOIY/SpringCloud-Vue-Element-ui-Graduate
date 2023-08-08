@@ -23,13 +23,12 @@ public class AdminFeignController {
     private FeignAdminService feignAdminService;
 
     @CrossOrigin
-    @GetMapping("/admin/{adminId}/{pageNo}/{pageSize}/{searchName}/{operate}")
+    @GetMapping("/admin/{adminId}/{pageNo}/{pageSize}/{searchName}")
     public ReturnInfo<PagePackage<Admin>> index(@NotNull @PathVariable(value = "adminId") Long adminId,
                                                 @NotNull @PathVariable(value = "pageNo") Integer pageNo,
                                                 @NotNull @PathVariable(value = "pageSize") Integer pageSize,
-                                                @Length(max = 100) @PathVariable(value = "searchName", required = false) String searchName,
-                                                @Length(max = 100) @PathVariable(value = "operate", required = false) String operate) {
-        return feignAdminService.index(adminId, pageNo, pageSize, searchName, operate);
+                                                @Length(max = 100) @PathVariable(value = "searchName", required = false) String searchName) {
+        return feignAdminService.index(adminId, pageNo, pageSize, searchName);
     }
 
     @PostMapping("/add_admin")
@@ -65,7 +64,6 @@ public class AdminFeignController {
 
     @PostMapping("/login/shopkeeper")
     public ReturnInfo<Shopkeeper> shopkeeperLogin(@RequestBody Shopkeeper shopkeeper) {
-        System.out.println(shopkeeper);
         return feignAdminService.shopkeeperLogin(shopkeeper);
     }
 

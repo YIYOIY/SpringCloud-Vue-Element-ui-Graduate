@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.yoi.enumvalue.CommentEnum;
 import com.yoi.enumvalue.OrderEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @ToString
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Order {
     @NotNull(message = "id不能为空")
     @TableId
@@ -50,22 +52,4 @@ public class Order {
     @TableField(exist = false)
     private Word word;
 
-    public Order(Long id, Long bookId, Long userId, Long wordId, CommentEnum commentStatus, Double bookPrice, Double discount, Double expressFare, Double kickback, LocalDateTime orderSignTime, LocalDateTime buyTime, LocalDateTime backTime, LocalDateTime confirmTime, OrderEnum orderStatus,
-                 Integer buyNumber) {
-        this.id = id;
-        this.bookId = bookId;
-        this.userId = userId;
-        this.wordId = wordId;
-        this.commentStatus = commentStatus;
-        this.bookPrice = bookPrice;
-        this.discount = discount;
-        this.expressFare = expressFare;
-        this.kickback = kickback;
-        this.orderSignTime = orderSignTime;
-        this.buyTime = buyTime;
-        this.backTime = backTime;
-        this.confirmTime = confirmTime;
-        this.orderStatus = orderStatus;
-        this.buyNumber = buyNumber;
-    }
 }

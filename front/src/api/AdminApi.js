@@ -1,33 +1,34 @@
 import http from "@/utils/http";
 
+
+export function adminGetAdmins(adminId,pageNo,pageSize,searchName) {
+    return http.get(
+        `api/admin/${adminId}/${pageNo}/${pageSize}/${searchName}`
+    )
+}
+
+export function getAdmin(params) {
+    return http.get(
+        `api/admin/${params}`
+    )
+}
+
 export function addAdmin(data) {
     return http.post(
-        '/api/addAdmin',
+        '/api/add_admin',
         data
     )
 }
 
-export function deleteAdmin(params) {
+export function deleteAdmin(data) {
     return http.delete(
-        `api/admin?adminId=${params}`
+        'api/admin',
+        data
     )
 }
-
-export function getAdmin() {
-    return http.get(
-        'api/admin'
-    )
-}
-
-export function alterAdminGet(params) {
-    return http.get(
-        `api/alterAdmin?adminId=${params}`
-    )
-}
-
-export function alterAdmin(params) {
+export function alterAdmin(data) {
     return http.put(
-        `api/admin`,
-        params
+        'api/admin',
+        data
     )
 }

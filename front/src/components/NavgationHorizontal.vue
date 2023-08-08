@@ -28,7 +28,7 @@
           系列
         </template>
         <el-menu-item index="9-1" v-for="item in series" :key="item.seriesId">
-          <el-tag type="success" effect="dark" @click="selectBySeries(item.seriesName)" style="width: 100%">
+          <el-tag type="warning" effect="light" @click="selectBySeries(item.seriesName)" style="width: 100%;">
             {{ item.seriesName }}
           </el-tag>
         </el-menu-item>
@@ -63,8 +63,16 @@
         </template>
         <el-menu-item-group>
           <template #title>人员管理</template>
-          <el-menu-item index="2-1">
+          <el-menu-item index="2-0">
             <router-link to="/admin">
+              <el-icon>
+                <GoldMedal/>
+              </el-icon>
+              个人信息
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="2-1">
+            <router-link to="/admins">
               <el-icon>
                 <Cpu/>
               </el-icon>
@@ -79,9 +87,17 @@
               用户管理
             </router-link>
           </el-menu-item>
+          <el-menu-item index="2-3">
+            <router-link to="/adminShopkeepers">
+              <el-icon>
+                <Connection/>
+              </el-icon>
+              企业管理
+            </router-link>
+          </el-menu-item>
         </el-menu-item-group>
         <el-menu-item-group title="书籍管理">
-          <el-menu-item index="2-3">
+          <el-menu-item index="2-4">
             <router-link to="/adminBooks">
               <el-icon>
                 <Sunrise/>
@@ -89,7 +105,7 @@
               书籍信息管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-3">
+          <el-menu-item index="2-5">
             <router-link to="/series">
               <el-icon>
                 <Ship/>
@@ -98,9 +114,9 @@
             </router-link>
           </el-menu-item>
         </el-menu-item-group>
-        <el-sub-menu index="2-4">
+        <el-sub-menu index="2-6">
           <template #title>用户隐私</template>
-          <el-menu-item index="2-4-1">
+          <el-menu-item index="2-6-1">
             <router-link to="/adminOrder">
               <el-icon>
                 <ShoppingTrolley/>
@@ -138,7 +154,47 @@
         </el-menu-item-group>
       </el-sub-menu>
 
-      <el-menu-item index="4" v-if="login">
+      <el-sub-menu index="4" v-if="store.state.isShopkeeper">
+        <template #title>
+          <el-icon class="is-loading" size="large" style="margin: 0 1px">
+            <Orange/>
+          </el-icon>
+          <span style="margin-left: 5%">企业</span>
+        </template>
+
+        <el-menu-item-group title="企业信息">
+          <el-menu-item index="4-1">
+            <router-link to="/shopkeeper">
+              <el-icon>
+                <GoldMedal/>
+              </el-icon>
+              企业信息
+            </router-link>
+          </el-menu-item>
+        </el-menu-item-group>
+
+        <el-menu-item-group title="书籍管理">
+          <el-menu-item index="4-2">
+            <router-link to="/adminBooks">
+              <el-icon>
+                <Sunrise/>
+              </el-icon>
+              书籍信息管理
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="4-3">
+            <router-link to="/series">
+              <el-icon>
+                <Ship/>
+              </el-icon>
+              书籍系列管理
+            </router-link>
+          </el-menu-item>
+        </el-menu-item-group>
+      </el-sub-menu>
+
+
+      <el-menu-item index="5" v-if="login">
         <router-link to="/login">
           <el-icon class="is-loading" size="large" style="margin: 0 3px">
             <Sunny/>
@@ -147,7 +203,7 @@
         </router-link>
       </el-menu-item>
 
-      <el-menu-item index="5" v-if="login">
+      <el-menu-item index="6" v-if="login">
         <el-icon class="is-loading" size="large" style="margin: 0 3px">
           <Watermelon/>
         </el-icon>
@@ -162,14 +218,14 @@
       </el-menu-item>
 
 
-      <el-menu-item index="6" v-if="!login">
+      <el-menu-item index="7" v-if="!login">
         <el-icon class="is-loading" size="large" style="margin: 0 3px">
           <Refresh/>
         </el-icon>
         <router-link to="/login">切换账号</router-link>
       </el-menu-item>
 
-      <el-menu-item index="7" v-if="!login">
+      <el-menu-item index="8" v-if="!login">
         <el-icon class="is-loading" size="large" style="margin: 0 3px">
           <Ticket/>
         </el-icon>
@@ -177,7 +233,7 @@
       </el-menu-item>
 
       <!--      头部菜单切换底部菜单-->
-      <el-menu-item index="8" v-if="store.state.menu===1">
+      <el-menu-item index="9" v-if="store.state.menu===1">
         <el-icon class="is-loading" size="large" style="margin: 13% 3px">
           <SwitchFilled/>
         </el-icon>
@@ -186,7 +242,7 @@
         </el-button>
       </el-menu-item>
       <!--      底部菜单切换侧边菜单-->
-      <el-menu-item index="8" v-if="store.state.menu===0">
+      <el-menu-item index="9" v-if="store.state.menu===0">
         <el-icon class="is-loading" size="large" style="margin: 13% 3px">
           <SwitchFilled/>
         </el-icon>
@@ -208,6 +264,7 @@ import {useRouter} from "vue-router";
 import {getBooksByName, getSeries} from "@/api/BookApi";
 import {ElMessage} from "element-plus";
 import emitter from "@/utils/bus";
+import {getAllSeries} from "@/api/SeriesApi";
 const handleSelect = (key, keyPath) => {
   console.log(key, keyPath)
 }
@@ -221,14 +278,14 @@ let a = ref()
 // 在导航栏显示书籍系列
 let series = ref('')
 onBeforeMount(async () => {
-  await getSeries().then(Response => {
-    series.value = Response.data
+  await getAllSeries(null,1,100).then(Response => {
+    series.value = Response.data.data
   })
 })
-// 用来检测管理员是否变动书记系列
+// 用来检测管理员是否变动书籍系列
 let getSer = (() => {
-  getSeries().then(Response => {
-    series.value = Response.data
+  getAllSeries(null,1,100).then(Response => {
+    series.value = Response.data.data
   })
 })
 
@@ -247,7 +304,7 @@ const loginout = () => {
 }
 
 onBeforeUpdate(() => {
-  if (store.state.isUser || store.state.isAdmin) {
+  if (store.state.isUser || store.state.isAdmin||store.state.isShopkeeper) {
     login.value = false
   } else {
     login.value = true
@@ -256,7 +313,7 @@ onBeforeUpdate(() => {
 
 onMounted(() => {
   a = setInterval(() => {
-    if (store.state.isUser || store.state.isAdmin) {
+    if (store.state.isUser || store.state.isAdmin||store.state.isShopkeeper) {
       login.value = false
     } else {
       login.value = true
@@ -265,8 +322,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  sessionStorage.removeItem('token')
-  sessionStorage.removeItem('store')
   clearInterval(a)
 })
 

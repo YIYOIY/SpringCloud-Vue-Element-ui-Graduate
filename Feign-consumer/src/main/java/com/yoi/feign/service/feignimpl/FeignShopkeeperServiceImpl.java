@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class FeignShopkeeperServiceImpl implements FeignShopkeeperService {
 
     @Override
-    public ReturnInfo<PagePackage<Shopkeeper>> index(Long adminId, Integer pageNo, Integer pageSize, String searchName, String operate) {
+    public ReturnInfo<PagePackage<Shopkeeper>> index(Long adminId, Integer pageNo, Integer pageSize, String searchName) {
         return ReturnInfo.withEnumNoData(ReturnEnum.WAIT);
     }
 

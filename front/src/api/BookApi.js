@@ -5,7 +5,6 @@ export function getBooks() {
         'api/book'
     )
 }
-
 export function getBooksByName(params) {
     return http.get(
         'api/book?searchName='+params
@@ -14,12 +13,6 @@ export function getBooksByName(params) {
 export function getBooksById(params) {
     return http.get(
         'api/lookup?bookId='+params
-    )
-}
-
-export function getSeries() {
-    return http.get(
-        'api/series'
     )
 }
 

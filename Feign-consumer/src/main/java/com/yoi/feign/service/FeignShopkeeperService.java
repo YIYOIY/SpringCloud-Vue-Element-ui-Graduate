@@ -22,12 +22,11 @@ import javax.validation.constraints.NotNull;
 @FeignClient(value = "shopkeeper",fallback = FeignShopkeeperServiceImpl.class)
 public interface FeignShopkeeperService {
     @CrossOrigin
-    @GetMapping("/Shopkeeper/{adminId}/{pageNo}/{pageSize}/{searchName}/{operate}")
+    @GetMapping("/shopkeeper/{adminId}/{pageNo}/{pageSize}/{searchName}")
      ReturnInfo<PagePackage<Shopkeeper>> index(@NotNull @PathVariable(value = "adminId") Long adminId,
                                                      @NotNull @PathVariable(value = "pageNo") Integer pageNo,
                                                      @NotNull @PathVariable(value = "pageSize") Integer pageSize,
-                                                     @Length(max = 100) @PathVariable(value = "searchName", required = false) String searchName,
-                                                     @Length(max = 100) @PathVariable(value = "operate", required = false) String operate) ;
+                                                     @Length(max = 100) @PathVariable(value = "searchName", required = false) String searchName) ;
     @GetMapping("/shopkeeper/{shopkeeperId}")
      ReturnInfo<Shopkeeper> shopkeeperSelf(@NotNull @PathVariable("shopkeeperId") Long shopkeeperId) ;
     @PostMapping("/add_shopkeeper")

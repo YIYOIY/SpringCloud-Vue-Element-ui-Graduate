@@ -4,8 +4,8 @@ import com.yoi.entity.ReturnInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -37,63 +36,61 @@ public class img {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     private String picturePath;
-//    使用yaml配置对象的方式进行一次设置，持续引用
+    //    使用yaml配置对象的方式进行一次设置，持续引用
     @Value("${user.lo}")
     private String FILEPATH;
 
     @RequestMapping("/test/up/{id}")
-    public void testUp(@PathVariable Long id, @RequestPart("photo") MultipartFile[] photo) throws IOException {
-        ListOperations<String, String> stringStringListOperations = stringRedisTemplate.opsForList();
-        log.info("上传的信息: photo={}",photo.length);
-        for (MultipartFile pto : photo) {
-            if (!pto.isEmpty()) {
+    public void testUp(@PathVariable Long id, @RequestPart("photo") MultipartFile photo) throws IOException {
+        ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
+        log.info("上传的信息: photo={}", photo);
+
+        if (!photo.isEmpty()) {
 //        获取上传的文件名
-                String filename = pto.getOriginalFilename();
+            String filename = photo.getOriginalFilename();
 
 //        以下操作是为了保证文件名不重复，文件名重复会导致相同文件名的内容被覆盖
 //        获取上传的文件后缀名
-                assert filename != null;
-                String name = filename.substring(filename.lastIndexOf("."));
+            assert filename != null;
+            String name = filename.substring(filename.lastIndexOf("."));
 //        获取uuid,也可以用获取时间戳的方式
-                String s = UUID.randomUUID().toString();
+            String s = UUID.randomUUID().toString();
 //        拼接一个新文件名
-                filename = s + name;
+            filename = s + name;
 //        如果运行的项目没有初始数据，是一个崭新的项目，可以直接在配置文件中写入图片文件要保存的地址后进行
-                File file = new File(FILEPATH);
-                if (!file.exists()) {
-                    System.out.println("正在创建文件夹！");
-                    boolean mkdirs = file.mkdirs();
-                    if (!mkdirs) {
-                        System.out.println("创建图片文件夹失败");
-                    }
+            File file = new File(FILEPATH);
+            if (!file.exists()) {
+                System.out.println("正在创建文件夹！");
+                boolean mkdirs = file.mkdirs();
+                if (!mkdirs) {
+                    System.out.println("创建图片文件夹失败");
                 }
-                FILEPATH = FILEPATH.replaceAll("\\\\", "/");
-
-                System.out.println("已经获得当前项目图片文件夹在当前设备的绝对路径：" + FILEPATH);
-                Path path2 = Paths.get(FILEPATH);
-                String finalPath = path2 + File.separator + filename;
-
-                pto.transferTo(new File(finalPath));
-//          上传成功后保存图片路径
-                picturePath = "img/" + filename;
-                System.out.println("返回前端的图片请求路径" + picturePath);
             }
-            //图片路径放入redis
-            stringStringListOperations.leftPush(id.toString(),picturePath);
-        }
+            FILEPATH = FILEPATH.replaceAll("\\\\", "/");
 
+            System.out.println("已经获得当前项目图片文件夹在当前设备的绝对路径：" + FILEPATH);
+            Path path2 = Paths.get(FILEPATH);
+            String finalPath = path2 + File.separator + filename;
+
+            photo.transferTo(new File(finalPath));
+//          上传成功后保存图片路径
+            picturePath = "img/" + filename;
+            System.out.println("保存在redis的图片请求路径" + picturePath);
+        }
+        //图片路径放入redis
+        stringStringValueOperations.set(id.toString(), picturePath);
     }
 
+
     @RequestMapping("/getPicture/{id}")
-    public ReturnInfo<List<String>> getPicture(@PathVariable Long id) {
+    public ReturnInfo<String> getPicture(@PathVariable Long id) {
 //        从redis中读取图片路径的数据
-        ListOperations<String, String> stringStringListOperations = stringRedisTemplate.opsForList();
-        List<String> range = stringStringListOperations.range(id.toString(), 0, -1);
-        stringStringListOperations.leftPop(id.toString(),100);
-        if (range!=null&&!range.isEmpty()){
-            return new ReturnInfo<>(200,"图片路径获取完成！",range);
-        }else {
-            return new ReturnInfo<>(404,"图片路径获取失败！");
+        ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
+        String s = stringStringValueOperations.get(id.toString());
+        if (s != null) {
+            return new ReturnInfo<>(200, "图片路径获取完成！", s);
+        } else {
+            return new ReturnInfo<>(404, "图片路径获取失败！");
         }
     }
 
@@ -103,11 +100,11 @@ public class img {
 //        Path path2 = Paths.get("C:\\Users\\yo\\Desktop\\vuespringbootTotalProject\\WebDevelopment\\back\\demo\\src\\main\\resources\\static\\img");
         Path path2 = Paths.get(FILEPATH);
 //        因为返回去的 api/，正好4个可以截断api/
-        String name=picturePath.substring(4);
-        System.out.println(name+"图片下载的图片名称");
-        System.out.println(path2+"将要在这个地址进行下载");
+        String name = picturePath.substring(4);
+        System.out.println(name + "图片下载的图片名称");
+        System.out.println(path2 + "将要在这个地址进行下载");
         String finalPath = path2 + File.separator + name;
-        System.out.println(finalPath+"最终下载路径以及图片名");
+        System.out.println(finalPath + "最终下载路径以及图片名");
 
 //创建输入流
 //      InputStream is = new FileInputStream(finalPath);
@@ -120,7 +117,7 @@ public class img {
 //创建HttpHeaders对象设置响应头信息
         MultiValueMap<String, String> headers = new HttpHeaders();
 //设置要下载方式以及下载文件的名字,  content-Disposition,attachment:filename=是固定格式
-        headers.add("Content-Disposition", "attachment;filename="+name);
+        headers.add("Content-Disposition", "attachment;filename=" + name);
 //设置响应状态码
         HttpStatus statusCode = HttpStatus.OK;
 //创建ResponseEntity对象

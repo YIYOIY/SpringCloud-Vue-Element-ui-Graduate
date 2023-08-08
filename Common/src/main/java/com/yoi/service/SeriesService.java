@@ -12,7 +12,7 @@ public interface SeriesService extends IService<Series> {
     Page<Series> getAll(String keyword, Integer pageNo, Integer pageSize);
     Series getSeries(Long bookSeriesId);
     boolean addSeries(Series series);
-    boolean deleteSeries(Long bookSeriesId);
+    boolean deleteSeries(Series series);
     boolean updateSeries(Series series);
 
 }

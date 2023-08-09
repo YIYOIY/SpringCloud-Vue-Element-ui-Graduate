@@ -9,7 +9,7 @@ public interface BookService extends IService<Book> {
         Page<Book> selectBySeries(String seriesName, Integer pageNo, Integer pageSize);
 //        Long getCount(String keyword);
         Boolean addBook(Book Book);
-        Boolean deleteBook(Long bookId);
+        Boolean deleteBook(Book book);
         Book getById(Long bookId);
         Boolean updateBook(Book Book);
 }

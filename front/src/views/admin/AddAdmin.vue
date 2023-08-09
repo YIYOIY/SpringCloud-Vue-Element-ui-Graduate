@@ -1,7 +1,6 @@
 <template>
   <div id="building">
     <el-form label-position="top" ref="form" :model="admin.admin" :rules="rule">
-
       <div style="left: 2%;width:35%;height:20%;position: relative">
         <el-form-item label="账户名称" prop="adminName">
           <el-input v-model="admin.admin.adminName" autofocus @change="next" maxlength="20" minlength="1" clearable
@@ -116,19 +115,11 @@
 <script setup>
 import {ref, reactive} from "vue";
 import {useRouter} from "vue-router";
-import {useRoute} from "vue-router";
 import {ElButton, ElMessage, ElNotification, ElUpload} from "element-plus";
 import {addAdmin} from "@/api/AdminApi";
 import {getPicture} from "@/api/ImgAndExcelApi";
 
 let router = useRouter()
-let route = useRoute()
-
-let isEnroll = ref(false)
-if (route.query.enroll) {
-  isEnroll.value = true
-}
-console.log("是否从首页进入而非用户管理页进入" + isEnroll.value)
 
 let active = ref(0)
 let next = (() => {
@@ -206,7 +197,6 @@ const add = (() => {
     console.log("要保存的用户对象信息" + Admin)
 
     addAdmin(Admin).then(Response => {
-      if (isEnroll.value) {
         ElNotification({
           message: Response.message,
           title: '录入成功！',
@@ -214,7 +204,6 @@ const add = (() => {
           Position: 'top-left'
         });
         router.push('/admins')
-      }
     }).catch(Error => {
       ElNotification({
         message: Error.data.message + " 换一个吧!",
@@ -242,7 +231,7 @@ const cancelAdd = (() => {
   font-size: large;
   position: fixed;
   background-size: 100% 100%;
-  background: url(../../assets/static/enroll.jpg) no-repeat fixed center;
+  background: url(../../assets/static/adminsBg.png) no-repeat fixed center;
   z-index: -1;
 }
 

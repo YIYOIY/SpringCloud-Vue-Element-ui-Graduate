@@ -1,42 +1,43 @@
 import http from "@/utils/http";
 
-export function getBooks() {
+export function getBooks(searchName, pageNo, pageSize) {
     return http.get(
-        'api/book'
+        `api/book/${searchName}/${pageNo}/${pageSize}`
     )
 }
-export function getBooksByName(params) {
+export function selectBySeries(seriesName, pageNo, pageSize) {
     return http.get(
-        'api/book?searchName='+params
-    )
-}
-export function getBooksById(params) {
-    return http.get(
-        'api/lookup?bookId='+params
+        `api/select_by_series/${seriesName}/${pageNo}/${pageSize}`
     )
 }
 
-export function getSelectBySeries(params) {
+export function getBooksById(bookId) {
     return http.get(
-        `api/selectBySeries?seriesName=`+params
+        `api/lookup/${bookId}`
     )
 }
 
-export function alterBook(params) {
-    return http.put(
-        'api/book',
-        params
-    )
-}
-
-export function deleteBook(params) {
-    return http.delete(
-        `api/book?bookId=`+params
-    )
-}
 export function addBook(data) {
     return http.post(
         'api/book',
         data
     )
 }
+
+export function deleteBook(data) {
+    return http.delete(
+        `api/book`,
+        data
+    )
+}
+
+export function alterBook(data) {
+    return http.put(
+        'api/book',
+        data
+    )
+}
+
+
+
+

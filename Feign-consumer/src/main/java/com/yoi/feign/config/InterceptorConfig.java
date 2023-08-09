@@ -43,12 +43,13 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         List<String> excludePath = new ArrayList<>();
         //这里用来排除拦截的接口,例如登录前调用的接口
-        excludePath.add("/book");  //首页
+        excludePath.add("/book/**");  //首页书记想查询
+        excludePath.add("/select_by_series/**");  //书籍按系列查询
         excludePath.add("/login/**");  //登录
         excludePath.add("/add_user");     //注册
         excludePath.add("/img");  //静态资源
-        excludePath.add("/lookup");  //书籍详情
-        excludePath.add("/series");  //系列查询
+        excludePath.add("/lookup/**");  //书籍详情
+        excludePath.add("/series/**");  //系列查询
 
         registry.addInterceptor(jwtInterceptor) // 注册拦截器
                 .addPathPatterns("/**")

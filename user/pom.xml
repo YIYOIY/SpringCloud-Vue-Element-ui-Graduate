@@ -138,13 +138,6 @@
             <artifactId>druid-spring-boot-starter</artifactId>
         </dependency>
 
-        <!--        stringRedisTemplate序列化和反序列化时使用-->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
         <!--RedisTemplate-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

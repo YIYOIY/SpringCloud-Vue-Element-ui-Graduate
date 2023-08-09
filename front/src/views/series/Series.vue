@@ -19,16 +19,15 @@
       </el-form-item>
     </el-form>
 
-    <el-table :data="series" :highlight-current-row="true" height="100%" style="width: 100%;margin-top: 3%"
-              label-width="30%">
+    <el-table :data="series" :highlight-current-row="true" height="400" style="margin-top: 3%" tooltip-effect="light">
       <el-table-column prop="id" label="编号" sortable width="200" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="seriesName" label="系列名" width="320"></el-table-column>
-      <el-table-column prop="seriesSignTime" label="创建日期" width="320">
+      <el-table-column prop="seriesSignTime" label="创建日期" sortable width="320">
         <template v-slot="scope">
           <el-date-picker style="width: 100%;" v-model="scope.row.seriesSignTime" type="datetime" format="YYYY 年 MM 月 DD 日 HH 时 mm 分 ss 秒"></el-date-picker>
         </template>
       </el-table-column>
-      <el-table-column prop="version" label="修改日期" width="320">
+      <el-table-column prop="version" label="修改日期" sortable width="320">
         <template v-slot="scope">
             <el-date-picker style="width: 100%;" v-model="scope.row.version" type="datetime" format="YYYY 年 MM 月 DD 日 HH 时 mm 分 ss 秒"></el-date-picker>
         </template>
@@ -51,7 +50,7 @@ import {deleteSeries, getAllSeries} from "@/api/SeriesApi";
 import {ElMessage, ElNotification} from "element-plus";
 
 let pageNo = ref(1)
-let pageSize = ref(5)
+let pageSize = ref(7)
 let searchName = ref('')
 
 let series = ref([])
@@ -128,8 +127,8 @@ let del = ((v) => {
 })
 </script>
 <style scoped>
-.el-table__cell {
-  font-size: 20px;
+/deep/ .el-table__cell {
+  font-size: 18px;
 }
 
 .el-table .el-button {
@@ -139,5 +138,6 @@ let del = ((v) => {
 
 .ac {
   margin: 3% 5%;
+
 }
 </style>

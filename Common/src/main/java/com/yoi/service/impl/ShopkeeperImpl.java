@@ -68,7 +68,7 @@ public class ShopkeeperImpl extends ServiceImpl<ShopkeeperMapper, Shopkeeper> im
 
     @Override
     public boolean deleteShopkeeper(Shopkeeper shopkeeper) {
-        imageMapper.deleteById(shopkeeper.getImageId());
+        imageMapper.deleteById(shopkeeperMapper.selectById(shopkeeper.getId()).getImageId());
         return shopkeeperMapper.deleteById(shopkeeper.getId()) > 0;
     }
 

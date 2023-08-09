@@ -242,7 +242,7 @@ const cancelAdd = (() => {
   bottom: 0;
   top: 0;
   left: 0;
-  background: url(../../assets/static/enroll.jpg);
+  background: url(../../assets/static/adminsBg.png);
   width: 100%;
   height: 100%;
   font-size: large;

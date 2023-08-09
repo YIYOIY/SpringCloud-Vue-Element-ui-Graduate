@@ -1,7 +1,6 @@
 package com.yoi.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yoi.entity.Image;
@@ -76,7 +75,7 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
 
     @Override
     public boolean deleteUser(User user) {
-        imageMapper.deleteById(user.getImageId());
+        imageMapper.deleteById(userMapper.selectById(user.getId()).getImageId());
         return userMapper.deleteById(user.getId()) > 0;
     }
 
@@ -99,17 +98,6 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
                 }
             }
         }
-
-        UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
-        userUpdateWrapper
-                .set(user.getUserName() != null, "user_name", user.getUserName())
-                .set(user.getUserPassword() != null, "user_password", user.getUserPassword())
-                .set(user.getImageId()!=null,"image_id",user.getImageId())
-                .set(user.getUserPhone() != null, "user_phone", user.getUserPhone())
-                .set(user.getUserBirth() != null, "user_birth", user.getUserBirth())
-                .set(user.getUserSex() != null, "user_sex", user.getUserSex())
-                .set(user.getUserAddress() != null, "user_address", user.getUserAddress())
-                .eq("id", user.getId());
-        return userMapper.update(null, userUpdateWrapper) > 0;
+        return userMapper.updateById(user) > 0;
     }
 }

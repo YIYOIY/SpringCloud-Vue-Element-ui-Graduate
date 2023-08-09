@@ -28,8 +28,6 @@ public class Word {
     private String bookDescribe;
     private String bookDetail;
     private String comments;
-
-
     private LocalDateTime wordSignTime;
     @Version
     private LocalDateTime version;

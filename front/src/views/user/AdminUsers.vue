@@ -6,7 +6,7 @@
     <el-button @click="search(searchName)" style="top: 16%;left: 25%;position: absolute" plain round type="info">
       查找用户
     </el-button>
-    <el-button @click="search('all')" style="top: 16%;left: 32%;position: absolute" plain round type="primary">
+    <el-button @click="search('')" style="top: 16%;left: 32%;position: absolute" plain round type="primary">
       全部用户
     </el-button>
     <el-form>
@@ -91,7 +91,7 @@ let search = ((v) => {
   })
 })
 
-  adminGetUsers(store.state.adminId, pageNo.value, pageSize.value, "all").then(Response => {
+  adminGetUsers(store.state.adminId, pageNo.value, pageSize.value, null).then(Response => {
     // 因为又在统一返回上封装了分页，所以多了一层data
     users.value = Response.data.data
     console.log(users.value)

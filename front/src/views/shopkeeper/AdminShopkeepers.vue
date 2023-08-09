@@ -6,7 +6,7 @@
     <el-button @click="search(searchName)" style="top: 16%;left: 25%;position: absolute" plain round type="info">
       查找企业
     </el-button>
-    <el-button @click="search('all')" style="top: 16%;left: 32%;position: absolute" plain round type="primary">
+    <el-button @click="search('')" style="top: 16%;left: 32%;position: absolute" plain round type="primary">
       全部企业
     </el-button>
     <el-form>
@@ -42,7 +42,7 @@
       </el-table-column>
       <el-table-column fixed prop="shopkeeperBirth" label="企业注册日期" sortable width="200"/>
       <el-table-column fixed prop="shopkeeperAddress" label="公司地址" :show-overflow-tooltip="true" width="150"/>
-      <el-table-column fixed prop="id" label="操作" width="220px">
+      <el-table-column fixed prop="id" label="操作" width="190px">
         <template v-slot="scope">
           <el-button link round plain type="primary"  @click="alter(scope.row.id)">详细信息</el-button>
           <el-button link round plain type="danger"   @click="del(scope.row.id)">删除信息</el-button>
@@ -86,7 +86,7 @@ let search = ((v) => {
 })
 
 onMounted(()=>{
-  adminGetShopkeepers(store.state.adminId, pageNo.value, pageSize.value, "all").then(Response => {
+  adminGetShopkeepers(store.state.adminId, pageNo.value, pageSize.value, null).then(Response => {
     // 因为又在统一返回上封装了分页，所以多了一层data
     shopkeepers.value = Response.data.data
     console.log(shopkeepers.value)

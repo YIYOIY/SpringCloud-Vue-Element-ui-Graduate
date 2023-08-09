@@ -261,7 +261,7 @@ import {useStore} from "vuex";
 import {Football, Refresh, Setting} from '@element-plus/icons-vue'
 import {useRoute} from "vue-router";
 import {useRouter} from "vue-router";
-import {getBooksByName, getSeries} from "@/api/BookApi";
+import {getBooks} from "@/api/BookApi";
 import {ElMessage} from "element-plus";
 import emitter from "@/utils/bus";
 import {getAllSeries} from "@/api/SeriesApi";
@@ -332,9 +332,9 @@ let selectByName = (() => {
   if (searchName.value === "" || searchName.value === undefined || searchName.value === null) {
     ElMessage.error("请输入书籍名称！")
   } else {
-    getBooksByName(searchName.value).then(Response => {
-      id.value = Response.data[0].bookId
-      console.log(id.value)
+    getBooks(searchName.value,1,10).then(Response => {
+      id.value = Response.data.data[0].id
+      console.log("查询出来的书籍的id"+id.value)
       GotoBookInfor()
       searchName.value = ''
     }).catch((error) => {

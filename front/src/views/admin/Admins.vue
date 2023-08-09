@@ -6,7 +6,7 @@
     <el-button @click="search(searchName)" style="top: 16%;left: 25%;position: absolute" plain round type="info">
       查找管理员
     </el-button>
-    <el-button @click="search('all')" style="top: 16%;left: 32%;position: absolute" plain round type="primary">
+    <el-button @click="search('')" style="top: 16%;left: 32%;position: absolute" plain round type="primary">
       全部管理员
     </el-button>
     <el-form>
@@ -17,7 +17,7 @@
     </el-form>
 
 
-    <el-table :data="admins" :highlight-current-row="true" height="400" width="1000" style="margin-top: 13%"
+    <el-table :data="admins" :highlight-current-row="true" height="400"  style="margin-top: 13%"
               tooltip-effect="light">
       <el-table-column fixed prop="id" label="管理员ID" :show-overflow-tooltip="true" sortable
                        width="150px"></el-table-column>
@@ -91,7 +91,7 @@ let search = ((v) => {
   })
 })
 
-adminGetAdmins(store.state.adminId, pageNo.value, pageSize.value, "all").then(Response => {
+adminGetAdmins(store.state.adminId, pageNo.value, pageSize.value, null).then(Response => {
   // 因为又在统一返回上封装了分页，所以多了一层data
   admins.value = Response.data.data
   console.log(admins.value)

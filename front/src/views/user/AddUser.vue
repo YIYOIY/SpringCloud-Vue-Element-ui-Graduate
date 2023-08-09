@@ -248,7 +248,7 @@ const cancelAdd = (() => {
   font-size: large;
   position: fixed;
   background-size: 100% 100%;
-  background: url(../../assets/static/enroll.jpg) no-repeat fixed center;
+  background: url(../../assets/static/adminsBg.png) no-repeat fixed center;
   z-index: -1;
 }
 

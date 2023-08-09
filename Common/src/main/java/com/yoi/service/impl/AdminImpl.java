@@ -5,10 +5,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yoi.entity.Admin;
 import com.yoi.entity.Image;
+import com.yoi.entity.Shopkeeper;
+import com.yoi.entity.User;
 import com.yoi.mapper.AdminMapper;
 import com.yoi.mapper.ImageMapper;
+import com.yoi.mapper.ShopkeeperMapper;
+import com.yoi.mapper.UserMapper;
 import com.yoi.service.AdminService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,16 +20,12 @@ import org.springframework.stereotype.Service;
  * @create 2023-04-02 7:19 PM
  */
 @Service
+@RequiredArgsConstructor
 public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminService {
-    private AdminMapper adminMapper;
-    private ImageMapper imageMapper;
-
-    //    setter注入
-    @Autowired
-    public void setAdminMapper(AdminMapper adminMapper, ImageMapper imageMapper) {
-        this.adminMapper = adminMapper;
-        this.imageMapper = imageMapper;
-    }
+    private final AdminMapper adminMapper;
+    private final ImageMapper imageMapper;
+    private final ShopkeeperMapper shopkeeperMapper;
+    private final UserMapper userMapper;
 
 
     @Override
@@ -71,12 +71,28 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
                 admin.setImageId(image.getId());
             }
         }
-        return adminMapper.insert(admin) > 0;
+        int insert = adminMapper.insert(admin);
+//        自动赋予管理员商家和用户身份
+        User user = new User();
+        user.setId(admin.getId());
+        user.setUserName("admin" + admin.getAdminName());
+        user.setUserPassword(admin.getAdminPassword());
+        userMapper.insert(user);
+
+        Shopkeeper shopkeeper = new Shopkeeper();
+        shopkeeper.setId(admin.getId());
+        shopkeeper.setShopkeeperName("admin" + admin.getAdminName());
+        shopkeeper.setShopkeeperPassword(admin.getAdminPassword());
+        shopkeeperMapper.insert(shopkeeper);
+        return insert > 0;
     }
 
     @Override
     public Boolean deleteAdmin(Admin admin) {
-        imageMapper.deleteById(admin.getImageId());
+        imageMapper.deleteById(adminMapper.selectById(admin.getId()).getImageId());
+//        将管理员的其他身份一同删除
+        userMapper.deleteById(admin.getId());
+        shopkeeperMapper.deleteById(admin.getId());
         return adminMapper.deleteById(admin.getId()) > 0;
     }
 
@@ -88,10 +104,10 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
                 Image image = new Image(null, admin.getImage().getPicture(), null, null, null);
                 if (imageMapper.insert(image) > 0) {
                     admin.setImageId(image.getId());
-                }else {
+                } else {
                     return false;
                 }
-            }else {
+            } else {
 //                用户创建时已经上传头像，更新时只需要更新头像
                 Image image = new Image(admin.getImageId(), admin.getImage().getPicture(), null, null, null);
                 if (imageMapper.updateById(image) < 0) {

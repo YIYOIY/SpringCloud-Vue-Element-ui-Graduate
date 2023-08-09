@@ -419,7 +419,7 @@ router.beforeEach((to, from, next) => {
                     next();
                 }
             }).catch(Error => {
-                if (Error.data.code !== 200) {
+                if (Error.code !== 200) {
                     ElMessage.error('检验失败' + Error.data.message)
                     router.replace({path: '/login'}) // 如果token失效,返回到登录页面
                     next({path: '/login'})

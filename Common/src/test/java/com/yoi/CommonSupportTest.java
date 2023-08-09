@@ -1,9 +1,7 @@
 package com.yoi;
 
-import com.yoi.mapper.AdminMapper;
+import com.yoi.entity.Image;
 import com.yoi.mapper.ImageMapper;
-import com.yoi.service.AdminService;
-import com.yoi.service.ImageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,20 +12,15 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 public class CommonSupportTest {
-
-    @Autowired
-    public AdminMapper adminMapper;
     @Autowired
     public ImageMapper imageMapper;
-    @Autowired
-    public ImageService imageService;
-    @Autowired
-    public AdminService adminService;
 
     @Test
     public void test() {
-//        Image img = new Image(null, "img", LocalDateTime.now());
-//        imageMapper.insert(img);
+        Image img = new Image();
+        img.setId(123L);
+        img.setPicture("wuhu");
+        imageMapper.insert(img);
 //        Image byId = imageService.getById(img.getId());
 //        System.out.println(byId.getPicture());
 

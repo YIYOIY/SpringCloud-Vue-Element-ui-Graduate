@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <name>Maven</name>
-    <url>http://maven.apache.org/</url>
+    <url>https://maven.apache.org/</url>
     <inceptionYear>2001</inceptionYear>
 
     <modules>
@@ -38,7 +38,6 @@
         <baomidou.version>3.5.3.1</baomidou.version>
         <mybatis.spring.boot.version>2.3.0</mybatis.spring.boot.version>
         <alibaba.fastjson.version>2.0.32</alibaba.fastjson.version>
-        <jackson.version>2.15.2</jackson.version>
         <java.jwt.version>3.10.0</java.jwt.version>
         <druid.version>1.1.21</druid.version>
         <zipkin.version>2.2.8.RELEASE</zipkin.version>
@@ -191,24 +190,6 @@
                 <version>${org.yaml}</version>
             </dependency>
 
-
-            <!-- jackson -->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
             <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-zipkin -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

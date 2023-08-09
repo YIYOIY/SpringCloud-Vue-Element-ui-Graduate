@@ -21,7 +21,6 @@ public class JwtUtils {
 //    Date invalidateDate = new Date(System.currentTimeMillis() + EXPIRE_TIME);
 //    builder.withExpiresAt(invalidateDate);
 //    System.out.println("\n过期时间：" + invalidateDate);
-
     //密钥 (随机生成,可以从网上找到随机密钥生成器)
     private static final String SIGNATURE="MD9youyiqunxun+chunhelixhzneMG^EG79RV+T?J87AI4NWQVT^&";
 
@@ -99,10 +98,10 @@ public class JwtUtils {
      */
     public static void verify(String token){
         DecodedJWT verify = JWT.require(Algorithm.HMAC256(SIGNATURE)).build().verify(token);
-        System.out.println("认证通过：");
-        System.out.println("id: " + verify.getClaim("id").asString());
-        System.out.println("name: " + verify.getClaim("name").asString());
-        System.out.println("过期时间：" + verify.getExpiresAt());
+            System.out.println("认证通过：");
+            System.out.println("id: " + verify.getClaim("id").asString());
+            System.out.println("name: " + verify.getClaim("name").asString());
+            System.out.println("过期时间：" + verify.getExpiresAt());
     }
 
     /**
@@ -113,4 +112,6 @@ public class JwtUtils {
     public static DecodedJWT getToken(String token){
         return JWT.require(Algorithm.HMAC256(SIGNATURE)).build().verify(token);
     }
+
+
 }

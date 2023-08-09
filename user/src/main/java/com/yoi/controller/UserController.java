@@ -1,7 +1,6 @@
 package com.yoi.controller;
 
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yoi.entity.PagePackage;
 import com.yoi.entity.ReturnInfo;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.concurrent.TimeUnit;
+import java.time.LocalDateTime;
 
 @Validated
 @RestController
@@ -45,29 +44,13 @@ public class UserController {
                                                @NotNull @PathVariable(value = "pageSize") Integer pageSize,
                                                @Length(max = 100) @PathVariable(value = "searchName", required = false) String searchName) {
         ValueOperations<String, String> op = stringRedisTemplate.opsForValue();
-
-            /*判断管理员是否进行了查询操作，没查询走else分支，查询操作如果传入的查询名有效会记录在redis中，
-            管理员如果想在查询完后查询所有数据，应该在查询输入框内清除输入数据重新查询，可以在点击查询后出现一个查询所有数据的按钮，点击后自动查询*/
-
         if (searchName.equals("null")) {
-            /*管理员未进行查询，或者已经查询过，点击翻页后，进入此操作， 如果管理员查询过数据将把查询的关键字继续使用查询下一页*/
-            String keyword = op.get(adminId + "searchUser");
-            if (StringUtils.isNotEmpty(keyword)) {
-                searchName = keyword;
-            } else {
-                searchName = "";
-            }
-        }else {
-            op.set(adminId + "searchUser",searchName,3, TimeUnit.MINUTES);
-            if (searchName.equals("all")){
-                searchName="";
-                stringRedisTemplate.delete(adminId + "searchUser");
-            }
+            searchName = "";
         }
-
 //          返回分页结果
         Page<User> all = userService.getAll(searchName, pageNo, pageSize);
         if (!all.getRecords().isEmpty()) {
+            op.set(adminId.toString(), searchName + LocalDateTime.now());
 //          包装分页数据
             PagePackage<User> userPagePackage = new PagePackage<>(all.getRecords(), all.getCurrent(),
                     all.getPages(), all.getSize(), all.getTotal(), all.hasNext(), all.hasPrevious());

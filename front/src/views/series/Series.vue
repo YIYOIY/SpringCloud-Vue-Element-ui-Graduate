@@ -1,25 +1,25 @@
 <template>
   <div class="ac">
     <el-dialog v-model="addView" title="添加系列" width="50%" style="height: 50%;width: 50%" :destroy-on-close="true">
-      <AddSeries @cancel="cancel" @finish="finsihAdd"></AddSeries>
+      <AddSeries @cancel="cancel" @finish="finishAdd"></AddSeries>
     </el-dialog>
 
     <el-dialog v-model="alterView" title="修改系列" width="50%" style="height: 50%;width: 50%" destroy-on-close>
       <AlterSeries @cancel="cancel" @finish="alterFinish" :sd="sId"></AlterSeries>
     </el-dialog>
 
-    <el-button @click="addView = !addView" plain round type="warning" style="margin-top: 5%">添加新系列</el-button>
-
-    <el-button @click="search(searchName)" style="top: 16%;left: 32%;position: absolute" plain round type="info">查找系列</el-button>
-    <el-button @click="search('')" style="top: 16%;left: 38%;position: absolute" plain round type="primary">全部系列</el-button>
     <el-form>
-      <el-form-item label="系列名称" prop="seriesName" style="top: 16%;left: 15%;position: absolute">
+      <el-form-item label="系列名称" prop="seriesName" style="top: 16%;left: 5%;position: absolute">
         <el-input type="text" v-model="searchName" autofocus maxlength="20" clearable
                   style="max-width: 200px" placeholder="输入系列名"></el-input>
       </el-form-item>
     </el-form>
+    <el-button @click="search(searchName)" style="top: 16%;left: 23%;position: absolute" plain round type="info">查找系列</el-button>
+    <el-button @click="search('')" style="top: 16%;left: 29%;position: absolute" plain round type="primary">全部系列</el-button>
+    <el-button @click="addView = !addView" plain round type="warning" style="top: 16%;left: 36%;position: absolute">添加新系列</el-button>
 
-    <el-table :data="series" :highlight-current-row="true" height="400" style="margin-top: 3%" tooltip-effect="light">
+
+    <el-table :data="series" :highlight-current-row="true" height="400" style="margin-top: 15%" tooltip-effect="light">
       <el-table-column prop="id" label="编号" sortable width="200" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="seriesName" label="系列名" width="320"></el-table-column>
       <el-table-column prop="seriesSignTime" label="创建日期" sortable width="320">
@@ -84,8 +84,9 @@ let cancel = (() => {
   alterView.value = false
 })
 
-let finsihAdd = (() => {
+let finishAdd = (() => {
   addView.value = false
+  searchName.value = null
   getAllSeries(searchName.value, pageNo.value, pageSize.value).then(Response => {
     series.value = Response.data.data
   })
@@ -99,8 +100,10 @@ let alter = ((v) => {
   sId.value = v
   alterView.value = true
 })
+
 let alterFinish = (() => {
   alterView.value = false
+  searchName.value = null
   getAllSeries(searchName.value, pageNo.value, pageSize.value).then(Response => {
     series.value = Response.data.data
   })
@@ -117,6 +120,7 @@ let del = ((v) => {
     let seriesDel = JSON.stringify(delSeries)
     deleteSeries(seriesDel).then(Response => {
       ElMessage.success(Response.message)
+      searchName.value = null
       getAllSeries(searchName.value, pageNo.value, pageSize.value).then(Response => {
         series.value = Response.data.data
       })
@@ -131,13 +135,12 @@ let del = ((v) => {
   font-size: 18px;
 }
 
-.el-table .el-button {
+/deep/ .el-table .el-button {
   margin-left: 10%;
   width: 40%;
 }
 
 .ac {
-  margin: 3% 5%;
-
+  margin: 3% 3%;
 }
 </style>

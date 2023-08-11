@@ -173,16 +173,6 @@
         </el-icon>
         <router-link to="/book" @click="loginout">退出账号</router-link>
       </el-menu-item>
-
-<!--      头部菜单切换底部菜单-->
-      <el-menu-item index="8" v-if="store.state.menu===1">
-        <el-icon class="is-loading" size="large" style="margin: 13% 3px">
-          <SwitchFilled/>
-        </el-icon>
-        <el-button type="warning" plain round @click="store.state.menu=0">
-          切换菜单样式
-        </el-button>
-      </el-menu-item>
 <!--      底部菜单切换侧边菜单-->
       <el-menu-item index="8" v-if="store.state.menu===0">
         <el-icon class="is-loading" size="large" style="margin: 13% 3px">

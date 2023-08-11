@@ -1,11 +1,14 @@
 import {createRouter, createWebHistory} from "vue-router";
 import {checkToken} from "@/api/LoginApi";
+import store from "@/store";
+import {ElLoading, ElMessage} from "element-plus";
 
 import Book from "@/views/book/BookIndex.vue";
 import AlterBooks from "@/views/book/AlterBooks.vue";
 import AddBook from "@/views/book/AddBook.vue";
 import BookInformation from "@/views/book/BookInformation.vue";
 import AdminBooks from "@/views/book/AdminBooks.vue";
+import ShopkeeperBooks from "@/views/book/ShopkeeperBooks.vue";
 
 import UserIndex from "@/views/user/UserIndex.vue";
 import AlterUser from "@/views/user/AlterUser.vue";
@@ -15,14 +18,13 @@ import AdminUsers from "@/views/user/AdminUsers.vue";
 import AdminIndex from "@/views/admin/AdminIndex.vue";
 import AlterAdmin from "@/views/admin/AlterAdmin.vue";
 import AddAdmin from "@/views/admin/AddAdmin.vue";
+import Admins from "@/views/admin/Admins.vue";
 
 import Login from "@/views/Login.vue";
-import store from "@/store";
-import {ElLoading, ElMessage} from "element-plus";
 
-import AddCategory from "@/views/series/AddSeries.vue";
-import AlterCategory from "@/views/series/AlterSeries.vue";
-import Category from "@/views/series/Series.vue";
+import AddSeries from "@/views/series/AddSeries.vue";
+import AlterSeries from "@/views/series/AlterSeries.vue";
+import Series from "@/views/series/Series.vue";
 
 import AdminOrder from "@/views/order/AdminOrder.vue";
 import UserOrder from "@/views/order/UserOrder.vue";
@@ -32,7 +34,8 @@ import ShopkeeperIndex from "@/views/shopkeeper/ShopkeeperIndex.vue";
 import AlterShopkeeper from "@/views/shopkeeper/AlterShopkeeper.vue";
 import AdminShopkeepers from "@/views/shopkeeper/AdminShopkeepers.vue";
 import AddShopkeeper from "@/views/shopkeeper/AddShopkeeper.vue";
-import Admins from "@/views/admin/Admins.vue";
+import ShopKeeperOrder from "@/views/order/ShopKeeperOrder.vue";
+
 
 let router = createRouter({
     history: createWebHistory(),
@@ -241,7 +244,21 @@ let router = createRouter({
             component: AdminBooks,
             beforeEnter: (to, from, next) => {
                 if (to.name === "adminBooks") {
-                    if (store.state.isAdmin || store.state.isShopkeeper) {
+                    if (store.state.isAdmin) {
+                        next();
+                    } else {
+                        next(false);
+                    }
+                }
+            },
+        },
+        {
+            name: "shopkeeperBooks",
+            path: "/shopkeeperBooks",
+            component: ShopkeeperBooks,
+            beforeEnter: (to, from, next) => {
+                if (to.name === "shopkeeperBooks") {
+                    if (store.state.isShopkeeper) {
                         next();
                     } else {
                         next(false);
@@ -283,11 +300,11 @@ let router = createRouter({
             },
         },
         {
-            name: "category",
+            name: "series",
             path: "/series",
-            component: Category,
+            component: Series,
             beforeEnter: (to, from, next) => {
-                if (to.name === "category") {
+                if (to.name === "series") {
                     if (store.state.isAdmin || store.state.isShopkeeper) {
                         next();
                     } else {
@@ -297,16 +314,16 @@ let router = createRouter({
             },
         },
         {
-            name: "alterCategory",
-            path: "/alterCategory",
-            component: AlterCategory,
+            name: "alterSeries",
+            path: "/alterSeries",
+            component: AlterSeries,
             props({query}) {
                 return {
                     seriesId: query.seriesId,
                 };
             },
             beforeEnter: (to, from, next) => {
-                if (to.name === "alterCategory") {
+                if (to.name === "alterSeries") {
                     if (store.state.isAdmin || store.state.isShopkeeper) {
                         next();
                     } else {
@@ -316,11 +333,11 @@ let router = createRouter({
             },
         },
         {
-            name: "addCategory",
-            path: "/addCategory",
-            component: AddCategory,
+            name: "addSeries",
+            path: "/addSeries",
+            component: AddSeries,
             beforeEnter: (to, from, next) => {
-                if (to.name === "addCategory") {
+                if (to.name === "addSeries") {
                     if (store.state.isAdmin || store.state.isShopkeeper) {
                         next();
                     } else {
@@ -336,6 +353,20 @@ let router = createRouter({
             beforeEnter: (to, from, next) => {
                 if (to.name === "adminOrder") {
                     if (store.state.isAdmin) {
+                        next();
+                    } else {
+                        next(false);
+                    }
+                }
+            },
+        },
+        {
+            name: "shopkeeperOrder",
+            path: "/shopkeeperOrder",
+            component: ShopKeeperOrder,
+            beforeEnter: (to, from, next) => {
+                if (to.name === "shopkeeperOrder") {
+                    if (store.state.isShopkeeper) {
                         next();
                     } else {
                         next(false);
@@ -362,7 +393,7 @@ let router = createRouter({
             component: OrderConfirm,
             beforeEnter: (to, from, next) => {
                 if (to.name === "orderConfirm") {
-                    if (store.state.isUser || store.state.isAdmin) {
+                    if (store.state.isUser || store.state.isShopkeeper|| store.state.isAdmin) {
                         next();
                     } else {
                         next({path: '/login'});
@@ -398,7 +429,6 @@ router.beforeEach((to, from, next) => {
     // setTimeout(() => {
     //   loading.close()
     // }, 2000)
-
 
     if (to.path === '/login') { // 如果跳转登录页面,则移除token
         store.commit('clearState')

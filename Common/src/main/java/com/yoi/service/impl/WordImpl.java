@@ -22,8 +22,8 @@ public class WordImpl extends ServiceImpl<WordMapper, Word> implements WordServi
     }
 
     @Override
-    public Boolean deleteWord(Long wordId) {
-        return wordMapper.deleteById(wordId)>0;
+    public void deleteWord(Long wordId) {
+        wordMapper.deleteById(wordId);
     }
 
     @Override

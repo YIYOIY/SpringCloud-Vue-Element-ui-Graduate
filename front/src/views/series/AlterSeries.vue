@@ -25,6 +25,7 @@ import {useRouter} from "vue-router";
 import {reactive} from "vue";
 import {alterSeries, getSeriesByID} from "@/api/SeriesApi";
 import {ElMessage} from "element-plus";
+// eslint-disable-next-line no-unused-vars
 let router = useRouter()
 
 const series = reactive({
@@ -34,8 +35,10 @@ const series = reactive({
   }
 })
 
+// eslint-disable-next-line no-undef
 const emit = defineEmits(['finish', 'cancel'])
 
+// eslint-disable-next-line no-undef
 let props = defineProps(['sd'])
 
 getSeriesByID(props.sd).then(Response => {

@@ -26,6 +26,11 @@ public interface FeignOrderService {
                                                  @Min(5) @PathVariable("pageSize") Integer pageSize,
                                                  @PathVariable("userId") Long userId);
 
+    @GetMapping("/shopkeeper_order/{pageNo}/{pageSize}/{shopkeeperId}")
+    public ReturnInfo<PagePackage<Order>> shopkeeperListOrder(@Min(1) @PathVariable("pageNo") Integer pageNo,
+                                                              @Min(5) @PathVariable("pageSize") Integer pageSize,
+                                                              @PathVariable("shopkeeperId") Long shopkeeperId);
+
     @GetMapping("/admin_order/{pageNo}/{pageSize}")
     ReturnInfo<PagePackage<Order>> adminListOrder(@Min(1) @PathVariable("pageNo") Integer pageNo,
                                                   @Min(5) @PathVariable("pageSize") Integer pageSize);
@@ -47,4 +52,9 @@ public interface FeignOrderService {
 
     @PutMapping("/back_order")
     ReturnInfo<String> backOrder(@Valid @RequestBody Order order);
+
+    @PutMapping("/comment_order")
+    public ReturnInfo<String> commentOrder(@Valid @RequestBody Order order) ;
+    @PutMapping("/alter_order")
+    public ReturnInfo<String> alterOrder(@Valid @RequestBody Order order) ;
 }

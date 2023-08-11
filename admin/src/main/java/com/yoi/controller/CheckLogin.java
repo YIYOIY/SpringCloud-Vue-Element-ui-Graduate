@@ -1,5 +1,6 @@
 package com.yoi.controller;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.yoi.config.JwtUtils;
 import com.yoi.entity.Admin;
 import com.yoi.entity.ReturnInfo;
@@ -11,6 +12,7 @@ import com.yoi.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,10 +44,11 @@ public class CheckLogin {
             Map<String, String> payload = new HashMap<>();
             payload.put("id", loginAdmin.getId().toString());
             payload.put("name", loginAdmin.getAdminName());
+            payload.put("type", "admin");
             //生成JWT令牌
             String token = JwtUtils.getToken(payload);
 //            存入redis中，token验证时会验证是否不能使用此token
-            stringRedisTemplate.opsForValue().set(loginAdmin.getId().toString(), token, 30, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set("admin"+loginAdmin.getId().toString(), token, 30, TimeUnit.MINUTES);
             System.out.println(token);
             return new ReturnInfo<>(200, "登录认证成功！", loginAdmin, token);
         } else {
@@ -61,9 +64,10 @@ public class CheckLogin {
             Map<String, String> payload = new HashMap<>();
             payload.put("id", loginUser.getId().toString());
             payload.put("name", loginUser.getUserName());
+            payload.put("type", "user");
             //生成JWT令牌
             String token = JwtUtils.getToken(payload);
-            stringRedisTemplate.opsForValue().set(loginUser.getId().toString(), token, 30, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set("user"+loginUser.getId().toString(), token, 30, TimeUnit.MINUTES);
             return new ReturnInfo<>(200, "登录成功！", loginUser, token);
         } else {
             return new ReturnInfo<>(200, "用户不存在，请注册后再登录！");
@@ -78,9 +82,10 @@ public class CheckLogin {
             Map<String, String> payload = new HashMap<>();
             payload.put("id", loginShopkeeper.getId().toString());
             payload.put("name", loginShopkeeper.getShopkeeperName());
+            payload.put("type", "shopkeeper");
             //生成JWT令牌
             String token = JwtUtils.getToken(payload);
-            stringRedisTemplate.opsForValue().set(loginShopkeeper.getId().toString(), token, 30, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set("shopkeeper"+loginShopkeeper.getId().toString(), token, 30, TimeUnit.MINUTES);
             return new ReturnInfo<>(200, "登录成功！", loginShopkeeper, token);
         } else {
             return new ReturnInfo<>(200, "商户不存在，请注册后再登录！");
@@ -89,9 +94,19 @@ public class CheckLogin {
 
     @GetMapping("/checkToken")
     public ReturnInfo<String> checkToken(@RequestParam("token") String token) {
+        ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
         try {
             JwtUtils.verify(token);
-            System.out.println(token);//输出令牌
+            DecodedJWT token1 = JwtUtils.getToken(token);
+            String id = token1.getClaim("id").asString();
+            System.out.println(id);
+            String type = token1.getClaim("type").asString();
+            System.out.println(type);
+            String s = stringStringValueOperations.get(type+id);
+            if (s==null){
+                throw new Exception("token不存在！");
+            }
+            System.out.println("redis中拿到id为"+id+"，用户身份为"+type+"的token\n"+s.substring(60)+"\n前端传递的token\n"+token.substring(60));//输出令牌
             return new ReturnInfo<>(200, "token验证成功！");
         } catch (Exception e) {
             log.warn(e.toString());

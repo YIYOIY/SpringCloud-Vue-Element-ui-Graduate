@@ -31,7 +31,7 @@
           <el-input-number :step=1 :min=0 :max=1000000 v-model="book.book.bookNumber"></el-input-number>
         </el-form-item>
         <el-form-item label="平台回扣（抽取比例）" v-if="store.state.isAdmin">
-          <el-input-number :step="0.01" :min=0 :max=1 v-model="book.book.kickback"></el-input-number>
+          <el-input-number :step="0.01" :min=0 :max=10 v-model="book.book.kickback"></el-input-number>
         </el-form-item>
         <el-form-item label="运费(元/Km)" prop="expressFare">
           <el-input-number :step=1 :min=0 :max=1000000 v-model="book.book.expressFare"></el-input-number>
@@ -247,9 +247,15 @@ let add = (() => {
     let Book = JSON.stringify(book.book)
     addBook(Book).then(Response => {
       ElNotification.success(Response.message)
-      router.push({
-        name: 'adminBooks',
-      })
+      if (store.state.isShopkeeper){
+        router.push({
+          name: 'shopkeeperBooks',
+        })
+      }else{
+        router.push({
+          name: 'adminBooks',
+        })
+      }
     }).catch(Error => {
       ElMessage.error(Error.data.message)
       console.log(Error)
@@ -258,9 +264,15 @@ let add = (() => {
 })
 
 let back = (() => {
-  router.push({
-    name: 'adminBooks'
-  })
+  if (store.state.isShopkeeper){
+    router.push({
+      name: 'shopkeeperBooks',
+    })
+  }else{
+    router.push({
+      name: 'adminBooks',
+    })
+  }
 })
 
 </script>
@@ -274,7 +286,7 @@ let back = (() => {
   font-size: large;
   position: fixed;
   background-size: 100% 100%;
-  background-color: rgb(253, 213, 99);
+  background: linear-gradient(to left top, #6b090a 30%, #eed3d4 60%);
   z-index: -1;
 }
 

@@ -1,61 +1,79 @@
 import http from "@/utils/http";
 
+// 用户
+export function getOrder(orderId) {
+    return http.get(
+        `api/order/${orderId}`
+    )
+}
+
+export function getUserOrder(pageNo, pageSize, userId) {
+    return http.get(
+        `api/user_order/${pageNo}/${pageSize}/${userId}`
+    )
+}
+
+export function shopkeeperOrder(pageNo, pageSize, shopkeeperId) {
+    return http.get(
+        `api/shopkeeper_order/${pageNo}/${pageSize}/${shopkeeperId}`
+    )
+}
+
+// 获取管理员权限的所有购物信息
+export function getAdminOrder(pageNo, pageSize) {
+    return http.get(
+        `api/admin_order/${pageNo}/${pageSize}`
+    )
+}
+
 // 添加购物车
 export function addOrder(data) {
     return http.post(
-        `api/order`,
+        'api/order',
+        data
+    )
+}
+// 删除order
+export function deleteOrder(data) {
+    return http.delete(
+        'api/order',
         data
     )
 }
 
-// 用户
-export function getOrder(params) {
-    return http.get(
-        `api/order?orderId=` + params
-    )
-}
-
-export function getUserOrder(pageNo, userId) {
-    return http.get(
-        `api/userOrder?pageNo=${pageNo}&userId=${userId}`
-    )
-}
-
-
-// 获取管理员权限的所有购物信息
-export function getAdminOrder(pageNo) {
-    return http.get(
-        `api/adminOrder?pageNo=${pageNo}`
-    )
-}
-
-
-
-export function getUserPage(params) {
-    return http.get(
-        `api/userPageCount?userId=` + params)
-}
-
-
-// 删除order
-export function deleteOrder(data) {
-    return http.delete(
-        'api/order?orderId='+data
-    )
-}
-
-// 获取管理员购物车显示页数
-export function getAdminPageCount() {
-    return http.get(
-        'api/adminPageCount'
-    )
-}
-
-
-
-// 购买--更新
-export function checkBag(orderId, num, bookId) {
+// 购买
+export function buy(data) {
     return http.put(
-        `api/buyOrder?orderId=${orderId}&num=${num}&bookId=${bookId}`,
+        'api/order',
+        data
     )
 }
+// 确认收货
+export function confirmOrder(data) {
+    return http.put(
+        'api/confirm_order',
+        data
+    )
+}
+// 退款
+export function backOrder(data) {
+    return http.put(
+        'api/back_order',
+        data
+    )
+}
+// 评论
+export function commentOrder(data) {
+    return http.put(
+        'api/comment_order',
+        data
+    )
+}
+// 企业修改,管理员比企业多了一个回扣可以修改
+export function alterOrder(data) {
+    return http.put(
+        'api/alter_order',
+        data
+    )
+}
+

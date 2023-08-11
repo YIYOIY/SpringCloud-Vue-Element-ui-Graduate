@@ -19,6 +19,11 @@ public class FeignBookServiceImpl implements FeignBookService {
     }
 
     @Override
+    public ReturnInfo<PagePackage<Book>> shopkeeperIndex(String searchName, Integer pageNo, Integer pageSize, Long shopkeeperId) {
+        return  ReturnInfo.withEnumNoData(ReturnEnum.WAIT);
+    }
+
+    @Override
     public ReturnInfo<PagePackage<Book>> selectBySeries(String seriesName, Integer pageNo, Integer pageSize) {
         return  ReturnInfo.withEnumNoData(ReturnEnum.WAIT);
     }

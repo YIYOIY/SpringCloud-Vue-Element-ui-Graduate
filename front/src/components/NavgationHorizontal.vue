@@ -175,7 +175,7 @@
 
         <el-menu-item-group title="书籍管理">
           <el-menu-item index="4-2">
-            <router-link to="/adminBooks">
+            <router-link to="/shopkeeperBooks">
               <el-icon>
                 <Sunrise/>
               </el-icon>
@@ -191,6 +191,14 @@
             </router-link>
           </el-menu-item>
         </el-menu-item-group>
+        <el-menu-item index="3-2">
+          <router-link to="/shopkeeperOrder">
+            <el-icon>
+              <CreditCard/>
+            </el-icon>
+            订单管理
+          </router-link>
+        </el-menu-item>
       </el-sub-menu>
 
 
@@ -238,15 +246,6 @@
           <SwitchFilled/>
         </el-icon>
         <el-button type="warning" plain round @click="store.state.menu=0">
-          切换菜单样式
-        </el-button>
-      </el-menu-item>
-      <!--      底部菜单切换侧边菜单-->
-      <el-menu-item index="9" v-if="store.state.menu===0">
-        <el-icon class="is-loading" size="large" style="margin: 13% 3px">
-          <SwitchFilled/>
-        </el-icon>
-        <el-button type="warning" plain round @click="store.state.menu=-1">
           切换菜单样式
         </el-button>
       </el-menu-item>

@@ -1,10 +1,11 @@
 <template>
-  <div style="width:100%;height: 100%;padding: 5% 0">
+  <div class="top"></div>
+  <div style="width:100%;height: 100%;padding: 5% 0" >
     <el-carousel style="width:100%;height:100%" height="550px" :interval=1500 :initial-index=1 direction="horizontal"
                  type="card" :autoplay="true" arrow="hover" pause-on-hover loop indicator-position="outside"
                  trigger="hover">
       <el-carousel-item v-for="item in books" :key="item.id"
-                        style="width: 30%;height: 100%;z-index:1;margin-left: 13%;">
+                        style="width: 30%;height: 100%;z-index:1;margin-left: 12%;">
         <el-image :src=item.image.picture style="width: 100%;height: 100%" @click="inf(item.id)"></el-image>
       </el-carousel-item>
     </el-carousel>
@@ -16,7 +17,7 @@
         <div class="card_content">
           <el-row>
             <el-row>
-              <el-image :src="item.image.picture" style="width: 90%;height: 100%;" @click="inf(item.id)"></el-image>
+              <el-image :src="item.image.picture" style="width: 100%;height: 100%;" @click="inf(item.id)"></el-image>
             </el-row>
             <el-tooltip  :content="item.word.bookDescribe" effect="dark">
               <el-row style="padding:8% 0">
@@ -82,7 +83,7 @@
     <el-table-column prop="id" label="操作">
       <template v-slot="scope">
         <el-button class="Ybutton" plain round type="success" @click="inf(scope.row.id)">书籍详情</el-button>
-        <el-button type="primary" plain round @click="buy(scope.row.id)" v-show="scope.row.bookNumber > 0">加入购物车
+        <el-button type="primary" plain round @click="buy(scope.row.id,scope.row.discount,scope.row.bookPrice,scope.row.kickback,scope.row.expressFare)" v-show="scope.row.bookNumber > 0">加入购物车
         </el-button>
       </template>
     </el-table-column>
@@ -101,20 +102,14 @@
 </template>
 
 <script setup>
-import {reactive, ref, onMounted} from "vue";
-import {
-  useRouter
-} from "vue-router";
-import {
-  useStore
-} from "vuex";
+import {onMounted, reactive, ref} from "vue";
+import {useRouter} from "vue-router";
+import {useStore} from "vuex";
 import {ElMessage, ElNotification} from "element-plus";
 import {getBooks, selectBySeries} from "@/api/BookApi";
 import {addOrder} from "@/api/OrderApi";
 import emitter from "@/utils/bus";
 // 监听事件，导航栏更改后这里就会触发，书记页面就会根据在导航页面选择的书籍系列展示书籍
-
-let searchName=ref('')
 let pageNo=ref(1)
 let pageSize=ref(15)
 emitter.on('seriesChange',data=>{
@@ -149,26 +144,31 @@ onMounted(async () => {
 
 let inf = ((v) => {
   console.log(v)
-  let id = v
   router.push({
     name: 'information',
     query: {
-      id: id
+      id: v
     }
   })
 })
-
+// 首页默认购买一本
 let bag = reactive({
   bookId: '',
   userId: '',
-  bookNum: 1
+  buyNumber: 1,
+  discount: 0,
+  bookPrice: 0,
+  kickback: 0,
+  expressFare: 0
 })
 
-let buy = ((v) => {
+let buy = ((v,discount,bookPrice,kickback,expressFare) => {
   bag.bookId = v;
-  console.log(v + "----左右两边都是bookId,左边是传过来的,右边是要发送后端的" + bag.bookId);
   bag.userId = store.state.userId;
-  console.log(bag.userId);
+  bag.discount = discount;
+  bag.bookPrice = bookPrice;
+  bag.kickback = kickback;
+  bag.expressFare =expressFare
   // 判断用户登陆了没，没登陆返回登录页面
   if (store.state.userId === "" || store.state.userId === undefined || store.state.userId === null) {
     router.push({
@@ -218,21 +218,17 @@ let buy = ((v) => {
 .card_item {
   flex-basis: 20%;
   margin-bottom: 6%;
-  padding: 0 3%;
+  padding: 0 2%;
   box-sizing: border-box;
 }
 
 
 .card_content {
-  background-color: rgb(247, 247, 247);
+  background-color: rgb(253, 253, 253);
   border-radius: 2%;
-  height: 60%;
-  width: 80%;
-}
-
-
-/deep/ .bookName .cell {
-  padding-left: 25%;
+  box-shadow: 2em 2em 2em #8fcbee;
+  height: 50%;
+  width: 70%;
 }
 
 .Ybutton {
@@ -241,5 +237,13 @@ let buy = ((v) => {
   margin-bottom: 10%;
 }
 
-
+.top{
+  left: 0;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  margin: 0 0;
+  background: linear-gradient(115deg, #bbcfe0 40%, #efe7e7 70%);
+  z-index: -1;
+}
 </style>

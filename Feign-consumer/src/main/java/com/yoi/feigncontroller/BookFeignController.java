@@ -30,6 +30,16 @@ public class BookFeignController {
                                                @Min(1) @PathVariable("pageSize") Integer pageSize) {
         return feignBookService.index(searchName, pageNo,pageSize);
     }
+
+    @CrossOrigin
+    @GetMapping("/book/{searchName}/{pageNo}/{pageSize}/{shopkeeperId}")
+    public ReturnInfo<PagePackage<Book>> shopkeeperIndex(@PathVariable("searchName") String searchName,
+                                                         @Min(1) @PathVariable("pageNo") Integer pageNo,
+                                                         @Min(1) @PathVariable("pageSize") Integer pageSize,
+                                                         @Min(1) @PathVariable("shopkeeperId") Long shopkeeperId) {
+        return feignBookService.shopkeeperIndex(searchName,pageNo,pageSize,shopkeeperId);
+
+    }
     @GetMapping("/select_by_series/{seriesName}/{pageNo}/{pageSize}")
     public ReturnInfo<PagePackage<Book>> selectBySeries(@NotNull @PathVariable("seriesName") String seriesName,
                                                         @Min(1) @PathVariable("pageNo") Integer pageNo,

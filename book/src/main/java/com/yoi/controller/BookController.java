@@ -24,6 +24,7 @@ public class BookController {
 
     /**
      * 商城首页，判断用户是否搜索书籍
+     *
      * @param searchName 搜索名称
      * @param pageNo     页面数
      * @param pageSize   页面显示数量
@@ -39,13 +40,37 @@ public class BookController {
             searchName = "";
         }
             /*
-            用户查询了书籍，从MySQL读取,并存入redis数据库中
+            用户查询了书籍，从MySQL读取
             */
         Page<Book> mysqlBooks = bookService.getAll(searchName, pageNo, pageSize);
         PagePackage<Book> bookPagePackage = new PagePackage<>(mysqlBooks.getRecords(), mysqlBooks.getCurrent(),
                 mysqlBooks.getPages(), mysqlBooks.getSize(), mysqlBooks.getTotal(), mysqlBooks.hasNext(), mysqlBooks.hasPrevious());
         if (mysqlBooks.getRecords() != null && !mysqlBooks.getRecords().isEmpty()) {
             return new ReturnInfo<>(200, "书籍获取成功", bookPagePackage);
+        } else {
+            return new ReturnInfo<>(404, "未收录书籍");
+        }
+    }
+
+    //    企业的书籍首页，根据企业id显示企业所拥有的书籍
+    @CrossOrigin
+    @GetMapping("/book/{searchName}/{pageNo}/{pageSize}/{shopkeeperId}")
+    public ReturnInfo<PagePackage<Book>> shopkeeperIndex(@PathVariable("searchName") String searchName,
+                                                         @Min(1) @PathVariable("pageNo") Integer pageNo,
+                                                         @Min(1) @PathVariable("pageSize") Integer pageSize,
+                                                         @Min(1) @PathVariable("shopkeeperId") Long shopkeeperId) {
+        /*企业是否搜索书籍*/
+        if (searchName.equals("null")) {
+            searchName = "";
+        }
+            /*
+            企业查询了书籍，从MySQL读取
+            */
+        Page<Book> mysqlBooks = bookService.getShopkeeperAll(searchName, pageNo, pageSize, shopkeeperId);
+        PagePackage<Book> bookPagePackage = new PagePackage<>(mysqlBooks.getRecords(), mysqlBooks.getCurrent(),
+                mysqlBooks.getPages(), mysqlBooks.getSize(), mysqlBooks.getTotal(), mysqlBooks.hasNext(), mysqlBooks.hasPrevious());
+        if (mysqlBooks.getRecords() != null && !mysqlBooks.getRecords().isEmpty()) {
+            return new ReturnInfo<>(200, "书籍查询成功", bookPagePackage);
         } else {
             return new ReturnInfo<>(404, "未收录书籍");
         }

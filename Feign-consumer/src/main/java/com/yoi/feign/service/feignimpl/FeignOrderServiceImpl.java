@@ -19,6 +19,11 @@ public class FeignOrderServiceImpl implements FeignOrderService {
     }
 
     @Override
+    public ReturnInfo<PagePackage<Order>> shopkeeperListOrder(Integer pageNo, Integer pageSize, Long shopkeeperId) {
+        return ReturnInfo.withEnumNoData(ReturnEnum.WAIT);
+    }
+
+    @Override
     public ReturnInfo<PagePackage<Order>> adminListOrder(Integer pageNo, Integer pageSize) {
         return ReturnInfo.withEnumNoData(ReturnEnum.WAIT);
     }
@@ -50,6 +55,16 @@ public class FeignOrderServiceImpl implements FeignOrderService {
 
     @Override
     public ReturnInfo<String> backOrder(Order order) {
+        return ReturnInfo.withEnumNoData(ReturnEnum.WAIT);
+    }
+
+    @Override
+    public ReturnInfo<String> commentOrder(Order order) {
+        return ReturnInfo.withEnumNoData(ReturnEnum.WAIT);
+    }
+
+    @Override
+    public ReturnInfo<String> alterOrder(Order order) {
         return ReturnInfo.withEnumNoData(ReturnEnum.WAIT);
     }
 }

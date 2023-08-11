@@ -5,6 +5,13 @@ export function getBooks(searchName, pageNo, pageSize) {
         `api/book/${searchName}/${pageNo}/${pageSize}`
     )
 }
+
+export function shopkeeperGetBooks(searchName, pageNo, pageSize,shopkeeperId) {
+    return http.get(
+        `api/book/${searchName}/${pageNo}/${pageSize}/${shopkeeperId}`
+    )
+}
+
 export function selectBySeries(seriesName, pageNo, pageSize) {
     return http.get(
         `api/select_by_series/${seriesName}/${pageNo}/${pageSize}`

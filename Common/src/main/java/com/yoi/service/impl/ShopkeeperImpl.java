@@ -10,6 +10,7 @@ import com.yoi.mapper.ShopkeeperMapper;
 import com.yoi.service.ShopkeeperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author 游弋
@@ -26,7 +27,7 @@ public class ShopkeeperImpl extends ServiceImpl<ShopkeeperMapper, Shopkeeper> im
         Shopkeeper shopkeeper = shopkeeperMapper.selectById(shopkeeperId);
 //        根据id取出照片并放入shopkeeper的image对象中
         Image image = imageMapper.selectById(shopkeeper.getImageId());
-        if (image != null) {
+        if (!ObjectUtils.isEmpty(image)) {
             shopkeeper.setImage(image);
         }
         return shopkeeper;
@@ -44,7 +45,7 @@ public class ShopkeeperImpl extends ServiceImpl<ShopkeeperMapper, Shopkeeper> im
         Page<Shopkeeper> shopkeepers = shopkeeperMapper.selectPage(shopkeeperPage, new QueryWrapper<Shopkeeper>().like("shopkeeper_name", keyword));
         for (Shopkeeper record : shopkeepers.getRecords()) {
             Image image = imageMapper.selectById(record.getImageId());
-            if (image != null) {
+            if (!ObjectUtils.isEmpty(image)) {
                 record.setImage(image);
             }
         }
@@ -53,8 +54,12 @@ public class ShopkeeperImpl extends ServiceImpl<ShopkeeperMapper, Shopkeeper> im
 
     @Override
     public boolean addShopkeeper(Shopkeeper shopkeeper) {
-        if (shopkeeper.getImage().getPicture() != null && !shopkeeper.getImage().getPicture().isEmpty()) {
+        if (!ObjectUtils.isEmpty(shopkeeper.getImage())) {
             String picture = shopkeeper.getImage().getPicture();
+            //            用户没有传递图片时，前端会自动传递一个图片对象， 对象中的图片地址是“”，会导致数据库默认的404图片被“”取代
+            if ("".equals(picture)){
+                picture=null;
+            }
             Image image = new Image(null, picture, null, null, null);
             if (imageMapper.insert(image) < 0) {
                 return false;
@@ -74,7 +79,7 @@ public class ShopkeeperImpl extends ServiceImpl<ShopkeeperMapper, Shopkeeper> im
 
     @Override
     public boolean updateShopkeeper(Shopkeeper shopkeeper) {
-        if (shopkeeper.getImage().getPicture() != null && !shopkeeper.getImage().getPicture().isEmpty()) {
+        if (!ObjectUtils.isEmpty(shopkeeper.getImage())) {
 //            如果用户创建时没有上传头像，更新时检测到上传就创建一个图像
             if (shopkeeper.getImage().getId() == null) {
                 Image image = new Image(null, shopkeeper.getImage().getPicture(), null, null, null);

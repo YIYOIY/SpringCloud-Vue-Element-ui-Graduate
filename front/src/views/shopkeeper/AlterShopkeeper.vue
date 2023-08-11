@@ -246,7 +246,7 @@ let back = () => {
 
 <style scoped>
 #building {
-  margin: 0 0;
+  bottom: 0;
   top: 0;
   left: 0;
   width: 100%;
@@ -255,7 +255,7 @@ let back = () => {
   position: fixed;
   background-size: 100% 100%;
   opacity: 0.9;
-  background: url(../../assets/static/alterAdmin.png) no-repeat fixed center;
+  background: url(../../assets/static/star.jpg) no-repeat  center;
   z-index: -1;
 }
 

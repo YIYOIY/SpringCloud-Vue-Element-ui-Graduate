@@ -31,6 +31,13 @@ public class OrderFeignController {
         return feignOrderService.userListOrder(pageNo, pageSize, userId);
     }
 
+    @GetMapping("/shopkeeper_order/{pageNo}/{pageSize}/{shopkeeperId}")
+    public ReturnInfo<PagePackage<Order>> shopkeeperListOrder(@Min(1) @PathVariable("pageNo") Integer pageNo,
+                                                              @Min(5) @PathVariable("pageSize") Integer pageSize,
+                                                              @PathVariable("shopkeeperId") Long shopkeeperId) {
+        return feignOrderService.shopkeeperListOrder(pageNo, pageSize, shopkeeperId);
+    }
+
     @GetMapping("/admin_order/{pageNo}/{pageSize}")
     public ReturnInfo<PagePackage<Order>> adminListOrder(@Min(1) @PathVariable("pageNo") Integer pageNo,
                                                          @Min(5) @PathVariable("pageSize") Integer pageSize) {
@@ -65,5 +72,15 @@ public class OrderFeignController {
     @PutMapping("/back_order")
     public ReturnInfo<String> backOrder(@Valid @RequestBody Order order) {
         return feignOrderService.backOrder(order);
+    }
+
+    @PutMapping("/comment_order")
+    public ReturnInfo<String> commentOrder(@Valid @RequestBody Order order) {
+        return feignOrderService.commentOrder(order);
+    }
+
+    @PutMapping("/alter_order")
+    public ReturnInfo<String> alterOrder(@Valid @RequestBody Order order) {
+        return feignOrderService.alterOrder(order);
     }
 }

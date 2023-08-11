@@ -42,10 +42,10 @@
       <el-table-column fixed prop="bookAuthor" label="作者" :show-overflow-tooltip="true" width="180"></el-table-column>
       <el-table-column fixed prop="series.seriesName" label="系列" width="150"></el-table-column>
       <el-table-column fixed prop="bookPrice" label="价格（元）" sortable width="120"/>
-      <el-table-column fixed prop="discount" label="折扣（%）" sortable width="120"/>
-      <el-table-column fixed prop="expressFare" label="运费（元）" sortable width="120"/>
-      <el-table-column fixed prop="kickback" label="抽成（%）" sortable width="120"/>
-      <el-table-column fixed prop="bookNumber" label="库存" sortable width="120"/>
+      <el-table-column fixed prop="discount" label="折扣（%）" sortable width="110"/>
+      <el-table-column fixed prop="expressFare" label="运费（元）" sortable width="110"/>
+      <el-table-column fixed prop="kickback" label="抽成（%）" sortable width="100"/>
+      <el-table-column fixed prop="bookNumber" label="库存" sortable width="100"/>
       <el-table-column fixed prop="id" label="操作" width="200">
         <template v-slot="scope">
           <el-row :gutter="10">
@@ -64,14 +64,11 @@
 <script setup>
 import {ref} from "vue";
 import {useRouter} from "vue-router";
-import {useStore} from "vuex";
 import {deleteBook, getBooks} from "@/api/BookApi";
 import {ElMessage, ElNotification} from "element-plus";
 
-let store = useStore()
 let books = ref([]);
 let router = useRouter();
-
 let searchName = ref('')
 let pageNo = ref(1)
 let pageSize = ref(15)
@@ -100,11 +97,10 @@ getBooks("null", pageNo.value, pageSize.value).then((Response) => {
 
 let alter = (v) => {
   console.log("这里是管理书籍的准备进入修改书籍" + v);
-  let id = v;
   router.push({
     name: "alterBooks",
     query: {
-      bookId: id,
+      bookId: v,
     },
   });
 };
@@ -122,7 +118,7 @@ let del = (v) => {
       });
     }).catch((Error) => {
       ElMessage.error(Error.data.message)
-      console(Error + "请稍后重试!");
+      console.log(Error + "请稍后重试!");
     });
   }
 };
@@ -144,6 +140,6 @@ a {
 }
 
 .background {
-  margin: 0 3.5%;
+  margin: 5% 5%;
 }
 </style>

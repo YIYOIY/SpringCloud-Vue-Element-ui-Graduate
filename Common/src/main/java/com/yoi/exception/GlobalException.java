@@ -15,6 +15,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -83,6 +84,10 @@ public class GlobalException {
     @ExceptionHandler(value = NullPointerException.class)
     public ReturnInfo<Exception> exceptionHandler(NullPointerException exception) {
         log.warn(exception.getMessage());
+        System.out.println(exception.getMessage());
+        System.out.println(Arrays.toString(exception.getStackTrace()));
+        System.out.println(exception.toString());
+        System.out.println(exception.getLocalizedMessage());
         return new ReturnInfo<>(400, "空指针异常");
     }
 

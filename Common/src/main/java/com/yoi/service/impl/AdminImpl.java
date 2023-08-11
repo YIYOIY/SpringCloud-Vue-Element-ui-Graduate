@@ -14,6 +14,7 @@ import com.yoi.mapper.UserMapper;
 import com.yoi.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author 游弋
@@ -33,7 +34,7 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
         Admin admin = adminMapper.selectById(adminId);
 //        根据id取出照片并放入user的image对象中
         Image image = imageMapper.selectById(admin.getImageId());
-        if (image != null) {
+        if (!ObjectUtils.isEmpty(image)) {
             admin.setImage(image);
         }
         return admin;
@@ -52,7 +53,7 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
         Page<Admin> admins = adminMapper.selectPage(Page, new QueryWrapper<Admin>().like("admin_name", keyword));
         for (Admin record : admins.getRecords()) {
             Image image = imageMapper.selectById(record.getImageId());
-            if (image != null) {
+            if (!ObjectUtils.isEmpty(image)) {
                 record.setImage(image);
             }
         }
@@ -62,8 +63,12 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
 
     @Override
     public Boolean addAdmin(Admin admin) {
-        if (admin.getImage().getPicture() != null && !admin.getImage().getPicture().isEmpty()) {
+        if (!ObjectUtils.isEmpty(admin.getImage())) {
             String picture = admin.getImage().getPicture();
+            //            用户没有传递图片时，前端会自动传递一个图片对象， 对象中的图片地址是“”，会导致数据库默认的404图片被“”取代
+            if ("".equals(picture)){
+                picture=null;
+            }
             Image image = new Image(null, picture, null, null, null);
             if (imageMapper.insert(image) < 0) {
                 return false;
@@ -98,7 +103,7 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
 
     @Override
     public Boolean updateAdmin(Admin admin) {
-        if (admin.getImage().getPicture() != null && !admin.getImage().getPicture().isEmpty()) {
+        if (!ObjectUtils.isEmpty(admin.getImage())) {
 //            如果用户创建时没有上传头像，更新时检测到上传就创建一个图像
             if (admin.getImage().getId() == null) {
                 Image image = new Image(null, admin.getImage().getPicture(), null, null, null);

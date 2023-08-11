@@ -8,6 +8,7 @@ import com.yoi.mapper.*;
 import com.yoi.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author 游弋
@@ -36,10 +37,29 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
         return book;
     }
 
+//    管理员获取所有书籍，商城首页
     @Override
     public Page<Book> getAll(String keyword, Integer pageNo, Integer pageSize) {
         Page<Book> Page = new Page<>(pageNo, pageSize);
         Page<Book> bookPage = bookMapper.selectPage(Page, new QueryWrapper<Book>().like("book_name", keyword));
+        for (Book record : bookPage.getRecords()) {
+            Image image = imageMapper.selectById(record.getImageId());
+            record.setImage(image);
+            Word word = wordMapper.selectById(record.getWordId());
+            record.setWord(word);
+            Shopkeeper shopkeeper = shopkeeperMapper.selectById(record.getShopkeeperId());
+            record.setShopkeeper(shopkeeper);
+            Series series = seriesMapper.selectById(record.getSeriesId());
+            record.setSeries(series);
+        }
+        return bookPage;
+    }
+
+//    企业获取企业所发布的书籍
+    @Override
+    public Page<Book> getShopkeeperAll(String keyword, Integer pageNo, Integer pageSize,Long shopkeeperId) {
+        Page<Book> Page = new Page<>(pageNo, pageSize);
+        Page<Book> bookPage = bookMapper.selectPage(Page, new QueryWrapper<Book>().like("book_name", keyword).eq("shopkeeper_id",shopkeeperId));
         for (Book record : bookPage.getRecords()) {
             Image image = imageMapper.selectById(record.getImageId());
             record.setImage(image);
@@ -75,7 +95,7 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
 
     @Override
     public Boolean addBook(Book book) {
-        if (book.getImage().getPicture() != null && !book.getImage().getPicture().isEmpty()) {
+        if (!ObjectUtils.isEmpty(book.getImage())) {
             String picture = book.getImage().getPicture();
             Image image = new Image(null, picture, null, null, null);
             if (imageMapper.insert(image) < 0) {
@@ -84,8 +104,7 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
                 book.setImageId(image.getId());
             }
         }
-        if ((book.getWord().getBookDescribe() != null && !book.getWord().getBookDescribe().isEmpty())
-                || (book.getWord().getBookDetail() != null && !book.getWord().getBookDetail().isEmpty())) {
+        if (!ObjectUtils.isEmpty(book.getWord())) {
             Word word = new Word(null, book.getWord().getBookDescribe(), book.getWord().getBookDetail(),
                     null, null,null, null);
             if (wordMapper.insert(word) < 0) {
@@ -107,7 +126,7 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
 
     @Override
     public Boolean updateBook(Book book) {
-        if (book.getImage().getPicture() != null && !book.getImage().getPicture().isEmpty()) {
+        if (!ObjectUtils.isEmpty(book.getImage())) {
 //            如果用户创建时没有上传头像，更新时检测到上传就创建一个图像
             if (book.getImageId() == null) {
                 Image image = new Image(null, book.getImage().getPicture(),
@@ -126,8 +145,7 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
                 }
             }
         }
-        if ((book.getWord().getBookDescribe() != null && !book.getWord().getBookDescribe().isEmpty())
-                || (book.getWord().getBookDetail() != null && !book.getWord().getBookDetail().isEmpty())) {
+        if (!ObjectUtils.isEmpty(book.getWord())) {
 //            如果用户创建时没有上传描述，更新时检测到上传就创建一个描述对象
             if (book.getWordId() == null) {
                 Word word = new Word(null, book.getWord().getBookDescribe(), book.getWord().getBookDetail(),

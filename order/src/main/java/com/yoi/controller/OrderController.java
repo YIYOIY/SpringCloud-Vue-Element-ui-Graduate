@@ -14,6 +14,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -33,6 +34,13 @@ public class OrderController {
                                                         @Min(5) @PathVariable("pageSize") Integer pageSize,
                                                         @PathVariable("userId") Long userId) {
         Page<Order> orderPage = orderService.userGetAll(userId, pageNo, pageSize);
+        return getPagePackageReturnInfo(orderPage);
+    }
+    @GetMapping("/shopkeeper_order/{pageNo}/{pageSize}/{shopkeeperId}")
+    public ReturnInfo<PagePackage<Order>> shopkeeperListOrder(@Min(1) @PathVariable("pageNo") Integer pageNo,
+                                                        @Min(5) @PathVariable("pageSize") Integer pageSize,
+                                                        @PathVariable("shopkeeperId") Long shopkeeperId) {
+        Page<Order> orderPage = orderService.shopkeeperGetAll(shopkeeperId, pageNo, pageSize);
         return getPagePackageReturnInfo(orderPage);
     }
 
@@ -76,7 +84,7 @@ public class OrderController {
 
     @DeleteMapping("/order")
     public ReturnInfo<String> deleteOrder(@Valid @RequestBody Order order) {
-        if (orderService.deleteOrder(order.getId())) {
+        if (orderService.deleteOrder(order)) {
             return ReturnInfo.withEnumNoData(ReturnEnum.DELETE_SUCCESS);
         } else {
             return ReturnInfo.withEnumNoData(ReturnEnum.DELETE_FAILED);
@@ -85,32 +93,47 @@ public class OrderController {
 
     @GlobalTransactional(rollbackFor = Exception.class)
     @PutMapping("/order")
-//    public ReturnInfo<String> buy(@RequestParam(value = "orderId", required = false) Integer orderId, @RequestParam(value = "num", required = false) Integer num, @RequestParam(value = "bookId", required = false) Integer bookId) {
     public ReturnInfo<String> buy(@Valid @RequestBody Order order) {
-        if (orderService.updateOrder(order.getId(), order.getBuyNumber(), order.getBookId())) {
-            stringRedisTemplate.delete("books");
+        if (orderService.updateOrder(order)) {
             return new ReturnInfo<>(200, "购买成功！");
         } else {
             return new ReturnInfo<>(404, "购买失败！");
         }
     }
-
+    @GlobalTransactional(rollbackFor = Exception.class)
     @PutMapping("/confirm_order")
     public ReturnInfo<String> confirmOrder(@Valid @RequestBody Order order) {
-        if (orderService.confirmOrder(order.getId())) {
-            stringRedisTemplate.delete("books");
+        if (orderService.confirmOrder(order)) {
             return new ReturnInfo<>(200, "收货成功！");
         } else {
             return new ReturnInfo<>(404, "收货失败！");
         }
     }
+    @GlobalTransactional(rollbackFor = Exception.class)
     @PutMapping("/back_order")
     public ReturnInfo<String> backOrder(@Valid @RequestBody Order order) {
-        if (orderService.backOrder(order.getId())) {
-            stringRedisTemplate.delete("books");
+        if (orderService.backOrder(order)) {
             return new ReturnInfo<>(200, "退货成功！");
         } else {
             return new ReturnInfo<>(404, "退货失败！");
+        }
+    }
+
+    @PutMapping("/comment_order")
+    public ReturnInfo<String> commentOrder(@Valid @RequestBody Order order) {
+        if (orderService.commentOrder(order)) {
+            return new ReturnInfo<>(200, "评论发布成功！");
+        } else {
+            return new ReturnInfo<>(404, "评论发布失败！");
+        }
+    }
+
+    @PutMapping("/alter_order")
+    public ReturnInfo<String> alterOrder(@RequestBody Order order) {
+        if (orderService.alterOrder(order)) {
+            return new ReturnInfo<>(200, "更新成功！");
+        } else {
+            return new ReturnInfo<>(404, "更新失败！");
         }
     }
 

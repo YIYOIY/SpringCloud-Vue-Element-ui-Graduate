@@ -9,6 +9,7 @@ import com.yoi.mapper.ImageMapper;
 import com.yoi.mapper.UserMapper;
 import com.yoi.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 
@@ -27,9 +28,8 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
     public User getById(Long UserId) {
         User user = userMapper.selectById(UserId);
 //        根据id取出照片并放入user的image对象中
-        Image image = imageMapper.selectById(user.getImageId());
-        if (image != null) {
-            user.setImage(image);
+        if (!ObjectUtils.isEmpty(imageMapper.selectById(user.getImageId()))) {
+            user.setImage(imageMapper.selectById(user.getImageId()));
         }
         return user;
     }
@@ -50,7 +50,7 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
         Page<User> users = userMapper.selectPage(page, new QueryWrapper<User>().like("user_name", keyword));
         for (User record : users.getRecords()) {
             Image image = imageMapper.selectById(record.getImageId());
-            if (image != null) {
+            if (!ObjectUtils.isEmpty(image)) {
                 record.setImage(image);
             }
         }
@@ -60,8 +60,12 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
 
     @Override
     public boolean addUser(User user) {
-        if (user.getImage().getPicture() != null && !user.getImage().getPicture().isEmpty()) {
+        if (!ObjectUtils.isEmpty(user.getImage())) {
             String picture = user.getImage().getPicture();
+//            用户没有传递图片时，前端会自动传递一个图片对象， 对象中的图片地址是“”，会导致数据库默认的404图片被“”取代
+            if ("".equals(picture)){
+                picture=null;
+            }
             Image image = new Image(null, picture, null, null, null);
             if (imageMapper.insert(image) < 0) {
                 return false;
@@ -81,7 +85,7 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
 
     @Override
     public boolean updateUser(User user) {
-        if (user.getImage().getPicture() != null && !user.getImage().getPicture().isEmpty()) {
+        if (!ObjectUtils.isEmpty(user.getImage())) {
 //            如果用户创建时没有上传头像，更新时检测到上传就创建一个图像
             if (user.getImage().getId() == null) {
                 Image image = new Image(null, user.getImage().getPicture(), null, null, null);

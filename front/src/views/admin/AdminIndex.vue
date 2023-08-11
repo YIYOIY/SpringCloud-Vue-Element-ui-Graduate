@@ -277,7 +277,7 @@ let removeAdmin = (() => {
   font-size: large;
   position: fixed;
   background-size: 100% 100%;
-  background: url(../../assets/static/adminPages.png) no-repeat fixed left;
+  background: url(../../assets/static/userSelf.jpg) no-repeat fixed center;
   z-index: -1;
 }
 

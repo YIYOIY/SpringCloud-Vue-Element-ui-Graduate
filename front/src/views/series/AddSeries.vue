@@ -20,6 +20,7 @@
 import {reactive} from "vue";
 import {addSeries} from "@/api/SeriesApi";
 import {ElMessage} from "element-plus";
+// eslint-disable-next-line no-undef
 let emit = defineEmits(['finish', 'cancel'])
 
 let series = reactive({

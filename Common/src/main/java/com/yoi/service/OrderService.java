@@ -11,11 +11,13 @@ import com.yoi.entity.Order;
 public interface OrderService extends IService<Order> {
     Order getById(Long orderId);
     Page<Order> userGetAll(Long userId, Integer pageNo, Integer pageSize);
+    Page<Order> shopkeeperGetAll(Long shopkeeperId, Integer pageNo, Integer pageSize);
     Page<Order> adminGetAll(Integer pageNo, Integer pageSize);
-
     boolean addOrder(Order order);
-    boolean deleteOrder(Long orderId);
-    boolean updateOrder(Long orderId,Integer num,Long bookId);
-    boolean confirmOrder(Long orderId);
-    boolean backOrder(Long orderId);
+    boolean deleteOrder(Order order);
+    boolean updateOrder(Order order);
+    boolean confirmOrder(Order order);
+    boolean backOrder(Order order);
+    boolean commentOrder(Order order);
+    boolean alterOrder(Order order);
 }

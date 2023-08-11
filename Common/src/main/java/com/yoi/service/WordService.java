@@ -9,7 +9,7 @@ import com.yoi.entity.Word;
  */
 public interface WordService extends IService<Word> {
     Boolean addWord(Word word);
-    Boolean deleteWord(Long wordId);
+    void deleteWord(Long wordId);
     Word getById(Long wordId);
     Boolean updateWord(Word word);
 }

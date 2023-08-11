@@ -1,104 +1,131 @@
 <template>
   <div class="ac">
-  <el-table stripe :data="order" :highlight-current-row=true height="100%" style="width: 100%">
-    <el-table-column prop="orderId" label="订单编号" align="center"></el-table-column>
-    <el-table-column prop="book.bookPicture" label="封面">
-      <template v-slot="scope">
-        <el-image :src="scope.row.book.bookPicture"></el-image>
-      </template>
-    </el-table-column>
-    <el-table-column prop="book.bookName" class-name="bookName" label="书名"></el-table-column>
-    <el-table-column prop="user.userName" label="用户"></el-table-column>
-    <el-table-column prop="orderTime" label="加入购物车日期" width="250px">
-      <template v-slot="scope">
-        <el-date-picker size="small" v-model="scope.row.orderTime" type="datetime" format="YYYY年MM月DD日HH时mm分ss秒"
-          placeholder="加入购物车日期" disabled>
-        </el-date-picker>
-      </template>
-    </el-table-column>
-    <el-table-column prop=" bookNum" label="购买数量">
-      <template v-slot="scope">
-        <span>{{ scope.row.bookNum }} 本</span>
-      </template>
-    </el-table-column>
-    <el-table-column prop="book.bookNum" label="库存数量">
-      <template v-slot="scope">
-        <span>{{ scope.row.book.bookNum }} 本</span>
-      </template>
-    </el-table-column>
-    <el-table-column prop="book.bookPrice" label="单价">
-      <template v-slot="scope">
-        <span>{{ scope.row.book.bookPrice }} 元</span>
-      </template>
-    </el-table-column>
-    <el-table-column prop="total" label="总价">
-      <template v-slot="scope">
-        <span>{{ scope.row.book.bookPrice * scope.row.bookNum }} 元</span>
-      </template>
-    </el-table-column>
-    <el-table-column prop="orderStatus" label="状态"></el-table-column>
+    <el-table stripe :data="order" :highlight-current-row=true height="100%" style="width: 100%">
+      <el-table-column type="expand">
+        <template #default="props">
+          <div style="float: left;margin-top:4%;width:10%;left: 10%;position:relative;">
+            <el-image :src="props.row.book.image.picture" style="width: 100%; height: 100%"/>
+          </div>
+          <div style="float: right;width:30%;margin: 2% 0 2% 0">
+            <p>消费者名称： {{ props.row.user.userName }}</p>
+            <p>消费者联系方式： {{ props.row.user.userPhone }}</p>
+            <p>消费者联系地址： {{ props.row.user.userAddress.substr(0, 25) }}</p>
+            <p>所属企业： {{ props.row.book.shopkeeper.shopkeeperName }}</p>
+            <p>企业资质： {{ props.row.book.shopkeeper.shopkeeperQuality }}</p>
+            <p>企业联系方式： {{ props.row.book.shopkeeper.shopkeeperPhone }}</p>
+            <p>企业联系地址： {{ props.row.book.shopkeeper.shopkeeperAddress.substr(0, 25) }}</p>
+            <p>企业注册日期： {{ props.row.book.shopkeeper.shopkeeperSignTime }}</p>
+            <el-tooltip placement="top" effect="light">
+              <template #content>
+                {{props.row.orderSignTime}}
+              </template>
+              <el-button plain round type="info" >
+                订单生成日期： {{props.row.orderSignTime.substring(0,10)}}
+              </el-button>
+            </el-tooltip>
+          </div>
+          <div style="float: right;width:30%;margin: 2% 2% 2% 5%">
+            <p>状态： {{ props.row.orderStatus }}</p>
+            <p>回扣%： {{ props.row.kickback * 10 }}%</p>
+            <p>折扣%： {{ props.row.discount * 10 }}%</p>
+            <p>运费： {{ props.row.expressFare }}</p>
+            <p>单价： {{ props.row.bookPrice }}</p>
+            <p>数量： {{ props.row.buyNumber }}</p>
+            <p>总价： {{
+                (props.row.bookPrice * props.row.buyNumber) * (props.row.discount ? props.row.discount : 10) / 10
+                + props.row.expressFare
+              }}</p>
+            <p>商家收益： {{
+                ((props.row.bookPrice * props.row.buyNumber) * (props.row.discount ? props.row.discount : 10) / 10
+                    + props.row.expressFare)
+                - ((props.row.bookPrice * props.row.buyNumber) * (props.row.discount ? props.row.discount : 10) / 10
+                    + props.row.expressFare) * props.row.kickback
+              }}</p>
+            <p>管理员回扣收益： {{
+                ((props.row.bookPrice * props.row.buyNumber)
+                    * (props.row.discount ? props.row.discount : 10) / 10 + props.row.expressFare) * props.row.kickback
+              }}</p>
 
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="id" label="订单编号" align="center"></el-table-column>
+      <el-table-column prop="book.bookPicture" label="封面">
+        <template v-slot="scope">
+          <el-image :src="scope.row.book.image.picture"></el-image>
+        </template>
+      </el-table-column>
+      <el-table-column prop="book.bookName" class-name="bookName" label="书名"></el-table-column>
+      <el-table-column prop="user.userName" label="用户"></el-table-column>
+      <el-table-column prop="book.shopkeeper.shopkeeperName" label="企业"></el-table-column>
+      <el-table-column prop="orderSignTime" label="加入购物车日期" width="250">
+        <template v-slot="scope">
+          <el-date-picker size="small" v-model="scope.row.orderSignTime" type="datetime"
+                          format="YYYY年MM月DD日HH时mm分ss秒"
+                          placeholder="加入购物车日期">
+          </el-date-picker>
+        </template>
+      </el-table-column>
+      <el-table-column prop="buyNumber" label="购买数量">
+        <template v-slot="scope">
+          <span>{{ scope.row.buyNumber }} 本</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="book.bookNum" label="库存数量">
+        <template v-slot="scope">
+          <span>{{ scope.row.book.bookNumber }} 本</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="book.bookPrice" label="单价">
+        <template v-slot="scope">
+          <span>{{ scope.row.bookPrice }} 元</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="total" label="总价">
+        <template v-slot="scope">
+          <span>{{
+              (scope.row.bookPrice * scope.row.buyNumber) * (scope.row.discount ? scope.row.discount : 10) / 10 + scope.row.expressFare
+            }} 元</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="orderStatus" label="状态"></el-table-column>
 
-    <el-table-column prop="[orderId,orderStutus,book.bookNum]" label="操作">
-      <template v-slot="scope">
-        <el-button class="el-button" plain round color="#626aef"
-          @click="buy(scope.row.orderId, scope.row.bookNum, scope.row.bookId)"
-          :disabled="(scope.row.orderStatus == `已购买`) || (scope.row.bookNum > scope.row.book.bookNum)">购买</el-button>
-
-        <el-button class="el-button" plain round type="danger" @click="del(scope.row.orderId)">删除</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
-  <el-button-group>
-    <el-button @click="pageNoo(pageNo++)" v-show="pageNo < pageTotal">下一页</el-button>
-    <el-button @click="pageNoo(pageNo--)" v-show="pageNo > 1">上一页</el-button>
-  </el-button-group>
+      <el-table-column prop="[id,orderStatus,book.bookNumber]" label="操作">
+        <template v-slot="scope">
+          <el-button class="el-button" plain round type="warning" @click="alter(scope.row.id)">修改</el-button>
+          <el-button class="el-button" plain round type="danger" @click="del(scope.row.id,scope.row.wordId)">删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script setup>
-import { ref} from "vue";
-import { ElMessage, ElNotification } from "element-plus";
-import {checkBag, deleteOrder, getAdminOrder, getAdminPageCount} from "@/api/OrderApi";
+import {ref} from "vue";
+import {useRouter} from "vue-router";
+import {ElMessage, ElNotification} from "element-plus";
+import {deleteOrder, getAdminOrder} from "@/api/OrderApi";
+let router = useRouter()
 let order = ref([])
 let pageNo = ref(1);
-let pageTotal = ref(1);
+let pageSize = ref(20);
 
-getAdminPageCount().then(Response => {
-  pageTotal.value = Response.data
+getAdminOrder(pageNo.value, pageSize.value).then(Response => {
+  order.value = Response.data.data
 })
 
-
-getAdminOrder(pageNo.value).then(Response => {
-    order.value = Response.data
-  })
-
-let pageNoo = (() => {
-  getAdminOrder(pageNo.value).then(Response => {
-    order.value = Response.data
-  })
-})
-
-let buy = ((v, num, bookId) => {
-  if (confirm("确认购买?")) {
-    checkBag(v,num,bookId).then(Response => {
-      ElNotification.success(Response.message)
-      getAdminOrder(pageNo.value).then(Response => {
-        order.value = Response.data
-        console.log(order.value)
-      })
-    }).catch(Error => {
-      ElMessage.error(Error.data.message + "请稍后重试!")
-    })
-  }
-})
-
-let del = ((v) => {
+let del = ((v, wId) => {
   if (confirm("确认删除?")) {
-    deleteOrder(v).then(Response => {
+    let delOrder = {
+      id: v,
+      bookId: wId
+    }
+    let ord = JSON.stringify(delOrder)
+    deleteOrder(ord).then(Response => {
       ElNotification.success(Response.message)
-      getAdminOrder(pageNo.value).then(Response => {
-        order.value = Response.data
+      getAdminOrder(pageNo.value, pageSize.value).then(Response => {
+        order.value = Response.data.data
         console.log(order.value)
       })
     }).catch(Error => {
@@ -106,6 +133,14 @@ let del = ((v) => {
       ElMessage.error(Error.data.message + "请稍后重试!")
     })
   }
+})
+let alter = ((orderId) => {
+  router.push({
+    name: 'orderConfirm',
+    query: {
+      orderId: orderId
+    }
+  })
 })
 </script>
 <style scoped>

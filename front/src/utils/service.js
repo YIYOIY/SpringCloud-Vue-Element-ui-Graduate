@@ -10,8 +10,7 @@ axios.defaults.transformResponse = [
         const json = JSONBIG({
             storeAsString: true
         })
-        const res = json.parse(data)
-        return res
+        return json.parse(data)
     }
 ]
 

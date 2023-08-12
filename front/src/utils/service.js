@@ -44,7 +44,7 @@ serviceAxios.interceptors.request.use(
         // 1，application/json，现在越来越多的人把它作为请求头，用来告诉服务端消息主体是序列化后的 JSON 字符串。,使用contentType: “application/json”则data只能是json字符串
         // 2, application/x-www-form-urlencoded，form表单默认的数据格式，提交的数据按照 key1=val1&key2=val2 的方式进行编码，key 和 val 都进行了 URL 转码。（ajax默认的Content-Type类型,application/x-www-form-urlencoded是默认的请求头，其ajax的请求数据格式是json
         // 3，multipart/form-data，对用于在表单中上传文件时，也可以上传普通数据，只需要让from的ectyle等于multipart/form-data就可以了。
-        console.log("请求配置", config);
+        // console.log("请求配置", config);
         return config;
     }, (error) => {
         console.log(error + "错误请求！")
@@ -60,7 +60,7 @@ serviceAxios.interceptors.response.use((res) => {
     if (res.data.code === 200) {//code是后端的状态码
         if (typeof res.data.data != 'undefined') {
             //请求成功
-            console.log(res, '成功----')
+            // console.log(res, '成功----')
             // 在这里已经削了一层包装了，所以加下来直接可以用数据
             return Promise.resolve(res.data);
         } else {

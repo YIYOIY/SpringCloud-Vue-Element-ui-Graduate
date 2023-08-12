@@ -33,3 +33,10 @@ export function alterUser(data) {
         data
     )
 }
+
+export function UserMoney(data) {
+    return http.put(
+        "api/user_money",
+        data
+    )
+}

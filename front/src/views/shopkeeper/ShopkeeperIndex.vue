@@ -29,14 +29,14 @@
         </el-form-item>
 
         <el-form-item label="企业性质">
-          <el-select v-model="shopkeeper.shopkeeper.shopkeeperQuality" filterable clearable placeholder="选择企业性质" @change="next">
+          <el-select v-model="shopkeeper.shopkeeper.shopkeeperQuality" filterable clearable placeholder="选择企业性质">
             <el-option label="封闭公司" value="封闭公司"/>
             <el-option label="公众公司" value="公众公司"/>
           </el-select>
         </el-form-item>
 
         <el-form-item label="账户余额">
-          <el-tag v-model.number="shopkeeper.shopkeeper.userMoney" type="danger" >{{shopkeeper.shopkeeper.userMoney>0?shopkeeper.shopkeeper.userMoney:0}}元</el-tag>
+          <el-tag v-model.number="shopkeeper.shopkeeper.shopkeeperMoney" type="danger" >{{shopkeeper.shopkeeper.shopkeeperMoney>0?shopkeeper.shopkeeper.shopkeeperMoney:0}}元</el-tag>
         </el-form-item>
       </div>
 
@@ -92,7 +92,7 @@
 
 
     <div style="left: 8%;top:75%;width:40%;position: absolute">
-      <el-row gutter="40">
+      <el-row :gutter="40">
         <el-col :span="12">
           <el-button type="success" size="large" @click="alter()" plain round>保存修改</el-button>
         </el-col>

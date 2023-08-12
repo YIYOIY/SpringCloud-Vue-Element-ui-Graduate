@@ -1,114 +1,124 @@
 <template>
-  <div id="building">
-    <el-form label-position="top" ref="form" :model="user.user" :rules="rule">
-      <div style="left: 2%;width:35%;height:20%;position: relative">
-        <el-form-item label="账户名称" prop="userName">
-          <el-input v-model="user.user.userName" autofocus maxlength="20" minlength="1" clearable
-                    placeholder="账户名称作为登录凭证"></el-input>
-        </el-form-item>
+  <Suspense>
+    <template #default>
+      <!-- 异步组件加载完成之后展示的控件 -->
+      <div id="building">
+        <el-form label-position="top" ref="form" :model="user.user" :rules="rule">
+          <div style="left: 2%;width:35%;height:20%;position: relative">
+            <el-form-item label="账户名称" prop="userName">
+              <el-input v-model="user.user.userName" autofocus maxlength="20" minlength="1" clearable
+                        placeholder="账户名称作为登录凭证"></el-input>
+            </el-form-item>
 
-        <el-form-item label="账户密码" prop="userPassword">
-          <el-input type="password" show-password v-model="user.user.userPassword" maxlength="20" minlength="6"
-                    clearable
-                    placeholder="在此输入账户密码"></el-input>
-        </el-form-item>
+            <el-form-item label="账户密码" prop="userPassword">
+              <el-input type="password" show-password v-model="user.user.userPassword" maxlength="20" minlength="6"
+                        clearable
+                        placeholder="在此输入账户密码"></el-input>
+            </el-form-item>
 
-        <el-form-item label="联系方式" prop="userPhone">
-          <el-input v-model.number="user.user.userPhone" clearable maxlength="11"
-                    placeholder="在此输入联系方式"></el-input>
-        </el-form-item>
+            <el-form-item label="联系方式" prop="userPhone">
+              <el-input v-model.number="user.user.userPhone" clearable maxlength="11"
+                        placeholder="在此输入联系方式"></el-input>
 
-      </div>
+            </el-form-item>
+            <el-button type="success"  round @click="getsome()">随机充值</el-button>
+          </div>
 
 
-      <div style="left: 30%;top:20%;width: 15%;position: absolute">
-        <el-form-item label="出生日期">
-          <el-date-picker clearable v-model="user.user.userBirth"
-                          type="date" format="YYYY 年 MM 月 DD 日" placeholder="在此选择出生日期">
-          </el-date-picker>
-        </el-form-item>
+          <div style="left: 30%;top:20%;width: 15%;position: absolute">
+            <el-form-item label="出生日期">
+              <el-date-picker clearable v-model="user.user.userBirth"
+                              type="date" format="YYYY 年 MM 月 DD 日" placeholder="在此选择出生日期">
+              </el-date-picker>
+            </el-form-item>
 
-        <el-form-item label="性别">
-          <el-select v-model="user.user.userSex" filterable clearable placeholder="选择性别">
-            <el-option label="男" value="男"/>
-            <el-option label="女" value="女"/>
-            <el-option label="保密" value="保密"/>
-          </el-select>
-        </el-form-item>
+            <el-form-item label="性别">
+              <el-select v-model="user.user.userSex" filterable clearable placeholder="选择性别">
+                <el-option label="男" value="男"/>
+                <el-option label="女" value="女"/>
+                <el-option label="保密" value="保密"/>
+              </el-select>
+            </el-form-item>
 
-        <el-form-item label="账户余额">
-          <el-tag v-model.number="user.user.userMoney" type="danger">
-            {{ user.user.userMoney > 0 ? user.user.userMoney : 0 }}元
-          </el-tag>
-        </el-form-item>
-      </div>
+            <el-form-item label="账户余额">
+              <el-tag v-model.number="user.user.userMoney" type="danger" size="large" style="width: 100%;margin-bottom: 1%">
+                {{ user.user.userMoney > 0 ? user.user.userMoney : 0 }}元
+              </el-tag>
+            </el-form-item>
+          </div>
 
-      <div style="left: 12%;top:50%;width: 30%;position: absolute">
-        <el-form-item label="地址" prop="userAddress">
-          <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10 }" v-model="user.user.userAddress" clearable
-                    placeholder="在此输入收货地址" maxlength="1000"></el-input>
-        </el-form-item>
-      </div>
+          <div style="left: 12%;top:52%;width: 30%;position: absolute">
+            <el-form-item label="地址" prop="userAddress">
+              <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 10 }" v-model="user.user.userAddress" clearable
+                        placeholder="在此输入收货地址" maxlength="1000"></el-input>
+            </el-form-item>
+          </div>
 
-    </el-form>
+        </el-form>
 
-    <div style="float:right;right: 5%;width: 40%;top:5%;position: absolute">
-      <el-row justify="space-evenly" v-show="havePicture" style="top: 2%;position: absolute">
-        <el-col :span="24">
-          <el-image style="width: 600px; height: 500px;" :src="PICTURE" fit="contain" v-show="havePicture"/>
-        </el-col>
-
-        <el-col :span="24">
-          <el-row :gutter="15" justify="space-evenly">
-            <el-col :span="12">
-              <el-button plain round size="large" type="primary" v-show="havePicture"><a href="picture/test/download">下载头像</a>
-              </el-button>
+        <div style="float:right;right: 5%;width: 40%;top:5%;position: absolute">
+          <el-row justify="space-evenly" v-show="havePicture" style="top: 2%;position: absolute">
+            <el-col :span="24">
+              <el-image style="width: 600px; height: 500px;" :src="PICTURE?PICTURE:'img/未设置图片时的404.jpg'" fit="contain" v-show="havePicture"/>
             </el-col>
-            <el-col :span="12">
-              <el-button plain round size="large" type="warning" @click="havePicture = !havePicture"
-                         v-show="havePicture">清空头像
-              </el-button>
+
+            <el-col :span="24">
+              <el-row :gutter="15" justify="space-evenly">
+                <el-col :span="12">
+                  <el-button plain round size="large" type="primary" v-show="havePicture"><a href="picture/test/download">下载头像</a>
+                  </el-button>
+                </el-col>
+                <el-col :span="12">
+                  <el-button plain round size="large" type="warning" @click="havePicture = !havePicture"
+                             v-show="havePicture">清空头像
+                  </el-button>
+                </el-col>
+              </el-row>
             </el-col>
           </el-row>
-        </el-col>
-      </el-row>
-    </div>
+        </div>
 
-    <div v-show="!havePicture" style="right:1%;bottom: 60%;width:40%;position: absolute">
-      <el-upload ref="pict" class="upload-demo" :action="`picture/test/up/${store.state.userId}`" multiple
-                 :limit="1"
-                 encytype="multipart/form-data" name="photo" v-show="!havePicture" :auto-upload="false"
-                 :show-file-list="true" :on-success="handleBookPicture">
+        <div v-show="!havePicture" style="right:1%;bottom: 60%;width:40%;position: absolute">
+          <el-upload ref="pict" class="upload-demo" :action="`picture/test/up/${store.state.userId}`" multiple
+                     :limit="1"
+                     encytype="multipart/form-data" name="photo" v-show="!havePicture" :auto-upload="false"
+                     :show-file-list="true" :on-success="handleBookPicture">
 
-        <template #trigger>
-          <el-button v-if="!confirmPictureButton" @click="confirmPictureButton=!confirmPictureButton" style="width: 100%" size="large" plain round type="primary">上传头像</el-button>
-        </template>
-        <el-button v-if="confirmPictureButton" style="width: 20%" size="large" plain round type="success" @click="handleBookPicture">确定</el-button>
-        <template #tip>
-          <div class="el-upload__tip" style="color: #f5bcbc;font-size: 15px">
-            图片格式仅允许 jpg/png 且图片大小不超过 500kb
-          </div>
-        </template>
+            <template #trigger>
+              <el-button v-if="!confirmPictureButton" @click="confirmPictureButton=!confirmPictureButton" style="width: 100%" size="large" plain round type="primary">上传头像</el-button>
+            </template>
+            <el-button v-if="confirmPictureButton" style="width: 20%" size="large" plain round type="success" @click="handleBookPicture">确定</el-button>
+            <template #tip>
+              <div class="el-upload__tip" style="color: #f5bcbc;font-size: 15px">
+                图片格式仅允许 jpg/png 且图片大小不超过 500kb
+              </div>
+            </template>
 
-      </el-upload>
-    </div>
+          </el-upload>
+        </div>
 
 
-    <div style="left: 8%;top:75%;width:40%;position: absolute">
-      <el-row gutter="40">
-        <el-col :span="8">
-          <el-button type="success" size="large" @click="alter()" plain round>保存修改</el-button>
-        </el-col>
-        <el-col :span="8">
-          <el-button type="danger" size="large" @click="removeUser()" plain round>注销账号</el-button>
-        </el-col>
-        <el-col :span="8">
-          <el-button type="primary" size="large" @click="addShopkeeper()" plain round>成为商户</el-button>
-        </el-col>
-      </el-row>
-    </div>
+        <div style="left: 8%;top:75%;width:40%;position: absolute">
+          <el-row :gutter="40">
+            <el-col :span="8">
+              <el-button type="success" size="large" @click="alter()" plain round>保存修改</el-button>
+            </el-col>
+            <el-col :span="8">
+              <el-button type="danger" size="large" @click="removeUser()" plain round>注销账号</el-button>
+            </el-col>
+            <el-col :span="8">
+              <el-button type="primary" size="large" @click="addShopkeeper()" plain round>成为商户</el-button>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
+    </template>
+    <template #fallback>
+      <!-- 异步组件加载中展示的控件 -->
+      <h2>请稍等！</h2>
+    </template>
+  </Suspense>
 
-  </div>
 </template>
 
 <script setup>
@@ -116,12 +126,46 @@ import {ElButton, ElMessage, ElNotification, ElUpload} from "element-plus";
 import {useRouter} from "vue-router";
 import {ref, reactive, onMounted} from "vue";
 import {useStore} from "vuex";
-import {alterUser, deleteUser, getUser} from "@/api/UserApi";
+import {alterUser, deleteUser, getUser, UserMoney} from "@/api/UserApi";
 import {getPicture} from "@/api/ImgAndExcelApi";
 
 let router = useRouter()
 let store = useStore();
+// 加载时先根据用户id获取用户个人信息
+onMounted(async () => {
+  console.log(store.state.userId)
+  await getUser(store.state.userId).then(Response => {
+    user.user = Response.data
+    if (user.user.image !== null) {
+      PICTURE.value = user.user.image.picture
+      havePicture.value = true
+    } else {
+      user.user.image = ref({
+        picture: ''
+      })
+    }
+  })
+})
 
+let getsome=(()=>{
+  let obj = JSON.stringify(user.user)
+  UserMoney(obj).then(Response => {
+    ElNotification({
+      message: Response.message,
+      title: '充值成功！',
+      type: 'success',
+      Position: 'top-left'
+    });
+    location.reload()
+  }).catch(Error => {
+    ElNotification({
+      message: Error.data.message + "  请稍后再试!",
+      title: '错误',
+      type: 'error',
+      Position: 'top-right'
+    })
+  })
+})
 
 // 图像上传控制按钮
 let confirmPictureButton = false
@@ -176,21 +220,7 @@ let rule = reactive({
   ],
 });
 
-// 加载时先根据用户id获取用户个人信息
-onMounted(async () => {
-  console.log(store.state.userId)
-  await getUser(store.state.userId).then(Response => {
-    user.user = Response.data
-    if (user.user.image !== null) {
-      PICTURE.value = user.user.image.picture
-      havePicture.value = true
-    } else {
-      user.user.image = ref({
-        picture: ''
-      })
-    }
-  })
-})
+
 
 // 用户对象
 const user = reactive({

@@ -25,7 +25,7 @@
       <el-table-column fixed prop="image.picture" label="头像" width="150">
         <template v-slot="scope">
           <el-image style="width: 100px; height: 100px;padding: 0 0 0 15%"
-                    :src="scope.row.image==null?'img/未设置图片时的404.jpg':scope.row.image.picture" fit="cover"/>
+                    :src="scope.row.image?scope.row.image.picture:'img/未设置图片时的404.jpg'" fit="cover"/>
         </template>
       </el-table-column>
 

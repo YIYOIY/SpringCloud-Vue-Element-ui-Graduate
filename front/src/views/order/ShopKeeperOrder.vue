@@ -4,7 +4,7 @@
       <el-table-column type="expand">
         <template #default="props">
           <div style="float: left;margin-top:4%;width:10%;left: 10%;position:relative;">
-            <el-image :src="props.row.book.image.picture" style="width: 100%; height: 100%"/>
+            <el-image :src="props.row.book.image.picture?props.row.book.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%; height: 100%"/>
           </div>
           <div style="float: right;width:30%;margin: 2% 0 2% 0">
             <p>消费者名称： {{ props.row.user.userName }}</p>
@@ -27,25 +27,25 @@
 
           <div style="float: right;width:30%;margin: 2% 2% 2% 5%">
             <p>状态： {{ props.row.orderStatus }}</p>
-            <p>回扣%： {{ props.row.kickback * 10 }}%</p>
-            <p>折扣%： {{ props.row.discount * 10 }}%</p>
+            <p>平台回扣： {{ props.row.kickback * 10 }}%</p>
+            <p>折扣立减： {{ 100-props.row.discount * 10 }}%</p>
             <p>运费： {{ props.row.expressFare }}</p>
             <p>单价： {{ props.row.bookPrice }}</p>
             <p>数量： {{ props.row.buyNumber }}</p>
             <p>总价： {{
-                (props.row.bookPrice * props.row.buyNumber) * (props.row.discount ? props.row.discount : 10) / 10
+                (props.row.bookPrice * props.row.buyNumber) * ((props.row.discount ? props.row.discount :10) / 10)
                 + props.row.expressFare
               }}</p>
             <p>商家收益： {{
-                ((props.row.bookPrice * props.row.buyNumber) * (props.row.discount ? props.row.discount : 10) / 10
-                    + props.row.expressFare)
-                - ((props.row.bookPrice * props.row.buyNumber) * (props.row.discount ? props.row.discount : 10) / 10
-                    + props.row.expressFare) * props.row.kickback
+                ((props.row.bookPrice * props.row.buyNumber) * ((props.row.discount ? props.row.discount :10) / 10) + props.row.expressFare)
+                -
+                ((props.row.bookPrice * props.row.buyNumber) * ((props.row.discount ? props.row.discount : 0) / 10) + props.row.expressFare) * ((props.row.kickback?props.row.kickback:0)/10)
               }}</p>
             <p>管理员回扣收益： {{
-                ((props.row.bookPrice * props.row.buyNumber)
-                    * (props.row.discount ? props.row.discount : 10) / 10 + props.row.expressFare) * props.row.kickback
-              }}</p>
+                (
+                    (props.row.bookPrice * props.row.buyNumber) * ((props.row.discount ? props.row.discount :10)/10)+props.row.expressFare)
+
+                *((props.row.kickback?props.row.kickback:0) /10)}}</p>
 
           </div>
         </template>
@@ -53,7 +53,7 @@
       <el-table-column prop="id" label="订单编号" align="center"></el-table-column>
       <el-table-column prop="book.bookPicture" label="封面">
         <template v-slot="scope">
-          <el-image :src="scope.row.book.image.picture"></el-image>
+          <el-image :src="scope.row.book.image.picture?scope.row.book.image.picture:`img/未设置图片时的404.jpg`"></el-image>
         </template>
       </el-table-column>
       <el-table-column prop="book.bookName" class-name="bookName" label="书名"></el-table-column>
@@ -94,7 +94,8 @@
       <el-table-column prop="[id,orderStatus,book.bookNumber]" label="操作">
         <template v-slot="scope">
           <el-button class="el-button" plain round type="warning" @click="alter(scope.row.id)">修改</el-button>
-          <el-button class="el-button" plain round type="danger" @click="del(scope.row.id,scope.row.wordId)">删除</el-button>
+          <el-button class="el-button" plain round type="danger" @click="del(scope.row.id,scope.row.wordId,scope.row.userId,
+          scope.row.bookPrice,scope.row.expressFare,scope.row.buyNumber,scope.row.discount,scope.row.orderStatus)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -109,12 +110,13 @@ import {ElMessage, ElNotification} from "element-plus";
 import {deleteOrder, shopkeeperOrder} from "@/api/OrderApi";
 let router=useRouter()
 let store=useStore()
-let order = ref([])
+let order =ref([])
 let pageNo = ref(1);
 let pageSize = ref(20);
 
 shopkeeperOrder(pageNo.value, pageSize.value,store.state.shopkeeperId).then(Response => {
   order.value = Response.data.data
+  console.log(order.value)
 })
 
 let alter = ((orderId) => {
@@ -126,11 +128,17 @@ let alter = ((orderId) => {
   })
 })
 
-let del = ((v, wId) => {
+let del = ((id,wid,uid,bookprice,expressfare,buynum,discount,os) => {
   if (confirm("确认删除?")) {
     let delOrder = {
-      id: v,
-      bookId: wId
+      id: id,
+      wordId: wid,
+      buyNumber: buynum,
+      userId: uid,
+      bookPrice: bookprice,
+      expressFare: expressfare,
+      discount: discount,
+      orderStatus: os
     }
     let ord = JSON.stringify(delOrder)
     deleteOrder(ord).then(Response => {

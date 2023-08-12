@@ -19,7 +19,7 @@
       <el-table-column fixed type="expand">
         <template #default="props">
           <div style="float: left;margin-top:4%;width:10%;left: 10%;position:relative;">
-            <el-image :src="props.row.image.picture" style="width: 100%; height: 100%"></el-image>
+            <el-image :src="props.row.image?props.row.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%; height: 100%"></el-image>
           </div>
           <div style="float: right;width:70%;margin: 2% 2% 2% 5%">
             <p><b>书籍编号:</b> {{ props.row.id }}</p>
@@ -36,13 +36,13 @@
       <el-table-column fixed prop="bookName" class-name="bookName" label="书名" width="160"></el-table-column>
       <el-table-column fixed prop="image.picture" label="封面" width="100">
         <template v-slot="scope">
-          <el-image :src="scope.row.image.picture" style="width: 100%; height: 100%"></el-image>
+          <el-image :src="scope.row.image?scope.row.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%; height: 100%"></el-image>
         </template>
       </el-table-column>
       <el-table-column fixed prop="bookAuthor" label="作者" :show-overflow-tooltip="true" width="180"></el-table-column>
       <el-table-column fixed prop="series.seriesName" label="系列" width="150"></el-table-column>
       <el-table-column fixed prop="bookPrice" label="价格（元）" sortable width="120"/>
-      <el-table-column fixed prop="discount" label="折扣（%）" sortable width="120"/>
+      <el-table-column fixed prop="discount" label="折扣（折）" sortable width="120"/>
       <el-table-column fixed prop="expressFare" label="运费（元）" sortable width="120"/>
       <el-table-column fixed prop="kickback" label="抽成（%）" sortable width="120"/>
       <el-table-column fixed prop="bookNumber" label="库存" sortable width="120"/>
@@ -53,7 +53,7 @@
               <el-button class="el-button" plain round color="#626aef" @click="alter(scope.row.id)">修改</el-button>
             </el-col>
             <el-col :span="12">
-              <el-button class="el-button" plain round type="danger" @click="del(scope.row.id)">删除</el-button>
+              <el-button class="el-button" plain round type="danger" @click="del(scope.row.id,scope.row.image.id,scope.row.word.id)">删除</el-button>
             </el-col>
           </el-row>
         </template>
@@ -108,10 +108,12 @@ let alter = (v) => {
   });
 };
 
-let del = (v) => {
+let del = (id,imageId,wordId) => {
   if (confirm("确认删除?")) {
     let book = {
-      id: v
+      id: id,
+      imageId:imageId,
+      wordId:wordId
     }
     let Bo = JSON.stringify(book)
     deleteBook(Bo).then((Response) => {

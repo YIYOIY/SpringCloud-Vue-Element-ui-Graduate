@@ -54,7 +54,7 @@
     <div style="float:right;right: 5%;width: 40%;top:5%;position: absolute">
       <el-row justify="space-evenly" v-show="havePicture" style="top: 2%;position: absolute">
         <el-col :span="24">
-          <el-image style="width: 600px; height: 500px;" :src="PICTURE" fit="contain" v-show="havePicture"/>
+          <el-image style="width: 600px; height: 500px;" :src="PICTURE?PICTURE:'img/未设置图片时的404.jpg'" fit="contain" v-show="havePicture"/>
         </el-col>
 
         <el-col :span="24">
@@ -201,7 +201,7 @@ const admin = reactive({
     adminAddress: '',
     adminMoney:'',
     image: {
-      picture: '123'
+      picture: ''
     }
   }
 })

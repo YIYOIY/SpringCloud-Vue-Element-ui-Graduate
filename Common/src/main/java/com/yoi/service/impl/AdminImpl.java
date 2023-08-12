@@ -12,6 +12,8 @@ import com.yoi.mapper.ImageMapper;
 import com.yoi.mapper.ShopkeeperMapper;
 import com.yoi.mapper.UserMapper;
 import com.yoi.service.AdminService;
+import com.yoi.service.ShopkeeperService;
+import com.yoi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -27,6 +29,8 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
     private final ImageMapper imageMapper;
     private final ShopkeeperMapper shopkeeperMapper;
     private final UserMapper userMapper;
+    private final ShopkeeperService shopkeeperService;
+    private final UserService userService;
 
 
     @Override
@@ -66,8 +70,8 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
         if (!ObjectUtils.isEmpty(admin.getImage())) {
             String picture = admin.getImage().getPicture();
             //            用户没有传递图片时，前端会自动传递一个图片对象， 对象中的图片地址是“”，会导致数据库默认的404图片被“”取代
-            if ("".equals(picture)){
-                picture=null;
+            if ("".equals(picture)) {
+                picture = null;
             }
             Image image = new Image(null, picture, null, null, null);
             if (imageMapper.insert(image) < 0) {
@@ -94,11 +98,23 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
 
     @Override
     public Boolean deleteAdmin(Admin admin) {
-        imageMapper.deleteById(adminMapper.selectById(admin.getId()).getImageId());
-//        将管理员的其他身份一同删除
-        userMapper.deleteById(admin.getId());
-        shopkeeperMapper.deleteById(admin.getId());
-        return adminMapper.deleteById(admin.getId()) > 0;
+        Admin am = adminMapper.selectById(admin.getId());
+//        将管理员的其他身份一同删除,因为可能已经被单独删除了，所以不能进行删除成功判断
+        User user = new User();
+        user.setId(am.getId());
+        userService.deleteUser(user);
+        Shopkeeper shopkeeper = new Shopkeeper();
+        shopkeeper.setId(am.getId());
+        shopkeeperService.deleteShopkeeper(shopkeeper);
+//      企业注销后将企业资金平分给管理员
+        if (adminMapper.selectCount(new QueryWrapper<Admin>().ne("id",am.getId())) > 0) {
+            for (Admin ad : adminMapper.selectList(new QueryWrapper<Admin>().ne("id",am.getId()))) {
+                ad.setAdminMoney(ad.getAdminMoney() + am.getAdminMoney() / adminMapper.selectCount(new QueryWrapper<Admin>().ne("id",am.getId())));
+                adminMapper.updateById(ad);
+            }
+        }
+        imageMapper.deleteById(adminMapper.selectById(am.getId()).getImageId());
+        return adminMapper.deleteById(am.getId()) > 0;
     }
 
     @Override

@@ -6,7 +6,7 @@
                  trigger="hover">
       <el-carousel-item v-for="item in books" :key="item.id"
                         style="width: 30%;height: 100%;z-index:1;margin-left: 12%;">
-        <el-image :src=item.image.picture style="width: 100%;height: 100%" @click="inf(item.id)"></el-image>
+        <el-image :src="item.image?item.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%;height: 100%" @click="inf(item.id)"></el-image>
       </el-carousel-item>
     </el-carousel>
   </div>
@@ -17,7 +17,7 @@
         <div class="card_content">
           <el-row>
             <el-row>
-              <el-image :src="item.image.picture" style="width: 100%;height: 100%;" @click="inf(item.id)"></el-image>
+              <el-image :src="item.image?item.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%;height: 100%;" @click="inf(item.id)"></el-image>
             </el-row>
             <el-tooltip  :content="item.word.bookDescribe" effect="dark">
               <el-row style="padding:8% 0">
@@ -50,7 +50,7 @@
     <el-table-column type="expand">
       <template #default="props">
         <div style="float: left;margin-top:4%;width:10%;left: 10%;position:relative;">
-          <el-image :src="props.row.image.picture" style="width: 100%; height: 100%"></el-image>
+          <el-image :src="props.row.image?props.row.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%; height: 100%"></el-image>
         </div>
         <div style="float: right;width:70%;margin: 2% 2% 2% 5%">
           <p><b>书籍编号:</b> {{ props.row.id }}</p>
@@ -66,7 +66,7 @@
     <el-table-column prop="bookName" class-name="bookName" label="书名" align="center" :min-width="80" :show-overflow-tooltip="true"></el-table-column>
     <el-table-column prop="image.picture" label="封面">
       <template v-slot="scope">
-        <el-image :src="scope.row.image.picture" style="width: 80%;height: 100%;"
+        <el-image :src="scope.row.image?scope.row.image.picture:`img/未设置图片时的404.jpg`" style="width: 80%;height: 100%;"
                   @click="inf(scope.row.id)"></el-image>
       </template>
     </el-table-column>

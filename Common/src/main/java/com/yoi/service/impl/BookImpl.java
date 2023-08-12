@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yoi.entity.*;
+import com.yoi.enumvalue.OrderEnum;
 import com.yoi.mapper.*;
 import com.yoi.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
     private final ImageMapper imageMapper;
     private final WordMapper wordMapper;
     private final ShopkeeperMapper shopkeeperMapper;
+    private final OrderMapper orderMapper;
+    private final UserMapper userMapper;
 
     @Override
     public Book getById(Long bookId) {
@@ -37,7 +40,7 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
         return book;
     }
 
-//    管理员获取所有书籍，商城首页
+    //    管理员获取所有书籍，商城首页
     @Override
     public Page<Book> getAll(String keyword, Integer pageNo, Integer pageSize) {
         Page<Book> Page = new Page<>(pageNo, pageSize);
@@ -55,11 +58,11 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
         return bookPage;
     }
 
-//    企业获取企业所发布的书籍
+    //    企业获取企业所发布的书籍
     @Override
-    public Page<Book> getShopkeeperAll(String keyword, Integer pageNo, Integer pageSize,Long shopkeeperId) {
+    public Page<Book> getShopkeeperAll(String keyword, Integer pageNo, Integer pageSize, Long shopkeeperId) {
         Page<Book> Page = new Page<>(pageNo, pageSize);
-        Page<Book> bookPage = bookMapper.selectPage(Page, new QueryWrapper<Book>().like("book_name", keyword).eq("shopkeeper_id",shopkeeperId));
+        Page<Book> bookPage = bookMapper.selectPage(Page, new QueryWrapper<Book>().like("book_name", keyword).eq("shopkeeper_id", shopkeeperId));
         for (Book record : bookPage.getRecords()) {
             Image image = imageMapper.selectById(record.getImageId());
             record.setImage(image);
@@ -106,7 +109,7 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
         }
         if (!ObjectUtils.isEmpty(book.getWord())) {
             Word word = new Word(null, book.getWord().getBookDescribe(), book.getWord().getBookDetail(),
-                    null, null,null, null);
+                    null, null, null, null);
             if (wordMapper.insert(word) < 0) {
                 return false;
             } else {
@@ -118,9 +121,26 @@ public class BookImpl extends ServiceImpl<BookMapper, Book> implements BookServi
 
     @Override
     public Boolean deleteBook(Book book) {
-        Book book1 = bookMapper.selectById(book.getId());
-        wordMapper.deleteById(book1.getWordId());
-        imageMapper.deleteById(book1.getImageId());
+        for (Order order : orderMapper.selectList(new QueryWrapper<Order>().eq("book_id", book.getId()))) {
+            if (order.getOrderStatus() == OrderEnum.BUY
+                    || order.getOrderStatus().getStatus().equals(OrderEnum.BUY.getStatus())) {
+                //退款
+                User userById = userMapper.selectById(order.getUserId());
+                double fare = (order.getBuyNumber() * order.getBookPrice() * (order.getDiscount() / 10.0))
+                        + order.getExpressFare();
+                userById.setUserMoney(userById.getUserMoney() + fare);
+                userMapper.updateById(userById);
+                if (!ObjectUtils.isEmpty(order.getWordId())) {
+                    wordMapper.deleteById(order.getWordId());
+                }
+                orderMapper.deleteById(order.getId());
+            }else {
+//                耽误了一个小时，忘记了写订单不是已支付直接删除订单
+                orderMapper.deleteById(order.getId());
+            }
+        }
+        wordMapper.deleteById(book.getWordId());
+        imageMapper.deleteById(book.getImageId());
         return bookMapper.deleteById(book.getId()) > 0;
     }
 

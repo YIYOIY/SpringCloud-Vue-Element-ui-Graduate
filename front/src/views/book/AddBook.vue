@@ -11,7 +11,7 @@
         <el-form-item label="价格(元)" prop="bookPrice">
           <el-input-number :step=1 :min=0 :max=1000000 v-model="book.book.bookPrice"></el-input-number>
         </el-form-item>
-        <el-form-item label="折扣 ((折扣/10)*100%)" prop="discount">
+        <el-form-item label="折扣 price(x/10*100%)" prop="discount">
           <el-input-number :step=0.01 :min=0 :max=10 v-model="book.book.discount"></el-input-number>
         </el-form-item>
         <el-form-item label="系列" prop="seriesId">
@@ -140,9 +140,9 @@ const book = reactive({
     bookFactory: "",
     bookNumber: 0,
     bookPrice: 0,
-    discount: 1,
+    discount: 10,
     expressFare: 0,
-    kickback: 0.1,
+    kickback: 0,
     bookSignTime: "",
     image: {
       picture: ""

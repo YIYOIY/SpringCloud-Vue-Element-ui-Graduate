@@ -446,6 +446,7 @@ router.beforeEach((to, from, next) => {
                     ElMessage.error('检验失败' + response)
                     router.replace({path: '/login'}) // 如果token失效,返回到登录页面
                 } else {
+                    sessionStorage.setItem("token", response.data);
                     next();
                 }
             }).catch(Error => {

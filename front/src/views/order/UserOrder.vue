@@ -4,7 +4,7 @@
     <el-table-column type="expand">
       <template #default="props">
         <div style="float: left;margin-top:4%;width:10%;left: 10%;position:relative;">
-          <el-image :src="props.row.book.image.picture" style="width: 100%; height: 100%"/>
+          <el-image :src="props.row.book.image.picture?props.row.book.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%; height: 100%"/>
         </div>
         <div style="float: right;width:30%;margin: 2% 0 2% 0">
           <p>所属企业： {{ props.row.book.shopkeeper.shopkeeperName }}</p>
@@ -35,7 +35,7 @@
       </template>
     </el-table-column>
     <el-table-column prop="id" label="订单编号" align="center"></el-table-column>
-    <el-table-column prop="book.bookPicture" label="封面">
+    <el-table-column prop="image.picture" label="封面">
       <template v-slot="scope">
         <el-image :src="scope.row.book.image.picture" @click="inf(scope.row.book.id)"></el-image>
       </template>
@@ -79,7 +79,8 @@
       <template v-slot="scope">
         <el-button class="el-button" plain round color="#626aef"
           @click="buying(scope.row.id, scope.row.bookNumber, scope.row.bookId)">详情</el-button>
-        <el-button class="el-button" plain round type="danger" @click="del(scope.row.id,scope.row.wordId)">删除</el-button>
+        <el-button class="el-button" plain round type="danger" @click="del(scope.row.id,scope.row.wordId,scope.row.userId,
+          scope.row.bookPrice,scope.row.expressFare,scope.row.buyNumber,scope.row.discount,scope.row.orderStatus)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -87,7 +88,7 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import { ref} from "vue";
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {ElMessage, ElNotification} from "element-plus";
@@ -95,7 +96,7 @@ import {deleteOrder, getUserOrder} from "@/api/OrderApi";
 
 let order = ref([])
 let pageNo = ref(1);
-let pageSize = ref(10);
+let pageSize = ref(20);
 let router = useRouter();
 let store = useStore();
 
@@ -125,11 +126,17 @@ let buying = ((orderId) => {
 })
 
 
-let del = ((v,wId) => {
+let del = ((id,wid,uid,bookprice,expressfare,buynum,discount,os) => {
   if (confirm("确认删除?")) {
-    let delOrder={
-      id:v,
-      bookId:wId
+    let delOrder = {
+      id: id,
+      wordId: wid,
+      buyNumber: buynum,
+      userId: uid,
+      bookPrice: bookprice,
+      expressFare: expressfare,
+      discount: discount,
+      orderStatus: os
     }
     let ord=JSON.stringify(delOrder)
     deleteOrder(ord).then(Response => {

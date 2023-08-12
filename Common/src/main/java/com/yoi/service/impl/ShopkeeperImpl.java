@@ -3,14 +3,21 @@ package com.yoi.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yoi.entity.Admin;
+import com.yoi.entity.Book;
 import com.yoi.entity.Image;
 import com.yoi.entity.Shopkeeper;
+import com.yoi.mapper.AdminMapper;
+import com.yoi.mapper.BookMapper;
 import com.yoi.mapper.ImageMapper;
 import com.yoi.mapper.ShopkeeperMapper;
+import com.yoi.service.BookService;
 import com.yoi.service.ShopkeeperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+
+import java.util.List;
 
 /**
  * @author 游弋
@@ -21,6 +28,9 @@ import org.springframework.util.ObjectUtils;
 public class ShopkeeperImpl extends ServiceImpl<ShopkeeperMapper, Shopkeeper> implements ShopkeeperService {
     private final ShopkeeperMapper shopkeeperMapper;
     private final ImageMapper imageMapper;
+    private final BookService bookService;
+    private final BookMapper bookMapper;
+    private final AdminMapper adminMapper;
 
     @Override
     public Shopkeeper getById(Long shopkeeperId) {
@@ -57,8 +67,8 @@ public class ShopkeeperImpl extends ServiceImpl<ShopkeeperMapper, Shopkeeper> im
         if (!ObjectUtils.isEmpty(shopkeeper.getImage())) {
             String picture = shopkeeper.getImage().getPicture();
             //            用户没有传递图片时，前端会自动传递一个图片对象， 对象中的图片地址是“”，会导致数据库默认的404图片被“”取代
-            if ("".equals(picture)){
-                picture=null;
+            if ("".equals(picture)) {
+                picture = null;
             }
             Image image = new Image(null, picture, null, null, null);
             if (imageMapper.insert(image) < 0) {
@@ -73,8 +83,18 @@ public class ShopkeeperImpl extends ServiceImpl<ShopkeeperMapper, Shopkeeper> im
 
     @Override
     public boolean deleteShopkeeper(Shopkeeper shopkeeper) {
-        imageMapper.deleteById(shopkeeperMapper.selectById(shopkeeper.getId()).getImageId());
-        return shopkeeperMapper.deleteById(shopkeeper.getId()) > 0;
+        Shopkeeper sk = shopkeeperMapper.selectById(shopkeeper.getId());
+        List<Book> books = bookMapper.selectList(new QueryWrapper<Book>().eq("shopkeeper_id", sk.getId()));
+        books.forEach(bookService::deleteBook);
+//      企业注销后将企业资金平分给管理员
+        if (adminMapper.selectCount(null) > 0) {
+            for (Admin admin : adminMapper.selectList(null)) {
+                admin.setAdminMoney(admin.getAdminMoney() + sk.getShopkeeperMoney() / adminMapper.selectCount(null));
+                adminMapper.updateById(admin);
+            }
+        }
+        imageMapper.deleteById(shopkeeperMapper.selectById(sk.getId()).getImageId());
+        return shopkeeperMapper.deleteById(sk.getId()) > 0;
     }
 
     @Override
@@ -85,10 +105,10 @@ public class ShopkeeperImpl extends ServiceImpl<ShopkeeperMapper, Shopkeeper> im
                 Image image = new Image(null, shopkeeper.getImage().getPicture(), null, null, null);
                 if (imageMapper.insert(image) > 0) {
                     shopkeeper.setImageId(image.getId());
-                }else {
+                } else {
                     return false;
                 }
-            }else {
+            } else {
 //                用户创建时已经上传头像，更新时只需要更新头像
                 Image image = new Image(shopkeeper.getImageId(), shopkeeper.getImage().getPicture(), null, null, null);
                 if (imageMapper.updateById(image) < 0) {

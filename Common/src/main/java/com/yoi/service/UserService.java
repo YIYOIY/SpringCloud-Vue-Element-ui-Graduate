@@ -17,4 +17,5 @@ public interface UserService extends IService<User> {
 
     boolean updateUser(User user);
 
+    boolean updateUserMoney(User user);
 }

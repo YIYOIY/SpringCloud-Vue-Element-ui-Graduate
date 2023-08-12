@@ -53,24 +53,26 @@
 
       <el-row justify="space-evenly" style="width:100%;font-size:18px;margin:3% 0">
         <el-col :span="12">数量</el-col>
-        <el-col :span="12" v-if="store.state.isUser">{{ order.order.buyNumber }} *</el-col>
-        <el-col :span="12" v-if="store.state.isShopkeeper||store.state.isAdmin">
+        <el-col :span="12" v-if="order.order.orderStatus ===`未支付`">
           <el-input-number v-model="order.order.buyNumber" :step=1 :max=order.order.book.bookNumber type="number"/>
+        </el-col>
+        <el-col :span="12" v-if="order.order.orderStatus !==`未支付`">
+          <span>{{ order.order.buyNumber }} </span>
         </el-col>
       </el-row>
       <el-row justify="space-evenly" style="width:100%;font-size:18px;margin:3% 0" v-if="store.state.isAdmin">
         <el-col :span="12">回扣</el-col>
-        <el-col :span="12" >
-          <el-input-number v-model="order.order.kickback" :step=0.01 :min=0 :max=10 type="number"/>
+        <el-col :span="12">
+          <el-input-number v-model="order.order.kickback" :step=0.01 :min=0.00 :max=10.00 type="number"/>
         </el-col>
       </el-row>
       <el-row style="height:10%;width:100%;font-size:18px;margin:3% 0">
         <el-col :span="12">折扣</el-col>
         <el-col :span="12" v-if="store.state.isUser">
-          <span>{{ order.order.discount>0?order.order.discount*10:'商家还没有打算降价' }} %</span>
+          <span>{{ order.order.discount > 0 ? order.order.discount * 10 : '商家还没有打算降价' }} %</span>
         </el-col>
         <el-col :span="12" v-if="store.state.isShopkeeper||store.state.isAdmin">
-          <el-input-number :step=0.01 v-model="order.order.discount" :min=0 :max=10 type="number"/>
+          <el-input-number :step=0.01 v-model="order.order.discount" :min=0.00 :max=10.00 type="number"/>
         </el-col>
       </el-row>
       <el-row style="height:10%;width:100%;font-size:18px;margin:3% 0">
@@ -124,7 +126,7 @@
         </el-col>
       </el-row>
 
-      <el-row style="width: 100%;"  justify="space-evenly">
+      <el-row style="width: 100%;" justify="space-evenly">
         <el-col :span="4" v-if="store.state.isUser">
           <el-button class="el-button" plain round color="#626aef"
                      @click="buying(order.order.id,order.order.buyNumber,order.order.bookId)"
@@ -132,7 +134,7 @@
                      || (order.order.orderStatus === `已签收`)
                      ||(order.order.orderStatus === `已退货`)
                      ||(order.order.buyNumber > order.order.book.bookNumber)"
-          v-if="order.order.orderStatus === `未支付`">
+                     v-if="order.order.orderStatus === `未支付`">
             购买
           </el-button>
         </el-col>
@@ -170,7 +172,8 @@
     </div>
 
     <div style="width:35%;margin: 6% 0 0 2%;float:right">
-      <el-image :src="order.order.book.image.picture" style="width:70%"></el-image>
+      <el-image :src="order.order.book.image?order.order.book.image.picture:`img/未设置图片时的404.jpg`"
+                style="width:70%"></el-image>
     </div>
   </div>
 </template>
@@ -265,46 +268,49 @@ getOrder(orderId.value).then(Response => {
 })
 
 let buying = ((v, num, bookId) => {
-  console.log("这里是购物车的购买" + v)
-  if (confirm("确认购买?")) {
-    let ord = {
-      id: v,
-      buyNumber: num,
-      bookId: bookId,
-      userId: order.order.userId,
-      bookPrice: order.order.bookPrice,
-      expressFare: order.order.expressFare,
-      discount: order.order.discount,
-      user: {
-        id: order.order.user.id,
-        userAddress: order.order.user.userAddress,
-        userPhone: order.order.user.userPhone
+  alter(order)
+  setTimeout(() => {
+    console.log("这里是购物车的购买" + v)
+    if (confirm("确认购买?")) {
+      let ord = {
+        id: v,
+        buyNumber: num,
+        bookId: bookId,
+        userId: order.order.userId,
+        bookPrice: order.order.bookPrice,
+        expressFare: order.order.expressFare,
+        discount: order.order.discount,
+        user: {
+          id: order.order.user.id,
+          userAddress: order.order.user.userAddress,
+          userPhone: order.order.user.userPhone
+        }
       }
+      let orderBuy = JSON.stringify(ord)
+      buy(orderBuy).then(Response => {
+        ElNotification.success({
+          message: Response.messgae,
+          position: 'top-left',
+          title: '购买成功'
+        })
+        router.push({
+          name: 'userOrder'
+        })
+      }).catch(error => {
+        ElMessage.error(error.data.message)
+      })
     }
-    let orderBuy = JSON.stringify(ord)
-    buy(orderBuy).then(Response => {
-      ElNotification.success({
-        message: Response.messgae,
-        position: 'top-left',
-        title: '购买成功'
-      })
-      router.push({
-        name: 'userOrder'
-      })
-    }).catch(error => {
-      ElMessage.error(error.data.message)
-    })
-  }
+  }, 3)
 })
 
-let confirmOrderById=((v, num, bookId)=>{
-  let con={
-    id:v,
+let confirmOrderById = ((v, num, bookId) => {
+  let con = {
+    id: v,
     buyNumber: num,
     bookId: bookId,
   }
-  let confirmId=JSON.stringify(con)
-  confirmOrder(confirmId).then(()=>{
+  let confirmId = JSON.stringify(con)
+  confirmOrder(confirmId).then(() => {
     ElNotification.success({
       message: Response.messgae,
       position: 'top-left',
@@ -318,14 +324,14 @@ let confirmOrderById=((v, num, bookId)=>{
   })
 })
 
-let backOrderById=((v, num, bookId)=>{
-  let con={
-    id:v,
+let backOrderById = ((v, num, bookId) => {
+  let con = {
+    id: v,
     buyNumber: num,
     bookId: bookId,
   }
-  let confirmId=JSON.stringify(con)
-  backOrder(confirmId).then(()=>{
+  let confirmId = JSON.stringify(con)
+  backOrder(confirmId).then(() => {
     ElNotification.success({
       message: Response.messgae,
       position: 'top-left',
@@ -348,7 +354,7 @@ let back = (() => {
     router.push({
       name: 'userOrder'
     })
-  }else {
+  } else {
     router.push({
       name: 'adminOrder'
     })
@@ -362,9 +368,9 @@ let alter = ((order) => {
     expressFare: order.order.expressFare,
     discount: order.order.discount,
     buyNumber: order.order.buyNumber,
-    userId:order.order.userId,
+    userId: order.order.userId,
     //管理员可以修改kickback，商家不可以修改
-    kickback:order.order.kickback,
+    kickback: order.order.kickback,
     user: {
       id: order.order.user.id,
       userAddress: order.order.user.userAddress,
@@ -374,13 +380,15 @@ let alter = ((order) => {
   let ao = JSON.stringify(alOrder)
   console.log(ao)
   alterOrder(ao).then(Response => {
-    if (Response.code === 200) {
-      ElNotification.success({
-        message: Response.messgae,
-        position: 'top-left',
-        title: '修改成功'
-      })
-      back()
+    if (store.state.isAdmin||store.state.isShopkeeper) {
+      if (Response.code === 200) {
+        ElNotification.success({
+          message: Response.messgae,
+          position: 'top-left',
+          title: '修改成功'
+        })
+        back()
+      }
     }
   }).catch(error => {
     console.log(error)

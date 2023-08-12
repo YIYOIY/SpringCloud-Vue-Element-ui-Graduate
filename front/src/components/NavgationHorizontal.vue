@@ -6,7 +6,6 @@
         class="el-menu-demo"
         mode="horizontal"
         :ellipsis="false"
-        @select="handleSelect"
         default-active="0"
         active-text-color="#ffd04b"
     >
@@ -264,9 +263,6 @@ import {getBooks} from "@/api/BookApi";
 import {ElMessage} from "element-plus";
 import emitter from "@/utils/bus";
 import {getAllSeries} from "@/api/SeriesApi";
-const handleSelect = (key, keyPath) => {
-  console.log(key, keyPath)
-}
 const store = useStore()
 let route = useRoute()
 // const drawer = ref(true)

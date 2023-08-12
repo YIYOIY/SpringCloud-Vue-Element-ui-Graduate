@@ -7,12 +7,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yoi.entity.*;
 import com.yoi.enumvalue.CommentEnum;
 import com.yoi.enumvalue.OrderEnum;
-import com.yoi.mapper.AdminMapper;
-import com.yoi.mapper.BookMapper;
-import com.yoi.mapper.OrderMapper;
-import com.yoi.mapper.WordMapper;
-import com.yoi.service.*;
+import com.yoi.mapper.*;
+import com.yoi.service.OrderService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -31,19 +29,18 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
     @Resource
     private BookMapper bookMapper;
     @Resource
+    private SeriesMapper seriesMapper;
+    @Resource
     private WordMapper wordMapper;
+    @Resource
+    private ImageMapper imageMapper;
     @Resource
     private AdminMapper adminMapper;
     @Resource
-    private BookService bookService;
+    private ShopkeeperMapper shopkeeperMapper;
     @Resource
-    private UserService userService;
-    @Resource
-    private WordService wordService;
-    @Resource
-    private ShopkeeperService shopkeeperService;
-    @Resource
-    private AdminService adminService;
+    private UserMapper userMapper;
+
 
     /*
      * 通过order表的id将购买的信息一同放入order实体类中
@@ -51,9 +48,19 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
     @Override
     public Order getById(Long orderId) {
         Order order = orderMapper.selectById(orderId);
-        order.setBook(bookService.getById(order.getBookId()));
-        order.setUser(userService.getById(order.getUserId()));
-        order.setWord(wordService.getById(order.getWordId()));
+        Book book = bookMapper.selectById(order.getBookId());
+        book.setImage(imageMapper.selectById(book.getImageId()));
+        book.setWord(wordMapper.selectById(book.getWordId()));
+        book.setShopkeeper(shopkeeperMapper.selectById(book.getShopkeeperId()));
+        book.setSeries(seriesMapper.selectById(book.getSeriesId()));
+        order.setBook(book);
+
+        User user = userMapper.selectById(order.getUserId());
+        if (!ObjectUtils.isEmpty(imageMapper.selectById(user.getImageId()))) {
+            user.setImage(imageMapper.selectById(user.getImageId()));
+        }
+        order.setUser(user);
+        order.setWord(wordMapper.selectById(order.getWordId()));
         return order;
     }
 
@@ -64,10 +71,24 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
     public Page<Order> userGetAll(Long userId, Integer pageNo, Integer pageSize) {
         Page<Order> page = new Page<>(pageNo, pageSize);
         Page<Order> orderPage = orderMapper.selectPage(page, new QueryWrapper<Order>().eq("user_id", userId));
+        return getOrderPage(orderPage);
+    }
+
+    private Page<Order> getOrderPage(Page<Order> orderPage) {
         for (Order record : orderPage.getRecords()) {
-            record.setBook(bookService.getById(record.getBookId()));
-            record.setUser(userService.getById(record.getUserId()));
-            record.setWord(wordService.getById(record.getWordId()));
+            Book book = bookMapper.selectById(record.getBookId());
+            book.setImage(imageMapper.selectById(book.getImageId()));
+            book.setWord(wordMapper.selectById(book.getWordId()));
+            book.setShopkeeper(shopkeeperMapper.selectById(book.getShopkeeperId()));
+            book.setSeries(seriesMapper.selectById(book.getSeriesId()));
+            record.setBook(book);
+
+            User user = userMapper.selectById(record.getUserId());
+            if (!ObjectUtils.isEmpty(imageMapper.selectById(user.getImageId()))) {
+                user.setImage(imageMapper.selectById(user.getImageId()));
+            }
+            record.setUser(user);
+            record.setWord(wordMapper.selectById(record.getWordId()));
         }
         return orderPage;
     }
@@ -91,14 +112,8 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
 
 //        根据收集的订单id在订单中重新分页查询
         Page<Order> shopkeeperOrder = orderMapper.selectPage(page, new QueryWrapper<Order>().in("id", orders));
-        System.out.println("该企业的订单:" + shopkeeperOrder.getRecords().toString());
 //       将企业的订单嵌入数据
-        for (Order order : shopkeeperOrder.getRecords()) {
-            order.setBook(bookService.getById(order.getBookId()));
-            order.setUser(userService.getById(order.getUserId()));
-            order.setWord(wordService.getById(order.getWordId()));
-        }
-        return shopkeeperOrder;
+        return getOrderPage(shopkeeperOrder);
     }
 
     /*
@@ -108,12 +123,7 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
     public Page<Order> adminGetAll(Integer pageNo, Integer pageSize) {
         Page<Order> page = new Page<>(pageNo, pageSize);
         Page<Order> orderPage = orderMapper.selectPage(page, new QueryWrapper<Order>().isNotNull("book_id").isNotNull("user_id"));
-        for (Order order : orderPage.getRecords()) {
-            order.setBook(bookService.getById(order.getBookId()));
-            order.setUser(userService.getById(order.getUserId()));
-            order.setWord(wordService.getById(order.getWordId()));
-        }
-        return orderPage;
+        return getOrderPage(orderPage);
     }
 
 
@@ -123,10 +133,27 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
         return orderMapper.insert(order) > 0;
     }
 
-    /*删除订单*/
+    /**
+     * 删除订单
+     * 如果订单是用户已经购买未签收，就用户的钱退回
+     * 无论是管理员删除订单还是用户自己的删除订单，还是商家删除书籍导致的删除订单（商家的订单页面只能看见未支付的）
+     */
     @Override
     public boolean deleteOrder(Order order) {
-        wordService.deleteWord(orderMapper.selectById(order.getId()).getWordId());
+        if (order.getOrderStatus() == OrderEnum.BUY
+                || order.getOrderStatus().getStatus().equals(OrderEnum.BUY.getStatus())) {
+            //退款
+            User userById = userMapper.selectById(order.getUserId());
+            double fare = (order.getBuyNumber() * order.getBookPrice() * (order.getDiscount() / 10.0))
+                    + order.getExpressFare();
+            userById.setUserMoney(userById.getUserMoney() + fare);
+            userMapper.updateById(userById);
+        }
+
+        if (!ObjectUtils.isEmpty(order.getWordId())) {
+            wordMapper.deleteById(order.getWordId());
+        }
+
         return orderMapper.deleteById(order.getId()) > 0;
     }
 
@@ -147,6 +174,11 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
         if (book.getBookNumber() < order.getBuyNumber()) {
             return false;
         }
+//        try {
+//            TimeUnit.SECONDS.sleep(2000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e + "超时了");
+//        }
 //      更新书籍数量
         UpdateWrapper<Book> bookUpdateWrapper = new UpdateWrapper<Book>()
                 .set(order.getBuyNumber() > 0, "book_number", book.getBookNumber() - order.getBuyNumber())
@@ -155,16 +187,16 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
 //        更改订单中用户的信息,与扣款获取用户不同，这里是要用新的数据覆盖原来的用户数据
         User user = order.getUser();
         user.setId(order.getUserId());
-        userService.updateUser(user);
+        userMapper.updateById(user);
 
 //        扣款
-        User userById = userService.getById(order.getUserId());
+        User userById = userMapper.selectById(order.getUserId());
         double fare = (order.getBuyNumber() * order.getBookPrice() * (order.getDiscount() / 10.0)) + order.getExpressFare();
         if (userById.getUserMoney() - fare < 0) {
             return false;
         } else {
             userById.setUserMoney(userById.getUserMoney() - fare);
-            userService.updateUser(userById);
+            userMapper.updateById(userById);
         }
 
         UpdateWrapper<Order> orderUpdateWrapper = new UpdateWrapper<Order>()
@@ -186,28 +218,27 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
     @Override
     public boolean confirmOrder(Order byId) {
 //      由于前端只会发送orderId回来，所以需要根据这个id进行获取order的全部信息
-        Order order =orderMapper.selectById(byId.getId());
+        Order order = orderMapper.selectById(byId.getId());
 //      设置管理员回扣
         double adminFare = (order.getBuyNumber() * order.getBookPrice() * (order.getDiscount() / 10.0)
                 + order.getExpressFare()) * (order.getKickback() / 10);
-        Long adminCount = adminMapper.selectCount(null);
-        for (Admin admin : adminMapper.selectList(null)) {
-            admin.setAdminMoney(admin.getAdminMoney() + adminFare / adminCount);
-            if (!adminService.updateAdmin(admin)) {
-                return false;
+        if (adminMapper.selectCount(null) > 0) {
+            for (Admin admin : adminMapper.selectList(null)) {
+                admin.setAdminMoney(admin.getAdminMoney() + adminFare / adminMapper.selectCount(null));
+                adminMapper.updateById(admin);
             }
         }
-
 //      设置商家收益
         double shopkeeperFare = (order.getBuyNumber() * order.getBookPrice()
                 * (order.getDiscount() / 10.0) + order.getExpressFare())
                 - ((order.getBuyNumber() * order.getBookPrice()
                 * (order.getDiscount() / 10.0) + order.getExpressFare()) * (order.getKickback() / 10));
 
-        Book bookById = bookService.getById(order.getBookId());
-        Shopkeeper spById = shopkeeperService.getById(bookById.getShopkeeperId());
+        Book bookById = bookMapper.selectById(order.getBookId());
+        Shopkeeper spById = shopkeeperMapper.selectById(bookById.getShopkeeperId());
         spById.setShopkeeperMoney(spById.getShopkeeperMoney() + shopkeeperFare);
-        shopkeeperService.updateShopkeeper(spById);
+        System.out.println(spById);
+        shopkeeperMapper.updateById(spById);
 
         UpdateWrapper<Order> orderUpdateWrapper = new UpdateWrapper<Order>()
                 .set("confirm_time", LocalDateTime.now())
@@ -243,11 +274,10 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
                 //设置管理员回扣  退还
                 double adminFare = (order.getBuyNumber() * order.getBookPrice() * (order.getDiscount() / 10.0)
                         + order.getExpressFare()) * (order.getKickback() / 10);
-                Long adminCount = adminMapper.selectCount(null);
-                for (Admin admin : adminMapper.selectList(null)) {
-                    admin.setAdminMoney(admin.getAdminMoney() - adminFare / adminCount);
-                    if (!adminService.updateAdmin(admin)) {
-                        return false;
+                if (adminMapper.selectCount(null) > 0) {
+                    for (Admin admin : adminMapper.selectList(null)) {
+                        admin.setAdminMoney(admin.getAdminMoney() - adminFare / adminMapper.selectCount(null));
+                        adminMapper.updateById(admin);
                     }
                 }
                 //设置商家收益  退还
@@ -256,17 +286,17 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
                         - ((order.getBuyNumber() * order.getBookPrice()
                         * (order.getDiscount() / 10.0) + order.getExpressFare()) * (order.getKickback() / 10));
 
-                Book bookById = bookService.getById(order.getBookId());
-                Shopkeeper spById = shopkeeperService.getById(bookById.getShopkeeperId());
+                Book bookById = bookMapper.selectById(order.getBookId());
+                Shopkeeper spById = shopkeeperMapper.selectById(bookById.getShopkeeperId());
                 spById.setShopkeeperMoney(spById.getShopkeeperMoney() - shopkeeperFare);
-                shopkeeperService.updateShopkeeper(spById);
+                shopkeeperMapper.updateById(spById);
             }
 
             //退款
-            User userById = userService.getById(order.getUserId());
+            User userById = userMapper.selectById(order.getUserId());
             double fare = (order.getBuyNumber() * order.getBookPrice() * (order.getDiscount() / 10.0)) + order.getExpressFare();
             userById.setUserMoney(userById.getUserMoney() + fare);
-            userService.updateUser(userById);
+            userMapper.updateById(userById);
 
 
 //        退款时退还购买书籍数量
@@ -282,7 +312,7 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
                     .set("comment_status", CommentEnum.COMMENTEDFORBIDDEN)
                     .eq("id", order.getId());
             return (orderMapper.update(null, orderUpdateWrapper) > 0 && bookMapper.update(null, bookUpdateWrapper) > 0);
-        }else{
+        } else {
 //            超过退货时间
             return false;
         }
@@ -305,14 +335,14 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
 //        更改订单中用户的信息
         User user = order.getUser();
         user.setId(order.getUserId());
-        userService.updateUser(user);
+        userMapper.updateById(user);
 
 //      应用企业对订单的修改
         UpdateWrapper<Order> orderUpdateWrapper = new UpdateWrapper<Order>()
                 .set("book_price", order.getBookPrice())
                 .set("discount", order.getDiscount())
-                .set("express_fare",order.getExpressFare())
-                .set("kickback",order.getKickback())
+                .set("express_fare", order.getExpressFare())
+                .set("kickback", order.getKickback())
                 .set("buy_number", order.getBuyNumber())
                 .eq("id", order.getId());
         return orderMapper.update(null, orderUpdateWrapper) > 0;

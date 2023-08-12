@@ -93,7 +93,7 @@
 
 
     <div style="left: 8%;top:75%;width:40%;position: absolute">
-      <el-row gutter="40">
+      <el-row :gutter="40">
         <el-col :span="12">
           <el-button type="success" size="large" @click="alter()" plain round>保存修改</el-button>
         </el-col>

@@ -96,15 +96,16 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
         for (Order order : orderMapper.selectList(orderByUserId)) {
             orderService.deleteOrder(order);
         }
-
+        User usForMoney = userMapper.selectById(user.getId());
 //      用户注销后将用户资金平分给管理员
         if (adminMapper.selectCount(null)>0){
             for (Admin admin : adminMapper.selectList(null)) {
-                admin.setAdminMoney(admin.getAdminMoney() + us.getUserMoney() / adminMapper.selectCount(null));
+                admin.setAdminMoney(admin.getAdminMoney() + usForMoney.getUserMoney() / adminMapper.selectCount(null));
                 adminMapper.updateById(admin);
             }
         }
-
+        usForMoney.setUserMoney(0.0);
+        userMapper.updateById(usForMoney);
         imageMapper.deleteById(userMapper.selectById(user.getId()).getImageId());
         return userMapper.deleteById(user.getId()) > 0;
     }
@@ -134,7 +135,7 @@ public class UserImpl extends ServiceImpl<UserMapper, User> implements UserServi
     @Override
     public boolean updateUserMoney(User user) {
         Random random = new Random();
-        double v = random.nextDouble() * 100000000;
+        double v = random.nextDouble() * 1000;
         user.setUserMoney(user.getUserMoney()+v);
         return userMapper.updateById(user)>0;
     }

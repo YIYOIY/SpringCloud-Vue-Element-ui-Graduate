@@ -28,20 +28,27 @@
 
       <el-table-column fixed prop="shopkeeperName" class-name="shopkeeperName" label="企业名" :show-overflow-tooltip="true" width="150px"/>
       <el-table-column fixed prop="shopkeeperQuality" label="企业性质" width="120px"/>
-      <el-table-column fixed prop="shopkeeperMoney" label="账户余额" sortable width="150px">
+      <el-table-column fixed prop="shopkeeperMoney" label="账户余额" sortable width="200px">
         <template v-slot="scope">
-          RMB  <el-tag effect="plain" type="warning" size="large">
-          {{scope.row.shopkeeperMoney>0?scope.row.shopkeeperMoney:0}}</el-tag>  元
+         <el-tag effect="plain" type="warning" size="large">
+          {{scope.row.shopkeeperMoney>0?scope.row.shopkeeperMoney:0}} 元</el-tag>
         </template>
       </el-table-column>
       <el-table-column fixed prop="shopkeeperPhone" label="联系方式" width="150px"/>
-      <el-table-column fixed prop="shopkeeperSignTime" label="平台注册日期"  :show-overflow-tooltip="true" width="200px">
+      <el-table-column fixed prop="shopkeeperSignTime" label="平台注册日期"  :show-overflow-tooltip="true" width="350px">
         <template v-slot="scope">
-          {{ scope.row.shopkeeperSignTime.substr(0,10)+"  "+scope.row.shopkeeperSignTime.substr(11,13) }}
+          <el-tooltip placement="bottom" effect="light">
+            <template #content>
+              <el-date-picker style="width: 150%;" v-model="scope.row.shopkeeperSignTime" type="datetime" format="YYYY 年 MM 月 DD 日 HH 时 mm 分 ss 秒"/>
+            </template>
+            <el-button plain round type="info" >
+              {{  scope.row.shopkeeperSignTime+"  "+scope.row.shopkeeperSignTime }}
+            </el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column fixed prop="shopkeeperBirth" label="企业注册日期" sortable width="200"/>
-      <el-table-column fixed prop="shopkeeperAddress" label="公司地址" :show-overflow-tooltip="true" width="150"/>
+      <el-table-column fixed prop="shopkeeperBirth" label="企业注册日期" sortable width="220"/>
+      <el-table-column fixed prop="shopkeeperAddress" label="公司地址" :show-overflow-tooltip="true" width="560"/>
       <el-table-column fixed prop="id" label="操作" width="190px">
         <template v-slot="scope">
           <el-button link round plain type="primary"  @click="alter(scope.row.id)">详细信息</el-button>
@@ -49,6 +56,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+        v-model:current-page="pageNo"
+        v-model:page-size="pageSize"
+        :page-sizes="[1,5, 10, 15,20,30,50,100,200,400,1000]"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 <script setup>
@@ -65,6 +82,7 @@ let shopkeepers = ref([])
 
 let pageNo = ref(1)
 let pageSize = ref(5)
+let total = ref(1)
 let searchName = ref('')
 
 let search = ((v) => {
@@ -93,7 +111,23 @@ onMounted(()=>{
   })
 })
 
+let handleSizeChange = ((val) => {
+  adminGetShopkeepers(store.state.adminId, pageNo.value, val, null).then(Response => {
+    shopkeepers.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
 
+let handleCurrentChange = ((val) => {
+  adminGetShopkeepers(store.state.adminId, val, pageSize.value, null).then(Response => {
+    shopkeepers.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
 let alter = ((v) => {
   let id = ref(v)
   router.push({
@@ -138,6 +172,6 @@ let add = (() => {
 }
 
 .background {
-  margin: 0 3.5%;
+  margin: 0 2.5%;
 }
 </style>

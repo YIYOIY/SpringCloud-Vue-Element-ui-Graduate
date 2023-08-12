@@ -1,28 +1,17 @@
 <template>
   <div class="header">
     <!--    菜单也可以单走横着的方式-->
-    <div v-if="store.state.menu===1">
+    <div>
       <NavigationHorizontal/>
     </div>
   </div>
 
-  <div class="footer" v-if="store.state.menu===0">
-    <FooterBar/>
-  </div>
-
-  <!--也可以使用竖着的方式-->
-    <div v-if="store.state.menu===-1">
-      <SiderBar/>
-    </div>
-
-
-  <!--    <router-view></router-view>-->
   <router-view v-slot="{ Component, route }">
     <!--        <component :is="Component" :key="route.name" v-if="route.meta.keepAlive"></component>-->
     <keep-alive>
       <component :is="Component" :key="route.name" v-if="route.meta.keepAlive"></component>
     </keep-alive>
-    <component :is="Component" :key="route.name" v-if="!route.meta.keepAlive"/>
+      <component :is="Component" :key="route.name" v-if="!route.meta.keepAlive"/>
   </router-view>
 
   <el-backtop :right="20" :bottom="20">
@@ -41,8 +30,9 @@
   </el-backtop>
 
 
-
-
+  <div class="footer">
+    <FooterBar/>
+  </div>
 
 </template>
 
@@ -50,9 +40,7 @@
 import NavigationHorizontal from "@/components/NavgationHorizontal.vue";
 import store from "@/store"
 import {onUnmounted} from "vue";
-import SiderBar from "@/components/SiderBar.vue";
 import FooterBar from "@/components/FooterBar.vue";
-import FooterBarNavigation from "@/components/FooterBarNavigation.vue";
 
 
 // 在页面加载时读取sessionStorage里的状态信息
@@ -101,7 +89,7 @@ a {
   position: fixed;
 }
 
-.footer{
+.footer {
   bottom: 0;
   width: 100%;
   z-index: 2;

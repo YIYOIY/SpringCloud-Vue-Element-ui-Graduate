@@ -39,6 +39,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+        v-model:current-page="pageNo"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 15,20,30,50,100,200,400,1000]"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
@@ -48,16 +58,32 @@ import AlterSeries from "@/views/series/AlterSeries.vue";
 import {ref} from "vue";
 import {deleteSeries, getAllSeries} from "@/api/SeriesApi";
 import {ElMessage, ElNotification} from "element-plus";
-
 let pageNo = ref(1)
-let pageSize = ref(7)
+let pageSize = ref(5)
+let total = ref(1)
 let searchName = ref('')
 
 let series = ref([])
 getAllSeries('null', pageNo.value, pageSize.value).then(Response => {
   series.value = Response.data.data
 })
+let handleSizeChange = ((val) => {
+  getAllSeries('null', pageNo.value, val).then(Response => {
+    series.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
 
+let handleCurrentChange = ((val) => {
+  getAllSeries('null', val, pageSize.value).then(Response => {
+    series.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
 let search = ((seName) => {
   if (seName === '') searchName.value = null
   getAllSeries(searchName.value, pageNo.value, pageSize.value).then(Response => {
@@ -141,6 +167,6 @@ let del = ((v) => {
 }
 
 .ac {
-  margin: 3% 3%;
+  margin: 0 6%;
 }
 </style>

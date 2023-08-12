@@ -11,6 +11,8 @@
 
     <groupId>com</groupId>
     <artifactId>admin-micro</artifactId>
+    <name>adminmicro</name>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

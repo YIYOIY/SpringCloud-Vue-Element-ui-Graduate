@@ -1,12 +1,13 @@
 <template>
   <div class="top"></div>
-  <div style="width:100%;height: 100%;padding: 5% 0" >
+  <div style="width:100%;height: 100%;padding: 5% 0">
     <el-carousel style="width:100%;height:100%" height="550px" :interval=1500 :initial-index=1 direction="horizontal"
                  type="card" :autoplay="true" arrow="hover" pause-on-hover loop indicator-position="outside"
                  trigger="hover">
       <el-carousel-item v-for="item in books" :key="item.id"
-                        style="width: 30%;height: 100%;z-index:1;margin-left: 12%;">
-        <el-image :src="item.image?item.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%;height: 100%" @click="inf(item.id)"></el-image>
+                        style="width: 25%;height: 100%;z-index:1;margin-left: 12%;">
+        <el-image :src="item.image?item.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%;height: 100%"
+                  @click="inf(item.id)"></el-image>
       </el-carousel-item>
     </el-carousel>
   </div>
@@ -17,9 +18,10 @@
         <div class="card_content">
           <el-row>
             <el-row>
-              <el-image :src="item.image?item.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%;height: 100%;" @click="inf(item.id)"></el-image>
+              <el-image :src="item.image?item.image.picture:`img/未设置图片时的404.jpg`"
+                        style="width: 100%;height: 100%;" @click="inf(item.id)"></el-image>
             </el-row>
-            <el-tooltip  :content="item.word.bookDescribe" effect="dark">
+            <el-tooltip :content="item.word.bookDescribe" effect="dark">
               <el-row style="padding:8% 0">
                 <el-col :span="24" @click="inf(item.id)">
                   <b @click="inf(item.id)">{{ item.bookName }}</b>
@@ -50,7 +52,8 @@
     <el-table-column type="expand">
       <template #default="props">
         <div style="float: left;margin-top:4%;width:10%;left: 10%;position:relative;">
-          <el-image :src="props.row.image?props.row.image.picture:`img/未设置图片时的404.jpg`" style="width: 100%; height: 100%"></el-image>
+          <el-image :src="props.row.image?props.row.image.picture:`img/未设置图片时的404.jpg`"
+                    style="width: 100%; height: 100%"></el-image>
         </div>
         <div style="float: right;width:70%;margin: 2% 2% 2% 5%">
           <p><b>书籍编号:</b> {{ props.row.id }}</p>
@@ -63,41 +66,73 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="bookName" class-name="bookName" label="书名" align="center" :min-width="80" :show-overflow-tooltip="true"></el-table-column>
+    <el-table-column prop="bookName" class-name="bookName" label="书名" align="center" :min-width="80"
+                     :show-overflow-tooltip="true"></el-table-column>
     <el-table-column prop="image.picture" label="封面">
       <template v-slot="scope">
-        <el-image :src="scope.row.image?scope.row.image.picture:`img/未设置图片时的404.jpg`" style="width: 80%;height: 100%;"
+        <el-image :src="scope.row.image?scope.row.image.picture:`img/未设置图片时的404.jpg`"
+                  style="width: 80%;height: 100%;"
                   @click="inf(scope.row.id)"></el-image>
       </template>
     </el-table-column>
     <el-table-column prop="bookAuthor" label="作者"></el-table-column>
     <el-table-column prop="bookPrice" label="价格">
       <template v-slot="scope">
-        <el-tag type="danger" effect="dark">{{scope.row.bookPrice}}￥</el-tag>
+        <el-tag type="danger" effect="dark">{{ scope.row.bookPrice }}￥</el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="series.seriesName" label="系列"></el-table-column>
     <!--    <el-table-column prop="bookAddDate" label="发布日期" sortable></el-table-column>-->
     <el-table-column prop="bookFactory" label="出版社"></el-table-column>
-<!--    <el-table-column prop="bookNum" label="库存" sortable></el-table-column>-->
+     <el-table-column prop="bookNumber" label="库存" sortable>
+       <template v-slot="scope">
+         在售： {{scope.row.bookNumber}} 本
+       </template>
+     </el-table-column>
     <el-table-column prop="id" label="操作">
       <template v-slot="scope">
-        <el-button class="Ybutton" plain round type="success" @click="inf(scope.row.id)">书籍详情</el-button>
-        <el-button type="primary" plain round @click="buy(scope.row.id,scope.row.discount,scope.row.bookPrice,scope.row.kickback,scope.row.expressFare)" v-show="scope.row.bookNumber > 0">加入购物车
-        </el-button>
+        <el-row justify="space-around">
+          <el-col :span="10">
+            <el-button  plain round type="success" @click="inf(scope.row.id)">详情</el-button>
+          </el-col>
+          <el-col :span="14">
+            <el-button type="primary" plain round
+                       @click="buy(scope.row.id,scope.row.discount,scope.row.bookPrice,scope.row.kickback,scope.row.expressFare)"
+                       v-show="scope.row.bookNumber > 0">加入购物车
+            </el-button
+            ></el-col>
+        </el-row>
       </template>
     </el-table-column>
   </el-table>
 
 
-  <div>
-    <el-steps :active="active" align-center finish-status="success" style="width: 70%;margin:3% 15%">
-      <el-step title="Step 1" description="注册账户"/>
-      <el-step title="Step 2" description="选择书籍加入购物车"/>
-      <el-step title="Step 3" description="在购物车进行支付"/>
-      <el-step title="Step 4" description="确认收货！"/>
-    </el-steps>
-    <el-button type="danger" style="width: 70%;margin:3% 15%" @click="next" plain round>下一步</el-button>
+  <div style="width: 70%;margin:3% 15%">
+    <el-row justify="space-evenly">
+      <el-col :span="12" style="margin-top: 5%">
+        <el-pagination
+            v-model:current-page="pageNo"
+            v-model:page-size="pageSize"
+            :page-sizes="[5, 10, 15,20,30,50,100,200,400,1000]"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+        />
+      </el-col>
+      <el-col :span="12">
+        <el-steps :active="active" align-center finish-status="success" style="width: 70%;margin:3% 15%">
+          <el-step title="Step 1" description="注册账户"/>
+          <el-step title="Step 2" description="选择书籍加入购物车"/>
+          <el-step title="Step 3" description="在购物车进行支付"/>
+          <el-step title="Step 4" description="确认收货！"/>
+        </el-steps>
+        <el-button type="danger" style="width: 70%;margin:3% 15%" @click="next" plain round>下一步</el-button>
+      </el-col>
+    </el-row>
+
+
   </div>
 </template>
 
@@ -110,19 +145,28 @@ import {getBooks, selectBySeries} from "@/api/BookApi";
 import {addOrder} from "@/api/OrderApi";
 import emitter from "@/utils/bus";
 // 监听事件，导航栏更改后这里就会触发，书记页面就会根据在导航页面选择的书籍系列展示书籍
-let pageNo=ref(1)
-let pageSize=ref(15)
-emitter.on('seriesChange',data=>{
-  selectBySeries(data,pageNo.value,pageSize.value).then(Response => {
+let pageNo = ref(1)
+let pageSize = ref(5)
+let total = ref(1)
+
+emitter.on('seriesChange', data => {
+  console.log(data)
+  selectBySeries(data, pageNo.value, pageSize.value).then(Response => {
     books.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
   })
 })
 
 // 当用户选择完系列重新点击首页后进行全部书籍的检查
-emitter.on('tooooBookRestart',v=>{
-  getBooks("null",pageNo.value,pageSize.value).then(Response => {
+emitter.on('tooooBookRestart', v => {
+  getBooks("null", pageNo.value, pageSize.value).then(Response => {
     console.log(v)
     books.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
   })
 })
 
@@ -136,9 +180,31 @@ let next = (() => {
   active.value++ > 3 ? active.value = 0 : active.value
 })
 
+
 onMounted(async () => {
-  await getBooks("null",pageNo.value,pageSize.value).then(Response => {
+  await getBooks("null", pageNo.value, pageSize.value).then(Response => {
     books.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
+
+let handleSizeChange = ((val) => {
+  getBooks("null", 1, val).then(Response => {
+    books.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
+
+let handleCurrentChange = ((val) => {
+  getBooks("null", val, pageSize.value).then(Response => {
+    books.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
   })
 })
 
@@ -162,13 +228,13 @@ let bag = reactive({
   expressFare: 0
 })
 
-let buy = ((v,discount,bookPrice,kickback,expressFare) => {
+let buy = ((v, discount, bookPrice, kickback, expressFare) => {
   bag.bookId = v;
   bag.userId = store.state.userId;
   bag.discount = discount;
   bag.bookPrice = bookPrice;
   bag.kickback = kickback;
-  bag.expressFare =expressFare
+  bag.expressFare = expressFare
   // 判断用户登陆了没，没登陆返回登录页面
   if (store.state.userId === "" || store.state.userId === undefined || store.state.userId === null) {
     router.push({
@@ -205,7 +271,6 @@ let buy = ((v,discount,bookPrice,kickback,expressFare) => {
   padding: 8px 0;
 }
 
-
 .card_wrap {
   flex-direction: row;
   justify-content: space-evenly;
@@ -222,7 +287,6 @@ let buy = ((v,discount,bookPrice,kickback,expressFare) => {
   box-sizing: border-box;
 }
 
-
 .card_content {
   background-color: rgb(253, 253, 253);
   border-radius: 2%;
@@ -231,13 +295,8 @@ let buy = ((v,discount,bookPrice,kickback,expressFare) => {
   width: 70%;
 }
 
-.Ybutton {
-  margin-left: 10%;
-  margin-top: 2%;
-  margin-bottom: 10%;
-}
 
-.top{
+.top {
   left: 0;
   height: 100%;
   width: 100%;

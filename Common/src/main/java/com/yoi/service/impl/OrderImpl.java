@@ -41,58 +41,6 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
     @Resource
     private UserMapper userMapper;
 
-
-    /*
-     * 通过order表的id将购买的信息一同放入order实体类中
-     * */
-    @Override
-    public Order getById(Long orderId) {
-        Order order = orderMapper.selectById(orderId);
-        Book book = bookMapper.selectById(order.getBookId());
-        book.setImage(imageMapper.selectById(book.getImageId()));
-        book.setWord(wordMapper.selectById(book.getWordId()));
-        book.setShopkeeper(shopkeeperMapper.selectById(book.getShopkeeperId()));
-        book.setSeries(seriesMapper.selectById(book.getSeriesId()));
-        order.setBook(book);
-
-        User user = userMapper.selectById(order.getUserId());
-        if (!ObjectUtils.isEmpty(imageMapper.selectById(user.getImageId()))) {
-            user.setImage(imageMapper.selectById(user.getImageId()));
-        }
-        order.setUser(user);
-        order.setWord(wordMapper.selectById(order.getWordId()));
-        return order;
-    }
-
-    /*
-     * 用户查看自己的购物车
-     * */
-    @Override
-    public Page<Order> userGetAll(Long userId, Integer pageNo, Integer pageSize) {
-        Page<Order> page = new Page<>(pageNo, pageSize);
-        Page<Order> orderPage = orderMapper.selectPage(page, new QueryWrapper<Order>().eq("user_id", userId));
-        return getOrderPage(orderPage);
-    }
-
-    private Page<Order> getOrderPage(Page<Order> orderPage) {
-        for (Order record : orderPage.getRecords()) {
-            Book book = bookMapper.selectById(record.getBookId());
-            book.setImage(imageMapper.selectById(book.getImageId()));
-            book.setWord(wordMapper.selectById(book.getWordId()));
-            book.setShopkeeper(shopkeeperMapper.selectById(book.getShopkeeperId()));
-            book.setSeries(seriesMapper.selectById(book.getSeriesId()));
-            record.setBook(book);
-
-            User user = userMapper.selectById(record.getUserId());
-            if (!ObjectUtils.isEmpty(imageMapper.selectById(user.getImageId()))) {
-                user.setImage(imageMapper.selectById(user.getImageId()));
-            }
-            record.setUser(user);
-            record.setWord(wordMapper.selectById(record.getWordId()));
-        }
-        return orderPage;
-    }
-
     @Override
     public Page<Order> shopkeeperGetAll(Long shopkeeperId, Integer pageNo, Integer pageSize) {
         Page<Order> page = new Page<>(pageNo, pageSize);
@@ -125,6 +73,52 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
         Page<Order> orderPage = orderMapper.selectPage(page, new QueryWrapper<Order>().isNotNull("book_id").isNotNull("user_id"));
         return getOrderPage(orderPage);
     }
+
+    /*
+     * 用户查看自己的购物车
+     * */
+    @Override
+    public Page<Order> userGetAll(Long userId, Integer pageNo, Integer pageSize) {
+        Page<Order> page = new Page<>(pageNo, pageSize);
+        Page<Order> orderPage = orderMapper.selectPage(page, new QueryWrapper<Order>().eq("user_id", userId));
+        return getOrderPage(orderPage);
+    }
+
+    /*
+     * 通过order表的id将购买的信息一同放入order实体类中
+     * */
+    @Override
+    public Order getById(Long orderId) {
+        Order order = orderMapper.selectById(orderId);
+        setBookInformation(order);
+        return order;
+    }
+
+    private Page<Order> getOrderPage(Page<Order> orderPage) {
+        for (Order record : orderPage.getRecords()) {
+            setBookInformation(record);
+        }
+        return orderPage;
+    }
+
+    private void setBookInformation(Order order) {
+        Book book = bookMapper.selectById(order.getBookId());
+        if (!ObjectUtils.isEmpty(imageMapper.selectById(book.getImageId()))) book.setImage(imageMapper.selectById(book.getImageId()));
+        if (!ObjectUtils.isEmpty(wordMapper.selectById(book.getWordId()))) book.setWord(wordMapper.selectById(book.getWordId()));
+        if (!ObjectUtils.isEmpty(shopkeeperMapper.selectById(book.getShopkeeperId()))) book.setShopkeeper(shopkeeperMapper.selectById(book.getShopkeeperId()));
+        if (!ObjectUtils.isEmpty(seriesMapper.selectById(book.getSeriesId()))) book.setSeries(seriesMapper.selectById(book.getSeriesId()));
+        order.setBook(book);
+
+        User user = userMapper.selectById(order.getUserId());
+        if (!ObjectUtils.isEmpty(imageMapper.selectById(user.getImageId()))) {
+            user.setImage(imageMapper.selectById(user.getImageId()));
+        }
+        order.setUser(user);
+        if (!ObjectUtils.isEmpty(wordMapper.selectById(order.getWordId()))) order.setWord(wordMapper.selectById(order.getWordId()));
+    }
+
+
+
 
 
     /*添加订单*/

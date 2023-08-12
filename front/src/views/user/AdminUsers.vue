@@ -32,13 +32,11 @@
       <el-table-column fixed prop="userName" class-name="userName" label="用户名" :show-overflow-tooltip="true"
                        width="150"/>
       <el-table-column fixed prop="userSex" label="性别" width="80"/>
-      <el-table-column fixed prop="userMoney" label="账户余额" sortable width="150">
+      <el-table-column fixed prop="userMoney" label="账户余额" sortable width="260">
         <template v-slot="scope">
-          RMB
           <el-tag effect="plain" type="warning" size="large">
-            {{ scope.row.userMoney > 0 ? scope.row.userMoney : 0 }}
+            {{ scope.row.userMoney > 0 ? scope.row.userMoney : 0 }} 元
           </el-tag>
-          元
         </template>
       </el-table-column>
       <el-table-column fixed prop="userPhone" label="联系方式" width="150"/>
@@ -48,7 +46,7 @@
         </template>
       </el-table-column>
       <el-table-column fixed prop="userBirth" label="出生日期" sortable width="150"/>
-      <el-table-column fixed prop="userAddress" label="收货地址" :show-overflow-tooltip="true" width="150"/>
+      <el-table-column fixed prop="userAddress" label="收货地址" :show-overflow-tooltip="true" width="180"/>
       <el-table-column fixed prop="id" label="操作" width="220px">
         <template v-slot="scope">
           <el-button link round plain type="primary" @click="alter(scope.row.id)">详细信息</el-button>
@@ -56,6 +54,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+        v-model:current-page="pageNo"
+        v-model:page-size="pageSize"
+        :page-sizes="[1,5, 10, 15,20,30,50,100,200,400,1000]"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 <script setup>
@@ -71,6 +79,7 @@ let users = ref([])
 
 let pageNo = ref(1)
 let pageSize = ref(5)
+let total = ref(1)
 let searchName = ref('')
 
 let search = ((v) => {
@@ -96,7 +105,23 @@ let search = ((v) => {
     users.value = Response.data.data
     console.log(users.value)
   })
+let handleSizeChange = ((val) => {
+  adminGetUsers(store.state.adminId, pageNo.value, val, null).then(Response => {
+    users.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
 
+let handleCurrentChange = ((val) => {
+  adminGetUsers(store.state.adminId, val, pageSize.value, null).then(Response => {
+    users.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
   let alter = ((v) => {
     let id = ref(v)
     router.push({
@@ -141,6 +166,6 @@ let search = ((v) => {
 }
 
 .background {
-  margin: 0 3.5%;
+  margin: 0 2.5%;
 }
 </style>

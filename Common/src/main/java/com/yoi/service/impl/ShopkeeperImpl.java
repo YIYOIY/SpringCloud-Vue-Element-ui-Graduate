@@ -15,6 +15,7 @@ import com.yoi.service.BookService;
 import com.yoi.service.ShopkeeperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -85,16 +86,19 @@ public class ShopkeeperImpl extends ServiceImpl<ShopkeeperMapper, Shopkeeper> im
     public boolean deleteShopkeeper(Shopkeeper shopkeeper) {
         Shopkeeper sk = shopkeeperMapper.selectById(shopkeeper.getId());
         List<Book> books = bookMapper.selectList(new QueryWrapper<Book>().eq("shopkeeper_id", sk.getId()));
-        books.forEach(bookService::deleteBook);
+        if (!CollectionUtils.isEmpty(books)) books.forEach(bookService::deleteBook);
 //      企业注销后将企业资金平分给管理员
+        Shopkeeper skForMoney = shopkeeperMapper.selectById(shopkeeper.getId());
         if (adminMapper.selectCount(null) > 0) {
             for (Admin admin : adminMapper.selectList(null)) {
-                admin.setAdminMoney(admin.getAdminMoney() + sk.getShopkeeperMoney() / adminMapper.selectCount(null));
+                admin.setAdminMoney(admin.getAdminMoney() + skForMoney.getShopkeeperMoney() / adminMapper.selectCount(null));
                 adminMapper.updateById(admin);
             }
         }
-        imageMapper.deleteById(shopkeeperMapper.selectById(sk.getId()).getImageId());
-        return shopkeeperMapper.deleteById(sk.getId()) > 0;
+        skForMoney.setShopkeeperMoney(0.0);
+        shopkeeperMapper.updateById(skForMoney);
+        imageMapper.deleteById(shopkeeperMapper.selectById(skForMoney.getId()).getImageId());
+        return shopkeeperMapper.deleteById(skForMoney.getId()) > 0;
     }
 
     @Override

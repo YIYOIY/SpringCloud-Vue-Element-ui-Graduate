@@ -1,20 +1,20 @@
 <template>
   <div class="background">
-    <el-button @click="add()" plain round type="warning" style="top: 16%;left: 40%;position: absolute">添加新书籍
+    <el-button @click="add()" plain round type="warning" style="top: 11%;left: 40%;position: absolute">添加新书籍
     </el-button>
-    <el-button @click="search(searchName)" style="top: 16%;left: 25%;position: absolute" plain round type="info">
+    <el-button @click="search(searchName)" style="top: 11%;left: 25%;position: absolute" plain round type="info">
       查找书籍
     </el-button>
-    <el-button @click="search('')" style="top: 16%;left: 32%;position: absolute" plain round type="primary">
+    <el-button @click="search('')" style="top: 11%;left: 32%;position: absolute" plain round type="primary">
       全部书籍
     </el-button>
     <el-form>
-      <el-form-item label="书籍名称" prop="adminName" style="top: 16%;left: 5%;position: absolute">
+      <el-form-item label="书籍名称" prop="adminName" style="top: 11%;left: 5%;position: absolute">
         <el-input type="text" v-model="searchName" autofocus maxlength="20" clearable
                   style="max-width: 200px" placeholder="输入书名"></el-input>
       </el-form-item>
     </el-form>
-    <el-table stripe :data="books" :highlight-current-row=true height="530" width="1000" style="margin-top: 13%"
+    <el-table stripe :data="books" :highlight-current-row=true height="530" width="1000" style="margin-top: 8%"
               tooltip-effect="light">
       <el-table-column fixed type="expand">
         <template #default="props">
@@ -59,6 +59,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+        v-model:current-page="pageNo"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 15,20,30,50,100,200,400,1000]"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 <script setup>
@@ -71,7 +81,8 @@ let books = ref([]);
 let router = useRouter();
 let searchName = ref('')
 let pageNo = ref(1)
-let pageSize = ref(15)
+let pageSize = ref(5)
+let total = ref(1)
 let search = ((v) => {
   if (v === '') v = null
   getBooks(v, pageNo.value, pageSize.value).then(Response => {
@@ -94,6 +105,24 @@ let search = ((v) => {
 getBooks("null", pageNo.value, pageSize.value).then((Response) => {
   books.value = Response.data.data;
 });
+
+let handleSizeChange = ((val) => {
+  getBooks("null", pageNo.value, val).then((Response) => {
+    books.value = Response.data.data;
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
+
+let handleCurrentChange = ((val) => {
+  getBooks("null", val, pageSize.value).then((Response) => {
+    books.value = Response.data.data;
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
 
 let alter = (v) => {
   console.log("这里是管理书籍的准备进入修改书籍" + v);
@@ -142,6 +171,6 @@ a {
 }
 
 .background {
-  margin: 0 3.5%;
+  margin: 0 1.5%;
 }
 </style>

@@ -98,23 +98,34 @@ public class AdminImpl extends ServiceImpl<AdminMapper, Admin> implements AdminS
 
     @Override
     public Boolean deleteAdmin(Admin admin) {
-        Admin am = adminMapper.selectById(admin.getId());
+        Admin deleteAdmin = adminMapper.selectById(admin.getId());
 //        将管理员的其他身份一同删除,因为可能已经被单独删除了，所以不能进行删除成功判断
-        User user = new User();
-        user.setId(am.getId());
-        userService.deleteUser(user);
-        Shopkeeper shopkeeper = new Shopkeeper();
-        shopkeeper.setId(am.getId());
-        shopkeeperService.deleteShopkeeper(shopkeeper);
-//      企业注销后将企业资金平分给管理员
-        if (adminMapper.selectCount(new QueryWrapper<Admin>().ne("id",am.getId())) > 0) {
-            for (Admin ad : adminMapper.selectList(new QueryWrapper<Admin>().ne("id",am.getId()))) {
-                ad.setAdminMoney(ad.getAdminMoney() + am.getAdminMoney() / adminMapper.selectCount(new QueryWrapper<Admin>().ne("id",am.getId())));
+        if (!ObjectUtils.isEmpty(userMapper.selectById(deleteAdmin.getId()))) {
+            userService.deleteUser(userMapper.selectById(deleteAdmin.getId()));
+        }
+        if (!ObjectUtils.isEmpty(shopkeeperMapper.selectById(deleteAdmin.getId()))) {
+            shopkeeperService.deleteShopkeeper(shopkeeperMapper.selectById(deleteAdmin.getId()));
+        }
+             /* 管理员注销后资金平分给剩余管理员
+             如果管理没有用户角色或者企业角色，下面这条获取金额可加可不加，但是如果他有，第一句获取的deleteAdmin会收到其他的角色的遗留资金
+            ，但是除了第一句查询了被删除管理员的信息外，我们在下面这条语句之前没有任何再次查询。也就导致了这个方法内管理员的资金没有被更新，
+            其实是因为被更新了而我们没有查*/
+        Admin admin1 = adminMapper.selectOne(new QueryWrapper<Admin>().select("admin_money").eq("id", deleteAdmin.getId()));
+        Long l = adminMapper.selectCount(new QueryWrapper<Admin>().ne("id", deleteAdmin.getId()));
+
+        if (adminMapper.selectCount(new QueryWrapper<Admin>().ne("id", deleteAdmin.getId())) > 0) {
+            for (Admin ad : adminMapper.selectList(new QueryWrapper<Admin>().ne("id", deleteAdmin.getId()))) {
+                double money = ad.getAdminMoney() + (admin1.getAdminMoney() / l);
+                ad.setAdminMoney(money);
                 adminMapper.updateById(ad);
             }
         }
-        imageMapper.deleteById(adminMapper.selectById(am.getId()).getImageId());
-        return adminMapper.deleteById(am.getId()) > 0;
+
+        deleteAdmin.setAdminMoney(0.0);
+        adminMapper.updateById(deleteAdmin);
+
+        imageMapper.deleteById(adminMapper.selectById(deleteAdmin.getId()).getImageId());
+        return adminMapper.deleteById(deleteAdmin.getId()) > 0;
     }
 
     @Override

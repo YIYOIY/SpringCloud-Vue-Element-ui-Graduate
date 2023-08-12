@@ -4,23 +4,23 @@
     <div style="margin: 4% 10%">
       <el-row justify="space-evenly" :gutter="10">
         <el-col :span="12">
-          <h2><span>{{ "<<" + book.book.bookName + '>>' }}</span></h2>
+          <h2><span style="color:#413525;">{{ "<<  "  + book.book.bookName + '  >>' }}</span></h2>
           <el-card :body-style="{ padding: '30px 50px' }" shadow="hover" style="width: 80%; align-content: center">
             <div class="info_div" style="color: #eeb20b">
               <span class="info_span">书名:</span><span>{{ book.book.bookName }}</span>
             </div>
             <div class="info_div">
-              <span class="info_span" style="color: orangered">价格:</span><span
-                style="color: orangered">RMB {{ book.book.bookPrice }} 元</span>
+              <span class="info_span" style="color: #4d403f">售价:</span><span
+                style="color: #ab6c6c">{{ book.book.bookPrice }} 元</span>
             </div>
-            <div class="info_div" style="color: orangered">
+            <div class="info_div" style="color: #457020">
               <span class="info_span">折扣:</span><span>{{ (book.book.discount / 10) * 100 }} % </span>
               <span class="info_span"
                     style="margin-left: 15%">运费:</span><span>{{
                 book.book.expressFare > 0 ? book.book.expressFare : 0
               }} 元 </span>
             </div>
-            <div class="info_div" style="color: #23af6a">
+            <div class="info_div" style="color: #207048">
               <span class="info_span">作者:</span><span>{{ book.book.bookAuthor }}</span>
             </div>
             <div class="info_div" style="color: #176260">
@@ -220,7 +220,7 @@ let buy = () => {
 <style scoped>
 .info_div {
   font-size: 20px;
-  background: linear-gradient(45deg, white 10%, #63eeee 80%);
+  background: linear-gradient(45deg, #f6f1f1 10%, #d2e8e8 80%);
   margin-bottom: 8%;
 }
 

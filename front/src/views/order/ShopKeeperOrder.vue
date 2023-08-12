@@ -1,6 +1,6 @@
 <template>
   <div class="ac">
-    <el-table stripe :data="order" :highlight-current-row=true height="100%" style="width: 100%">
+    <el-table stripe :data="order" :highlight-current-row=true height="530" width="1000" style="margin-top: 8%">
       <el-table-column type="expand">
         <template #default="props">
           <div style="float: left;margin-top:4%;width:10%;left: 10%;position:relative;">
@@ -99,6 +99,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+        v-model:current-page="pageNo"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 15,20,30,50,100,200,400,1000]"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
@@ -111,12 +121,31 @@ import {deleteOrder, shopkeeperOrder} from "@/api/OrderApi";
 let router=useRouter()
 let store=useStore()
 let order =ref([])
-let pageNo = ref(1);
-let pageSize = ref(20);
+let pageNo = ref(1)
+let pageSize = ref(5)
+let total = ref(1)
 
 shopkeeperOrder(pageNo.value, pageSize.value,store.state.shopkeeperId).then(Response => {
   order.value = Response.data.data
   console.log(order.value)
+})
+
+let handleSizeChange = ((val) => {
+  shopkeeperOrder(pageNo.value,val,store.state.shopkeeperId).then(Response => {
+    order.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
+
+let handleCurrentChange = ((val) => {
+  shopkeeperOrder(val, pageSize.value,store.state.shopkeeperId).then(Response => {
+    order.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
 })
 
 let alter = ((orderId) => {
@@ -166,6 +195,6 @@ let del = ((id,wid,uid,bookprice,expressfare,buynum,discount,os) => {
 }
 
 .ac {
-  margin: 5% 5%;
+  margin: 0 2%;
 }
 </style>

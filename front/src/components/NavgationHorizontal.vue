@@ -1,6 +1,4 @@
 <template>
-  <!--  <el-drawer  v-model="drawer" :show-close="false" direction="btt">-->
-  <!--    <ElDivider content-position="center">Hi Yoi's BookShop! Awesome Books !</ElDivider>-->
   <div class="header">
     <el-menu
         class="el-menu-demo"
@@ -239,17 +237,8 @@
         <router-link to="/book" @click="loginout">退出账号</router-link>
       </el-menu-item>
 
-      <!--      头部菜单切换底部菜单-->
-      <el-menu-item index="9" v-if="store.state.menu===1">
-        <el-icon class="is-loading" size="large" style="margin: 13% 3px">
-          <SwitchFilled/>
-        </el-icon>
-        <el-button type="warning" plain round @click="store.state.menu=0">
-          切换菜单样式
-        </el-button>
-      </el-menu-item>
     </el-menu>
-    <!--  </el-drawer>-->
+
   </div>
 </template>
 
@@ -257,15 +246,13 @@
 import {onBeforeMount, onBeforeUpdate, onMounted, onUnmounted, ref} from "vue";
 import {useStore} from "vuex";
 import {Football, Refresh, Setting} from '@element-plus/icons-vue'
-import {useRoute} from "vue-router";
 import {useRouter} from "vue-router";
 import {getBooks} from "@/api/BookApi";
 import {ElMessage} from "element-plus";
 import emitter from "@/utils/bus";
 import {getAllSeries} from "@/api/SeriesApi";
 const store = useStore()
-let route = useRoute()
-// const drawer = ref(true)
+
 const router = useRouter()
 let login = ref(true)
 let a = ref()

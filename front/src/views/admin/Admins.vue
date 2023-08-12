@@ -32,13 +32,12 @@
       <el-table-column fixed prop="adminName" class-name="adminName" label="管理员名" :show-overflow-tooltip="true"
                        width="150px"/>
       <el-table-column fixed prop="adminSex" label="性别" width="80px"/>
-      <el-table-column fixed prop="adminMoney" label="账户余额" sortable width="150px">
+      <el-table-column fixed prop="adminMoney" label="账户余额" sortable width="200px">
         <template v-slot="scope">
-          RMB
           <el-tag effect="plain" type="warning" size="large">
-            {{ scope.row.adminMoney > 0 ? scope.row.adminMoney : 0 }}
+            {{ scope.row.adminMoney > 0 ? scope.row.adminMoney : 0 }}元
           </el-tag>
-          元
+
         </template>
       </el-table-column>
       <el-table-column fixed prop="adminPhone" label="联系方式" width="150px"/>
@@ -56,6 +55,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+        v-model:current-page="pageNo"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 15,20,30,50,100,200,400,1000]"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 <script setup>
@@ -71,6 +80,7 @@ let admins = ref([])
 
 let pageNo = ref(1)
 let pageSize = ref(5)
+let total = ref(1)
 let searchName = ref('')
 
 let search = ((v) => {
@@ -95,6 +105,23 @@ adminGetAdmins(store.state.adminId, pageNo.value, pageSize.value, null).then(Res
   // 因为又在统一返回上封装了分页，所以多了一层data
   admins.value = Response.data.data
   console.log(admins.value)
+})
+let handleSizeChange = ((val) => {
+  adminGetAdmins(store.state.adminId, pageNo.value, val, null).then(Response => {
+    admins.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
+})
+
+let handleCurrentChange = ((val) => {
+  adminGetAdmins(store.state.adminId, val, pageSize.value, null).then(Response => {
+    admins.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
+  })
 })
 
 let alter = ((v) => {

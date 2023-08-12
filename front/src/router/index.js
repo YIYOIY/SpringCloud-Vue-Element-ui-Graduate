@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import {checkToken} from "@/api/LoginApi";
 import store from "@/store";
-import {ElLoading, ElMessage} from "element-plus";
+import {ElMessage} from "element-plus";
 
 import Book from "@/views/book/BookIndex.vue";
 import AlterBooks from "@/views/book/AlterBooks.vue";
@@ -92,9 +92,6 @@ let router = createRouter({
             name: "login",
             path: "/login",
             component: Login,
-            meta: {
-                keepAlive: false,
-            },
         },
         {
             name: "information",
@@ -393,7 +390,7 @@ let router = createRouter({
             component: OrderConfirm,
             beforeEnter: (to, from, next) => {
                 if (to.name === "orderConfirm") {
-                    if (store.state.isUser || store.state.isShopkeeper|| store.state.isAdmin) {
+                    if (store.state.isUser || store.state.isShopkeeper || store.state.isAdmin) {
                         next();
                     } else {
                         next({path: '/login'});
@@ -457,6 +454,16 @@ router.beforeEach((to, from, next) => {
                 }
             })
         }
+        setInterval(() => {
+            checkToken(token).then((response) => {
+                if (response.code !== 200) {
+                    router.replace({path: '/login'}) // 如果token失效,返回到登录页面
+                } else {
+                    sessionStorage.setItem("token", response.data);
+                    next();
+                }
+            })
+        },30000)
     }
 })
 

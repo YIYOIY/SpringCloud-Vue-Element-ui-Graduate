@@ -18,11 +18,11 @@ spring:
     #            groupId: DEFAULT_GROUP
     #            data-type: json
     #            rule-type: flow
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: "*"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 seata:
   registry:
     type: nacos

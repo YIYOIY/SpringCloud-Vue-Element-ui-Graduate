@@ -112,7 +112,7 @@ public class img {
 //创建字节数组，is.available,获取输入流所对应文件的字节数
         byte[] bytes = new byte[is.available()];
 //将流读到字节数组中
-        is.read(bytes);
+        int read = is.read(bytes);
 
 //创建HttpHeaders对象设置响应头信息
         MultiValueMap<String, String> headers = new HttpHeaders();

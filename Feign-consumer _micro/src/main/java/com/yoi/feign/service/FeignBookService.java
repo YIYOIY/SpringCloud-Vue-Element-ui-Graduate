@@ -24,7 +24,7 @@ public interface FeignBookService {
 
     @CrossOrigin
     @GetMapping("/book/{searchName}/{pageNo}/{pageSize}/{shopkeeperId}")
-    public ReturnInfo<PagePackage<Book>> shopkeeperIndex(@PathVariable("searchName") String searchName,
+     ReturnInfo<PagePackage<Book>> shopkeeperIndex(@PathVariable("searchName") String searchName,
                                                          @Min(1) @PathVariable("pageNo") Integer pageNo,
                                                          @Min(1) @PathVariable("pageSize") Integer pageSize,
                                                          @Min(1) @PathVariable("shopkeeperId") Long shopkeeperId);

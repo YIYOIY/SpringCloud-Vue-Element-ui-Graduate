@@ -15,14 +15,28 @@
     <modules>
         <module>Common</module>
         <module>admin</module>
+        <module>admin_micro</module>
+
         <module>user</module>
+        <module>user_micro</module>
+
         <module>book</module>
+        <module>book_micro</module>
+
         <module>series</module>
         <module>order</module>
+
+        <module>order_micro</module>
+
         <module>img</module>
+
         <module>Feign-consumer</module>
+        <module>Feign-consumer_micro</module>
+
         <module>gateway</module>
+
         <module>shopkeeper</module>
+        <module>shopkeeper_micro</module>
     </modules>
 
     <properties>

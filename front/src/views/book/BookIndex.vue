@@ -149,9 +149,11 @@ let pageNo = ref(1)
 let pageSize = ref(5)
 let total = ref(1)
 
+let seriesNameChange=ref("null");
 emitter.on('seriesChange', data => {
   console.log(data)
-  selectBySeries(data, pageNo.value, pageSize.value).then(Response => {
+  seriesNameChange.value=data
+  selectBySeries(data,1, pageSize.value).then(Response => {
     books.value = Response.data.data
     pageSize.value = Response.data.pageSize
     total.value = parseInt(Response.data.total)
@@ -161,8 +163,9 @@ emitter.on('seriesChange', data => {
 
 // 当用户选择完系列重新点击首页后进行全部书籍的检查
 emitter.on('tooooBookRestart', v => {
-  getBooks("null", pageNo.value, pageSize.value).then(Response => {
+  getBooks("null", 1, pageSize.value).then(Response => {
     console.log(v)
+    seriesNameChange.value="null"
     books.value = Response.data.data
     pageSize.value = Response.data.pageSize
     total.value = parseInt(Response.data.total)
@@ -191,21 +194,40 @@ onMounted(async () => {
 })
 
 let handleSizeChange = ((val) => {
-  getBooks("null", 1, val).then(Response => {
-    books.value = Response.data.data
-    pageSize.value = Response.data.pageSize
-    total.value = parseInt(Response.data.total)
-    pageNo.value = Response.data.current
-  })
+  if (seriesNameChange.value==="null"){
+    getBooks("null", 1, val).then(Response => {
+      books.value = Response.data.data
+      pageSize.value = Response.data.pageSize
+      total.value = parseInt(Response.data.total)
+      pageNo.value = Response.data.current
+    })
+  }else {
+    selectBySeries(seriesNameChange.value, pageNo.value, val).then(Response => {
+      books.value = Response.data.data
+      pageSize.value = Response.data.pageSize
+      total.value = parseInt(Response.data.total)
+      pageNo.value = Response.data.current
+    })
+  }
+
 })
 
 let handleCurrentChange = ((val) => {
-  getBooks("null", val, pageSize.value).then(Response => {
-    books.value = Response.data.data
-    pageSize.value = Response.data.pageSize
-    total.value = parseInt(Response.data.total)
-    pageNo.value = Response.data.current
-  })
+  if (seriesNameChange.value==="null") {
+    getBooks("null", val, pageSize.value).then(Response => {
+      books.value = Response.data.data
+      pageSize.value = Response.data.pageSize
+      total.value = parseInt(Response.data.total)
+      pageNo.value = Response.data.current
+    })
+  }else{
+    selectBySeries(seriesNameChange.value, val, pageSize.value).then(Response => {
+      books.value = Response.data.data
+      pageSize.value = Response.data.pageSize
+      total.value = parseInt(Response.data.total)
+      pageNo.value = Response.data.current
+    })
+  }
 })
 
 let inf = ((v) => {

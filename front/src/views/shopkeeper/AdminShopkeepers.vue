@@ -42,7 +42,7 @@
               <el-date-picker style="width: 150%;" v-model="scope.row.shopkeeperSignTime" type="datetime" format="YYYY 年 MM 月 DD 日 HH 时 mm 分 ss 秒"/>
             </template>
             <el-button plain round type="info" >
-              {{  scope.row.shopkeeperSignTime+"  "+scope.row.shopkeeperSignTime }}
+              {{  scope.row.shopkeeperSignTime}}
             </el-button>
           </el-tooltip>
         </template>

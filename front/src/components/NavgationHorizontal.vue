@@ -314,7 +314,7 @@ let selectByName = (() => {
   if (searchName.value === "" || searchName.value === undefined || searchName.value === null) {
     ElMessage.error("请输入书籍名称！")
   } else {
-    getBooks(searchName.value,1,10).then(Response => {
+    getBooks(searchName.value,1,1000).then(Response => {
       id.value = Response.data.data[0].id
       console.log("查询出来的书籍的id"+id.value)
       GotoBookInfor()

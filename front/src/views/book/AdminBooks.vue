@@ -46,7 +46,7 @@
       <el-table-column fixed prop="expressFare" label="运费（元）" sortable width="110"/>
       <el-table-column fixed prop="kickback" label="抽成（%）" sortable width="100"/>
       <el-table-column fixed prop="bookNumber" label="库存" sortable width="100"/>
-      <el-table-column fixed prop="id" label="操作" width="200">
+      <el-table-column fixed prop="id" label="操作" width="190">
         <template v-slot="scope">
           <el-row :gutter="10">
             <el-col :span="12">

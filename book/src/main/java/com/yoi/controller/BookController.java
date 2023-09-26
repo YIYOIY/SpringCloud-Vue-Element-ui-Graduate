@@ -80,7 +80,6 @@ public class BookController {
 
     /**
      * 按照书籍系列名查询，书籍系列名不允许为空
-     * 先从redis中查询与搜索书籍系列匹配的书籍，redis如果为空未命中再从mysql中查找
      *
      * @param seriesName 书记系列名
      * @param pageNo     查看的页面数

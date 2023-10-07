@@ -107,6 +107,9 @@ let search = ((v) => {
 
 shopkeeperGetBooks("null", pageNo.value, pageSize.value,store.state.shopkeeperId).then((Response) => {
   books.value = Response.data.data;
+  pageSize.value = Response.data.pageSize
+  total.value = parseInt(Response.data.total)
+  pageNo.value = Response.data.current
 });
 let handleSizeChange = ((val) => {
   shopkeeperGetBooks("null", pageNo.value, val,store.state.shopkeeperId).then((Response) => {

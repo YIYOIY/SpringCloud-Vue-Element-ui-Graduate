@@ -125,8 +125,11 @@ let pageNo = ref(1)
 let pageSize = ref(5)
 let total = ref(1)
 
-shopkeeperOrder(pageNo.value, pageSize.value,store.state.shopkeeperId).then(Response => {
+shopkeeperOrder(pageNo.value,pageSize.value,store.state.shopkeeperId).then(Response => {
   order.value = Response.data.data
+  pageSize.value = Response.data.pageSize
+  total.value = parseInt(Response.data.total)
+  pageNo.value = Response.data.current
   console.log(order.value)
 })
 

@@ -127,6 +127,9 @@ let total = ref(1)
 
 getAdminOrder(pageNo.value, pageSize.value).then(Response => {
   order.value = Response.data.data
+  pageSize.value = Response.data.pageSize
+  total.value = parseInt(Response.data.total)
+  pageNo.value = Response.data.current
 })
 let handleSizeChange = ((val) => {
   getAdminOrder(pageNo.value,val).then(Response => {

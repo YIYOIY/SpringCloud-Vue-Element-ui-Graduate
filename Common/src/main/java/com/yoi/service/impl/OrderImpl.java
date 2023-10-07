@@ -46,10 +46,10 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
         Page<Order> page = new Page<>(pageNo, pageSize);
         List<Long> orders = new ArrayList<>();
 
-//        查询出所有未支付的订单
-        Page<Order> orderPage = orderMapper.selectPage(page, new QueryWrapper<Order>().eq("order_status", OrderEnum.NOTPAIED));
+//        查询出所有未支付的订单，此行为是为了获取订单的总数量
+        List<Order> allOrders = orderMapper.selectList(new QueryWrapper<Order>().eq("order_status", OrderEnum.NOTPAIED));
 
-        for (Order record : orderPage.getRecords()) {
+        for (Order record : allOrders) {
 //            根据订单的书籍id和前端传递的企业id在book中查询订单中该企业的下的书籍
             Book book = bookMapper.selectOne(new QueryWrapper<Book>().eq("id", record.getBookId()).eq("shopkeeper_id", shopkeeperId));
 //            如果书籍不为空，则表示该企业有订单
@@ -58,7 +58,7 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
             }
         }
 
-//        根据收集的订单id在订单中重新分页查询
+//        根据有效的订单id在订单中重新分页查询
         Page<Order> shopkeeperOrder = orderMapper.selectPage(page, new QueryWrapper<Order>().in("id", orders));
 //       将企业的订单嵌入数据
         return getOrderPage(shopkeeperOrder);

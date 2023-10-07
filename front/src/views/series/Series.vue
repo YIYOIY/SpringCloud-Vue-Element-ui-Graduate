@@ -66,6 +66,9 @@ let searchName = ref('')
 let series = ref([])
 getAllSeries('null', pageNo.value, pageSize.value).then(Response => {
   series.value = Response.data.data
+  pageSize.value = Response.data.pageSize
+  total.value = parseInt(Response.data.total)
+  pageNo.value = Response.data.current
 })
 let handleSizeChange = ((val) => {
   getAllSeries('null', pageNo.value, val).then(Response => {

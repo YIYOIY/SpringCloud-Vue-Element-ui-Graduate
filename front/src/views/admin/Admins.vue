@@ -104,6 +104,9 @@ let search = ((v) => {
 adminGetAdmins(store.state.adminId, pageNo.value, pageSize.value, null).then(Response => {
   // 因为又在统一返回上封装了分页，所以多了一层data
   admins.value = Response.data.data
+  pageSize.value = Response.data.pageSize
+  total.value = parseInt(Response.data.total)
+  pageNo.value = Response.data.current
   console.log(admins.value)
 })
 let handleSizeChange = ((val) => {

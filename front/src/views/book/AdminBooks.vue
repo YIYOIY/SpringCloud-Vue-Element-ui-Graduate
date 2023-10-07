@@ -104,6 +104,9 @@ let search = ((v) => {
 
 getBooks("null", pageNo.value, pageSize.value).then((Response) => {
   books.value = Response.data.data;
+  pageSize.value = Response.data.pageSize
+  total.value = parseInt(Response.data.total)
+  pageNo.value = Response.data.current
 });
 
 let handleSizeChange = ((val) => {

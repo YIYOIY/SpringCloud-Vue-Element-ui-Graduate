@@ -454,16 +454,6 @@ router.beforeEach((to, from, next) => {
                 }
             })
         }
-        setInterval(() => {
-            checkToken(token).then((response) => {
-                if (response.code !== 200) {
-                    router.replace({path: '/login'}) // 如果token失效,返回到登录页面
-                } else {
-                    sessionStorage.setItem("token", response.data);
-                    next();
-                }
-            })
-        },30000)
     }
 })
 

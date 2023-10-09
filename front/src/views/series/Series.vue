@@ -118,6 +118,9 @@ let finishAdd = (() => {
   searchName.value = null
   getAllSeries(searchName.value, pageNo.value, pageSize.value).then(Response => {
     series.value = Response.data.data
+    pageSize.value = Response.data.pageSize
+    total.value = parseInt(Response.data.total)
+    pageNo.value = Response.data.current
   })
   // 本来是因为dialog页面自动缓存，用来强制刷新的，后来发现可以直接使用el-dialog的属性来解决destroy-on-close
   // location.reload()
@@ -152,6 +155,9 @@ let del = ((v) => {
       searchName.value = null
       getAllSeries(searchName.value, pageNo.value, pageSize.value).then(Response => {
         series.value = Response.data.data
+        pageSize.value = Response.data.pageSize
+        total.value = parseInt(Response.data.total)
+        pageNo.value = Response.data.current
       })
     }).catch(Error => {
       ElMessage.error(Error.data.message + "删除失败,请稍后重试!")

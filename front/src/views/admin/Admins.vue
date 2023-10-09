@@ -154,8 +154,12 @@ let del = ((v) => {
           name: 'login'
         })
       } else {
-        adminGetAdmins(store.state.adminId, pageNo.value, pageSize.value, "all").then(Response => {
+        adminGetAdmins(store.state.adminId, pageNo.value, pageSize.value, null).then(Response => {
           admins.value = Response.data.data
+          pageSize.value = Response.data.pageSize
+          total.value = parseInt(Response.data.total)
+          pageNo.value = Response.data.current
+          console.log(admins.value)
         })
       }
     }).catch(Error => {

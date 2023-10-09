@@ -149,6 +149,9 @@ let del = (id,imageId,wordId) => {
       ElMessage.success(Response.message);
       getBooks("null", pageNo.value, pageSize.value).then((Response) => {
         books.value = Response.data.data;
+        pageSize.value = Response.data.pageSize
+        total.value = parseInt(Response.data.total)
+        pageNo.value = Response.data.current
       });
     }).catch((Error) => {
       ElMessage.error(Error.data.message)

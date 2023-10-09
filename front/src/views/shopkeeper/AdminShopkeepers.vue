@@ -153,8 +153,11 @@ let del = ((v) => {
   if (confirm("确认删除?")) {
     deleteShopkeeper(JSON.stringify(deleteShop.shopkeeper)).then(Response => {
       ElMessage.success(Response.message)
-      adminGetShopkeepers(store.state.adminId, pageNo.value, pageSize.value, "all").then(Response => {
+      adminGetShopkeepers(store.state.adminId, pageNo.value, pageSize.value, null).then(Response => {
         shopkeepers.value = Response.data.data
+        pageSize.value = Response.data.pageSize
+        total.value = parseInt(Response.data.total)
+        pageNo.value = Response.data.current
       })
     }).catch(Error => {
       ElMessage.error(Error.data.message + "请稍后重试!")

@@ -29,7 +29,7 @@
         </el-form-item>
 
         <el-form-item label="企业性质">
-          <el-select v-model="shopkeeper.shopkeeper.shopkeeperQuality" filterable clearable placeholder="选择企业性质" @change="next">
+          <el-select v-model="shopkeeper.shopkeeper.shopkeeperQuality" filterable clearable placeholder="选择企业性质">
             <el-option label="封闭公司" value="封闭公司"/>
             <el-option label="公众公司" value="公众公司"/>
           </el-select>
@@ -92,7 +92,7 @@
 
 
     <div style="left: 8%;top:75%;width:50%;position: absolute">
-      <el-row gutter="10">
+      <el-row :gutter="10">
         <el-col :span="12">
           <el-button type="warning" size="large" @click="alter()" plain round>保存修改</el-button>
         </el-col>

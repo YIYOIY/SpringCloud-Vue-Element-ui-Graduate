@@ -147,8 +147,11 @@ let handleCurrentChange = ((val) => {
     if (confirm("确认删除?")) {
       deleteUser(JSON.stringify(delUser.user)).then(Response => {
         ElMessage.success(Response.message)
-        adminGetUsers(store.state.adminId, pageNo.value, pageSize.value, "all").then(Response => {
+        adminGetUsers(store.state.adminId, pageNo.value, pageSize.value, null).then(Response => {
           users.value = Response.data.data
+          pageSize.value = Response.data.pageSize
+          total.value = parseInt(Response.data.total)
+          pageNo.value = Response.data.current
         })
       }).catch(Error => {
         ElMessage.error(Error.data.message + "请稍后重试!")

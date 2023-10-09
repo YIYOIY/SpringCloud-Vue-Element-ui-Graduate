@@ -111,6 +111,7 @@
             </router-link>
           </el-menu-item>
         </el-menu-item-group>
+
         <el-sub-menu index="2-6">
           <template #title>用户隐私</template>
           <el-menu-item index="2-6-1">
@@ -122,6 +123,44 @@
             </router-link>
           </el-menu-item>
         </el-sub-menu>
+
+        <el-sub-menu index="2-7">
+          <template #title>系统管理</template>
+          <el-menu-item-group title="系统配置运行中心">
+          <el-menu-item index="2-7-1">
+            <a href="http://localhost:9411" target="_blank">
+              <el-icon>
+                <Cpu/>
+              </el-icon>
+              系统链路追踪
+            </a>
+          </el-menu-item>
+            <el-menu-item index="2-7-2">
+              <a href="http://localhost:8848/nacos" target="_blank">
+                <el-icon>
+                  <Cpu/>
+                </el-icon>
+                Nacos服务注册与发现
+              </a>
+            </el-menu-item>
+            <el-menu-item index="2-7-3">
+              <a href="http://localhost:8080" target="_blank">
+                <el-icon>
+                  <Cpu/>
+                </el-icon>
+                Sentinel限流管理
+              </a>
+            </el-menu-item>
+            <el-menu-item index="2-7-4">
+              <a href="http://localhost:7091" target="_blank">
+                <el-icon>
+                  <Cpu/>
+                </el-icon>
+                seata事务中心
+              </a>
+            </el-menu-item>
+          </el-menu-item-group>
+        </el-sub-menu>
       </el-sub-menu>
 
       <el-sub-menu index="3" v-if="store.state.isUser">
@@ -131,6 +170,24 @@
           </el-icon>
           <span style="margin-left: 5%">用户</span>
         </template>
+        <el-menu-item-group title="个人中心">
+          <el-menu-item index="3-1">
+            <router-link to="/user">
+              <el-icon>
+                <GoldMedal/>
+              </el-icon>
+              个人信息
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="3-2">
+            <router-link to="/userOrder">
+              <el-icon>
+                <CreditCard/>
+              </el-icon>
+              购物车
+            </router-link>
+          </el-menu-item>
+        </el-menu-item-group>
         <el-menu-item-group title="个人中心">
           <el-menu-item index="3-1">
             <router-link to="/user">
@@ -245,7 +302,20 @@
 <script setup>
 import {onBeforeMount, onBeforeUpdate, onMounted, onUnmounted, ref} from "vue";
 import {useStore} from "vuex";
-import {Football, Refresh, Setting} from '@element-plus/icons-vue'
+import {
+  Aim,
+  Connection,
+  Cpu,
+  CreditCard,
+  Football, GoldMedal,
+  Guide, Orange, PhoneFilled,
+  Refresh,
+  Setting, Ship, ShoppingTrolley,
+  Sunny,
+  Sunrise,
+  Ticket,
+  Watermelon
+} from '@element-plus/icons-vue'
 import {useRouter} from "vue-router";
 import {getBooks} from "@/api/BookApi";
 import {ElMessage} from "element-plus";
@@ -286,20 +356,12 @@ const loginout = () => {
 }
 
 onBeforeUpdate(() => {
-  if (store.state.isUser || store.state.isAdmin||store.state.isShopkeeper) {
-    login.value = false
-  } else {
-    login.value = true
-  }
+  login.value = !(store.state.isUser || store.state.isAdmin || store.state.isShopkeeper);
 })
 
 onMounted(() => {
   a = setInterval(() => {
-    if (store.state.isUser || store.state.isAdmin||store.state.isShopkeeper) {
-      login.value = false
-    } else {
-      login.value = true
-    }
+    login.value = !(store.state.isUser || store.state.isAdmin || store.state.isShopkeeper);
   }, 1000)
 })
 

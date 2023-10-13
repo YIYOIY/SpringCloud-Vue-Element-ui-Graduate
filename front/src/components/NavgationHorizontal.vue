@@ -9,7 +9,7 @@
     >
 
       <el-menu-item index="0">
-        <router-link to="/book">
+        <router-link to="/book" @click="resBook()">
           <el-icon class="is-loading" size="large" style="margin: 0 3px">
             <Guide/>
           </el-icon>
@@ -25,12 +25,12 @@
           系列
         </template>
         <el-menu-item index="9-1" v-for="item in series" :key="item.seriesId">
-          <el-tag type="warning" effect="light" @click="selectBySeries(item.seriesName)" style="width: 100%;">
+          <el-tag type="success" effect="plain" @click="selectBySeries(item.seriesName)" style="width: 100%;">
             {{ item.seriesName }}
           </el-tag>
         </el-menu-item>
         <el-menu-item index="1000">
-          <el-tag type="success" effect="plain" @click="resBook()" style="width: 100%">全部书籍</el-tag>
+          <el-tag type="warning" effect="plain" @click="resBook()" style="width: 100%">全部书籍</el-tag>
         </el-menu-item>
       </el-sub-menu>
 
@@ -170,24 +170,6 @@
           </el-icon>
           <span style="margin-left: 5%">用户</span>
         </template>
-        <el-menu-item-group title="个人中心">
-          <el-menu-item index="3-1">
-            <router-link to="/user">
-              <el-icon>
-                <GoldMedal/>
-              </el-icon>
-              个人信息
-            </router-link>
-          </el-menu-item>
-          <el-menu-item index="3-2">
-            <router-link to="/userOrder">
-              <el-icon>
-                <CreditCard/>
-              </el-icon>
-              购物车
-            </router-link>
-          </el-menu-item>
-        </el-menu-item-group>
         <el-menu-item-group title="个人中心">
           <el-menu-item index="3-1">
             <router-link to="/user">

@@ -13,8 +13,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 app.use(route).use(ElementPlus).use(store).mount('#app')
 setInterval(() => {
-    let tokenVerfiy = sessionStorage.getItem('token');
-    checkToken(tokenVerfiy).then((response) => {
+    let tokenVerify = sessionStorage.getItem('token');
+    checkToken(tokenVerify).then((response) => {
             sessionStorage.setItem("token", response.data);
     })
 },10000)

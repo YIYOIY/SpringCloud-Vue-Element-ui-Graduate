@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author 游弋
@@ -103,10 +104,14 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
 
     private void setBookInformation(Order order) {
         Book book = bookMapper.selectById(order.getBookId());
-        if (!ObjectUtils.isEmpty(imageMapper.selectById(book.getImageId()))) book.setImage(imageMapper.selectById(book.getImageId()));
-        if (!ObjectUtils.isEmpty(wordMapper.selectById(book.getWordId()))) book.setWord(wordMapper.selectById(book.getWordId()));
-        if (!ObjectUtils.isEmpty(shopkeeperMapper.selectById(book.getShopkeeperId()))) book.setShopkeeper(shopkeeperMapper.selectById(book.getShopkeeperId()));
-        if (!ObjectUtils.isEmpty(seriesMapper.selectById(book.getSeriesId()))) book.setSeries(seriesMapper.selectById(book.getSeriesId()));
+        if (!ObjectUtils.isEmpty(imageMapper.selectById(book.getImageId())))
+            book.setImage(imageMapper.selectById(book.getImageId()));
+        if (!ObjectUtils.isEmpty(wordMapper.selectById(book.getWordId())))
+            book.setWord(wordMapper.selectById(book.getWordId()));
+        if (!ObjectUtils.isEmpty(shopkeeperMapper.selectById(book.getShopkeeperId())))
+            book.setShopkeeper(shopkeeperMapper.selectById(book.getShopkeeperId()));
+        if (!ObjectUtils.isEmpty(seriesMapper.selectById(book.getSeriesId())))
+            book.setSeries(seriesMapper.selectById(book.getSeriesId()));
         order.setBook(book);
 
         User user = userMapper.selectById(order.getUserId());
@@ -114,11 +119,9 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
             user.setImage(imageMapper.selectById(user.getImageId()));
         }
         order.setUser(user);
-        if (!ObjectUtils.isEmpty(wordMapper.selectById(order.getWordId()))) order.setWord(wordMapper.selectById(order.getWordId()));
+        if (!ObjectUtils.isEmpty(wordMapper.selectById(order.getWordId())))
+            order.setWord(wordMapper.selectById(order.getWordId()));
     }
-
-
-
 
 
     /*添加订单*/
@@ -168,11 +171,7 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
         if (book.getBookNumber() < order.getBuyNumber()) {
             return false;
         }
-//        try {
-//            TimeUnit.SECONDS.sleep(2000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e + "超时了");
-//        }
+
 //      更新书籍数量
         UpdateWrapper<Book> bookUpdateWrapper = new UpdateWrapper<Book>()
                 .set(order.getBuyNumber() > 0, "book_number", book.getBookNumber() - order.getBuyNumber())
@@ -198,6 +197,11 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
                 .set("order_status", OrderEnum.BUY)
                 .set("comment_status", CommentEnum.COMMENTEDFORBIDDEN)
                 .eq("id", order.getId());
+//        try {
+//            TimeUnit.SECONDS.sleep(2000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e + "超时了");
+//        }
         return (orderMapper.update(null, orderUpdateWrapper) > 0
                 && bookMapper.update(null, bookUpdateWrapper) > 0);
     }

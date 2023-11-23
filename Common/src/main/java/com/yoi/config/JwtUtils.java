@@ -83,7 +83,7 @@ public class JwtUtils {
 
         Calendar nowTime = Calendar.getInstance();
         nowTime.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
-        nowTime.add(Calendar.SECOND, 20);
+        nowTime.add(Calendar.SECOND, 90);
         Date expiresDate = nowTime.getTime();
         builder.withExpiresAt(expiresDate);
         System.out.println("\n过期时间：" + expiresDate);

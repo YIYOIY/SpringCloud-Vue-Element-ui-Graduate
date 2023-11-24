@@ -132,7 +132,7 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
 
     /**
      * 删除订单
-     * 如果订单是用户已经购买未签收，就用户的钱退回
+     * 如果订单是用户已经购买未签收，就用户的钱退回，将购买的书籍数量还原
      * 无论是管理员删除订单还是用户自己的删除订单，还是商家删除书籍导致的删除订单（商家的订单页面只能看见未支付的）
      */
     @Override
@@ -145,6 +145,16 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
                     + order.getExpressFare();
             userById.setUserMoney(userById.getUserMoney() + fare);
             userMapper.updateById(userById);
+
+            Book book = bookMapper.selectOne(new QueryWrapper<Book>()
+                    .select("book_number")
+                    .eq("id", order.getBookId()));
+
+            //      更新书籍数量
+            UpdateWrapper<Book> bookUpdateWrapper = new UpdateWrapper<Book>()
+                    .set(order.getBuyNumber() > 0, "book_number", book.getBookNumber() + order.getBuyNumber())
+                    .eq("id", order.getBookId());
+            bookMapper.update(null, bookUpdateWrapper);
         }
 
         if (!ObjectUtils.isEmpty(order.getWordId())) {
@@ -197,11 +207,12 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
                 .set("order_status", OrderEnum.BUY)
                 .set("comment_status", CommentEnum.COMMENTEDFORBIDDEN)
                 .eq("id", order.getId());
-//        try {
-//            TimeUnit.SECONDS.sleep(2000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e + "超时了");
-//        }
+//测试全局回滚用的
+        try {
+            TimeUnit.SECONDS.sleep(15);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e+"超时了");
+        }
         return (orderMapper.update(null, orderUpdateWrapper) > 0
                 && bookMapper.update(null, bookUpdateWrapper) > 0);
     }

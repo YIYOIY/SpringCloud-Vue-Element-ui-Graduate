@@ -80,7 +80,7 @@
         <el-button class="el-button" plain round color="#626aef"
           @click="buying(scope.row.id)">详情</el-button>
         <el-button class="el-button" plain round type="danger" @click="del(scope.row.id,scope.row.wordId,scope.row.userId,
-          scope.row.bookPrice,scope.row.expressFare,scope.row.buyNumber,scope.row.discount,scope.row.orderStatus)">删除</el-button>
+          scope.row.bookPrice,scope.row.expressFare,scope.row.buyNumber,scope.row.book.id,scope.row.discount,scope.row.orderStatus)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -156,7 +156,7 @@ let buying = ((orderId) => {
 })
 
 
-let del = ((id,wid,uid,bookprice,expressfare,buynum,discount,os) => {
+let del = ((id,wid,uid,bookprice,expressfare,buynum,bookid,discount,os) => {
   if (confirm("确认删除?")) {
     let delOrder = {
       id: id,
@@ -164,6 +164,7 @@ let del = ((id,wid,uid,bookprice,expressfare,buynum,discount,os) => {
       buyNumber: buynum,
       userId: uid,
       bookPrice: bookprice,
+      bookId:bookid,
       expressFare: expressfare,
       discount: discount,
       orderStatus: os

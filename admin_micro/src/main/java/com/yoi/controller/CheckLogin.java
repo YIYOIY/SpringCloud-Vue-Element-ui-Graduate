@@ -49,7 +49,7 @@ public class CheckLogin {
             //生成JWT令牌
             String token = JwtUtils.getToken(payload);
 //            存入redis中，token验证时会验证是否不能使用此token
-            stringRedisTemplate.opsForValue().set("admin" + loginAdmin.getId().toString(), token, 5, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set("admin" + loginAdmin.getId().toString(), token, 90, TimeUnit.SECONDS);
             return new ReturnInfo<>(200, "登录认证成功！", loginAdmin, token);
         } else {
             return new ReturnInfo<>(404, "管理员登录失败，不存在此管理员！");
@@ -67,7 +67,7 @@ public class CheckLogin {
             payload.put("type", "user");
             //生成JWT令牌
             String token = JwtUtils.getToken(payload);
-            stringRedisTemplate.opsForValue().set("user" + loginUser.getId().toString(), token, 5, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set("user" + loginUser.getId().toString(), token, 90, TimeUnit.SECONDS);
             return new ReturnInfo<>(200, "登录成功！", loginUser, token);
         } else {
             return new ReturnInfo<>(200, "用户不存在，请注册后再登录！");
@@ -85,7 +85,7 @@ public class CheckLogin {
             payload.put("type", "shopkeeper");
             //生成JWT令牌
             String token = JwtUtils.getToken(payload);
-            stringRedisTemplate.opsForValue().set("shopkeeper" + loginShopkeeper.getId().toString(), token, 5, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set("shopkeeper" + loginShopkeeper.getId().toString(), token, 90, TimeUnit.SECONDS);
             return new ReturnInfo<>(200, "登录成功！", loginShopkeeper, token);
         } else {
             return new ReturnInfo<>(200, "商户不存在，请注册后再登录！");
@@ -102,26 +102,27 @@ public class CheckLogin {
             String name = ver.getClaim("name").asString();
             String type = ver.getClaim("type").asString();
             String s = stringStringValueOperations.get(type + id);
-
             if (StringUtil.isNullOrEmpty(s) || !s.equals(token)) {
-                throw new Exception("token不存在！");
+                throw new Exception("token无效！");
+            }else {
+                //生成新的token，并响应
+                Map<String, String> payload = new HashMap<>();
+                payload.put("id", id);
+                payload.put("name", name);
+                payload.put("type", type);
+                //生成JWT令牌并重新覆盖redis中的令牌
+                String newToken = JwtUtils.getToken(payload);
+                stringRedisTemplate.opsForValue().set(type + id, newToken, 90, TimeUnit.SECONDS);
+
+                System.out.println("redis中拿到id为" + id + "名称为" + name + "身份为" + type + "的token\n"
+                        + s.substring(60) + "\n前端传递的token\n" + token.substring(60)+"\n新Token\n"+newToken);//输出令牌
+
+                return new ReturnInfo<>(200, "token刷新成功！", newToken);
             }
-            //生成新的token，并响应
-            Map<String, String> payload = new HashMap<>();
-            payload.put("id", id);
-            payload.put("name", name);
-            payload.put("type", type);
-            //生成JWT令牌并重新覆盖redis中的令牌
-            String newToken = JwtUtils.getToken(payload);
-            stringRedisTemplate.opsForValue().set(type + id, newToken, 5, TimeUnit.MINUTES);
 
-            System.out.println("redis中拿到id为" + id + "名称为" + name + "身份为" + type + "的token\n"
-                    + s.substring(60) + "\n前端传递的token\n" + token.substring(60));//输出令牌
-
-            return new ReturnInfo<>(200, "token刷新成功！", newToken);
         } catch (Exception e) {
             log.warn(e.toString());
-            return new ReturnInfo<>(404, "token验证失败，该token已无效或不存在！");
+            return new ReturnInfo<>(404, "长时间未操作，请重新登录！");
         }
     }
 }

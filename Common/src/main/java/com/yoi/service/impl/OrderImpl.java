@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author 游弋
@@ -208,11 +207,11 @@ public class OrderImpl extends ServiceImpl<OrderMapper, Order> implements OrderS
                 .set("comment_status", CommentEnum.COMMENTEDFORBIDDEN)
                 .eq("id", order.getId());
 //测试全局回滚用的
-        try {
-            TimeUnit.SECONDS.sleep(15);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e+"超时了");
-        }
+//        try {
+//            TimeUnit.SECONDS.sleep(15);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e+"超时了");
+//        }
         return (orderMapper.update(null, orderUpdateWrapper) > 0
                 && bookMapper.update(null, bookUpdateWrapper) > 0);
     }
